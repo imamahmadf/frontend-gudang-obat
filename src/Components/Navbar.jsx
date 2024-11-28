@@ -17,7 +17,7 @@ function Navbar() {
     >
       <Container py={"10px"} maxW={"1280px"}>
         <Flex justifyContent={"space-between"}>
-          <Sidebar />{" "}
+          <Sidebar />
           <Image
             height="45px"
             overflow="hiden"

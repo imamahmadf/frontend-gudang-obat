@@ -15,6 +15,7 @@ import {
   ModalCloseButton,
   Center,
 } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { Link, useHistory } from "react-router-dom";
 import TambahAprahan from "../Components/TambahAprahan";
 import { BsCaretRightFill } from "react-icons/bs";
@@ -33,6 +34,8 @@ function Amprahan() {
   const [pages, setPages] = useState(0);
   const [rows, setRows] = useState(0);
   const [time, setTime] = useState("");
+  const [selectedTab, setSelectedTab] = useState("Members");
+  const [jenis, setJenis] = useState(1);
 
   const changePage = ({ selected }) => {
     setPage(selected);
@@ -42,7 +45,7 @@ function Amprahan() {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/amprahan/get/all-amprahan?&time=${time}&page=${page}&limit=${limit}`
+        }/amprahan/get/all-amprahan?&time=${time}&page=${page}&jenis=${jenis}&limit=${limit}`
       )
       .then((res) => {
         console.log(res.data.result);
@@ -71,49 +74,84 @@ function Amprahan() {
     return allAmprahan.map((val, idx) => {
       const newTanggal = formatTanggal(val.tanggal);
       return (
-        <Flex
-          my={"10px"}
-          borderBottom={"1px"}
-          borderColor={"rgba(229, 231, 235, 1)"}
-        >
-          <Text fontSize={"15px"} width={"130px"} me={"10px"}>
-            {val.uptd.nama}
-          </Text>
-          <Text fontSize={"15px"} width={"110px"} me={"10px"}>
-            {newTanggal}
-          </Text>{" "}
-          <Text fontSize={"15px"} width={"80px"} me={"10px"}>
-            Status
-          </Text>{" "}
-          <Box width={"80px"}>
-            <Center
-              onClick={() => {
-                history.push(`amprahan/${val.id}`);
-              }}
-              borderRadius={"5px"}
-              as="button"
-              h="25px"
-              w="25px"
-              fontSize="12px"
-              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-              color="white"
-              _hover={{
-                bg: "black",
-              }}
-              bg="green"
-              // onClick={onOpen}
-            >
-              <BsCart4 />
-            </Center>
-          </Box>
-        </Flex>
+        <Center flexDirection={"column"}>
+          <Flex
+            key={val.id}
+            my={"10px"}
+            borderBottom={"1px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+          >
+            <Text fontSize={"15px"} width={"130px"} me={"10px"}>
+              {val.uptd.nama}
+            </Text>
+            <Text fontSize={"15px"} width={"110px"} me={"10px"}>
+              {newTanggal}
+            </Text>{" "}
+            <Text fontSize={"15px"} width={"80px"} me={"10px"}>
+              {val.isOpen == 1 ? "Aktif" : "Selesai"}
+            </Text>{" "}
+            <Box width={"80px"}>
+              <Center
+                onClick={() => {
+                  history.push(`amprahan/${val.id}`);
+                }}
+                borderRadius={"5px"}
+                as="button"
+                h="25px"
+                w="25px"
+                fontSize="12px"
+                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                color="white"
+                _hover={{
+                  bg: "black",
+                }}
+                bg="green"
+              >
+                <BsCart4 />
+              </Center>
+            </Box>
+          </Flex>
+        </Center>
       );
     });
   }
 
+  function renderHalaman() {
+    return (
+      <>
+        <Center
+          borderTop={"1px"}
+          borderBottom={"1px"}
+          borderColor={"rgba(229, 231, 235, 1)"}
+          p={"10px"}
+        >
+          <Text fontSize={"15px"} fontWeight={600} width={"130px"} me={"10px"}>
+            Puskesmas
+          </Text>
+          <Text fontSize={"15px"} fontWeight={600} width={"110px"} me={"10px"}>
+            Tanggal
+          </Text>{" "}
+          <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
+            Status
+          </Text>{" "}
+          <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
+            Aksi
+          </Text>{" "}
+        </Center>
+        <Center flexDirection={"column"}>{renderAmrahan()}</Center>
+      </>
+    );
+  }
+  const isAnyOpen = allAmprahan.some((val) => val.isOpen === 1);
   useEffect(() => {
     fetchAllAmprahan();
-  }, [page]);
+    console.log(isAnyOpen);
+  }, [page, jenis]);
+
+  const handleTabClick = (val) => {
+    setJenis(val);
+    console.log(val, "JENISSS");
+  };
 
   return (
     <Layout>
@@ -126,37 +164,23 @@ function Amprahan() {
           maxW={"1280px"}
           p={"30px"}
         >
-          <TambahAprahan />
-          <Center
-            borderTop={"1px"}
-            borderBottom={"1px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-            p={"10px"}
-          >
-            <Text
-              fontSize={"15px"}
-              fontWeight={600}
-              width={"130px"}
-              me={"10px"}
-            >
-              Puskesmas
-            </Text>
-            <Text
-              fontSize={"15px"}
-              fontWeight={600}
-              width={"110px"}
-              me={"10px"}
-            >
-              Tanggal
-            </Text>{" "}
-            <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
-              Status
-            </Text>{" "}
-            <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
-              Aksi
-            </Text>{" "}
-          </Center>
-          <Center flexDirection={"column"}>{renderAmrahan()}</Center>
+          {(isAnyOpen === false || allAmprahan.length === 0) && (
+            <TambahAprahan />
+          )}
+
+          <Tabs variant="enclosed">
+            <TabList>
+              <Tab onClick={() => handleTabClick(1)}>Amprahan</Tab>
+              <Tab onClick={() => handleTabClick(2)}>bon</Tab>
+              <Tab onClick={() => handleTabClick(3)}>Alokasi</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>{renderHalaman()}</TabPanel>
+              <TabPanel>{renderHalaman()}</TabPanel>
+              <TabPanel>{renderHalaman()}</TabPanel>
+            </TabPanels>
+          </Tabs>
           <div
             style={{
               display: "flex",

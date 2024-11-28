@@ -15,7 +15,14 @@ import Register from "./Pages/Register";
 import axios from "axios";
 import Loading from "./Components/Loading";
 import { useDispatch, useSelector } from "react-redux";
+import Home from "./Pages/Home";
+import Profile from "./Pages/Profile";
 import { authFirebase } from "./Config/firebase";
+import ObatMasuk from "./Pages/ObatMasuk";
+import Login from "./Pages/Login";
+import auth_types from "./Redux/Reducers/Types/userTypes";
+import Kadaluwarsa from "./Pages/Kadaluwarsa";
+import StokOpname from "./Pages/StokOpname";
 import {
   getAuth,
   onAuthStateChanged,
@@ -43,15 +50,15 @@ function App() {
         setUserId(user.uid);
         setFirebaseProvider(user.providerData[0].providerId);
         setEmailVerified(user.emailVerified);
-        //console.log("ada yg login");
+        console.log("ada yg login");
         // kondisi jika sudah terverifikasi
         if (user.emailVerified) {
-          //console.log("your account has been verified");
+          console.log("your account has been verified");
         } else {
-          //console.log("Your account has not been verified");
+          console.log("Your account has not been verified");
         }
       } else {
-        //console.log("tidak ada yg login");
+        console.log("tidak ada yg login");
         // jika tidak ada akan di logout
         auth.signOut();
       }
@@ -67,22 +74,22 @@ function App() {
           },
         })
         .then((res) => {
-          console.log(res.data.globalState.UserRoles);
-          if (res.data.globalState === null) {
+          console.log(res.data, "CEK APPPP JAAA");
+          if (res.data.globalState === !null) {
             //console.log("loading...");
           } else {
-            res.data.globalState.UserRoles = res.data.globalState.UserRoles.map(
+            res.data.globalState.UserRoles = res.data.globalState.userRoles.map(
               (val) => {
-                // console.log(val);
+                console.log(val);
                 return val.roleId;
               }
             );
-            if (res.data.globalState.Tenant === null) {
-              res.data.globalState.Tenant = 0;
-            }
-            if (res.data.globalState.Profile === null) {
-              res.data.globalState.Profile = 0;
-            }
+            // if (res.data.globalState.Tenant === null) {
+            //   res.data.globalState.Tenant = 0;
+            // }
+            // if (res.data.globalState.Profile === null) {
+            //   res.data.globalState.Profile = 0;
+            // }
             // console.log("data get2 :", res.data.globalState);
             dispatch({
               type: auth_types.Redux,
@@ -94,8 +101,8 @@ function App() {
                 UserRoles: res.data.globalState.UserRoles,
                 // TenantId: res.data.globalState.Tenant.id || 0,
                 // TenantName: res.data.globalState?.Tenant?.name,
-                // ProfileName: res.data.globalState?.Profile?.name,
-                // ProfilePic: res.data.globalState?.Profile?.profilePic,
+                ProfileName: res.data.globalState?.profile?.nama,
+                ProfilePic: res.data.globalState?.profile?.profilePic,
               },
             });
           }
@@ -135,8 +142,14 @@ function App() {
             path="/gfk/amprahan/:amprahanId"
             exact
           />
+          <Route component={ObatMasuk} path="/gfk/obat-masuk" exact />
           <Route component={Pengaturan} path="/gfk/pengaturan" exact />
+          <Route component={Profile} path="/gfk/profile" exact />
+          <Route component={Kadaluwarsa} path="/gfk/kadaluwarsa" exact />
+          <Route component={StokOpname} path="/gfk/stok-opname" exact />
+          <Route component={Login} path="/login" exact />
           <Route component={Register} path="/register" exact />
+          <Route component={Home} path="/" />
         </Switch>
       </BrowserRouter>
     </>

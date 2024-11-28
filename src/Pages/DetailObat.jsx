@@ -9,6 +9,23 @@ import {
   FormControl,
   Input,
   Select,
+  Button,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Center,
+  Tr,
+  Th,
+  Td,
+  Grid,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
@@ -17,6 +34,8 @@ import ReactPaginate from "react-paginate";
 import "../Style/pagination.css";
 import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
+import { BsChevronDoubleDown } from "react-icons/bs";
+import { useDisclosure } from "@chakra-ui/react";
 function DetailObat(props) {
   const [dataObat, setDataObat] = useState([]);
   const [dataAmprahan, setDataAmprahan] = useState([]);
@@ -30,9 +49,15 @@ function DetailObat(props) {
   const [time, setTime] = useState("");
   const [puskesmas, setPuskesmas] = useState([]);
   const [puskesmasId, setPuskesmasId] = useState(0);
+  const [selectedBatch, setSelectedBatch] = useState(null);
   const changePage = ({ selected }) => {
     setPage(selected);
   };
+  const {
+    isOpen: isDetailOpen,
+    onOpen: onDetailOpen,
+    onClose: onDetailClose,
+  } = useDisclosure();
 
   const handleChange = (e, field) => {
     //console.log(field);
@@ -48,7 +73,7 @@ function DetailObat(props) {
     const { value } = event.target;
     if (field === "puskesmasId") {
       setPuskesmasId(value);
-      console.log(value);
+      // console.log(value);
     } else if (field === "time") {
       setTime(value);
     }
@@ -94,7 +119,7 @@ function DetailObat(props) {
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/uptd/puskesmas`)
       .then((res) => {
         setPuskesmas(res.data.result);
-        console.log(res.data.result);
+        // console.log(res.data.result);
       })
       .catch((err) => {
         console.error(err.message);
@@ -102,7 +127,7 @@ function DetailObat(props) {
   }
 
   function renderPuskesmas() {
-    console.log(puskesmas);
+    // console.log(puskesmas);
     return puskesmas?.map((val) => {
       return (
         <option key={val.id} value={val.id}>
@@ -115,7 +140,7 @@ function DetailObat(props) {
   function renderRiwayat() {
     return dataAmprahan?.map((val, idx) => {
       const newExp = formatTanggal(val.amprahan.tanggal);
-      console.log(val, idx, "tes index di detail OBAT");
+      // console.log(val, idx, "tes index di detail OBAT");
 
       let sisaStok = 0;
       let arraySisaStok = [];
@@ -131,36 +156,45 @@ function DetailObat(props) {
       }
 
       return (
-        <>
-          <Flex
-            py={"10px"}
-            borderBottom={"1px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-            backgroundColor={idx % 2 === 0 ? "white" : "rgba(229, 231, 235, 1)"}
-          >
-            <Text mx={"15px"} minW={"110px"}>
-              {newExp}
-            </Text>
-            <Text me={"15px"} minW={"110px"}>
-              {val.noBatch.noBatch}
-            </Text>
-            <Text me={"15px"} minW={"150px"}>
-              {val.amprahan.uptd.nama}
-            </Text>
-            <Text me={"15px"} minW={"100px"}>
-              {val.amprahan.uptd.status == 2 ? val.permintaan : "-"}
-            </Text>
-            <Text me={"15px"} minW={"100px"}>
-              {val.amprahan.uptd.status == 1 ? val.permintaan : "-"}
-            </Text>
-
-            <Text me={"15px"} minW={"100px"}>
-              {/* {arraySisaStok[idx]} */}
-              {val.sisa}
-              {/* {idx === 0 ? val.permintaan : val.amprahan.uptd.status == 1 ? val.permintaan[idx - 1] - val.permintaan : val.permintaan[idx - 1] + val.permintaan} */}
-            </Text>
-          </Flex>
-        </>
+        <Flex
+          key={`${val.id}-${idx}`}
+          py={"10px"}
+          borderBottom={"1px"}
+          borderColor={"rgba(229, 231, 235, 1)"}
+          backgroundColor={idx % 2 === 0 ? "white" : "rgba(229, 231, 235, 1)"}
+        >
+          <Text mx={"15px"} minW={"110px"}>
+            {newExp}
+          </Text>
+          <Text me={"15px"} minW={"110px"}>
+            {val.noBatch.noBatch}
+          </Text>
+          <Text me={"15px"} minW={"150px"}>
+            {val.amprahan.uptd.nama}
+          </Text>
+          <Text me={"15px"} minW={"100px"}>
+            {val.amprahan.uptd.status == 2 ? val.permintaan : "-"}
+          </Text>
+          <Text me={"15px"} minW={"100px"}>
+            {val.amprahan.uptd.status == 1 ? val.permintaan : "-"}
+          </Text>
+          <Text me={"15px"} minW={"100px"}>
+            {val.sisa}
+          </Text>
+          <Text me={"15px"} minW={"100px"}>
+            {val.amprahan.status === 1
+              ? "amprahan"
+              : val.amprahan.status === 2
+              ? "Bon"
+              : val.amprahan.status === 3
+              ? "program"
+              : val.amprahan.status === 4
+              ? "alokasi"
+              : val.amprahan.status === 5
+              ? "obat Masuk"
+              : "Obat EXP"}
+          </Text>
+        </Flex>
       );
     });
   }
@@ -201,108 +235,118 @@ function DetailObat(props) {
           borderColor={"rgba(229, 231, 235, 1)"}
           maxW={"1280px"}
         >
+          <Box>
+            <Text fontSize={"20px"} fontWeight={600}>
+              Nama Obat: {dataObat?.nama}
+            </Text>
+            <Text fontSize={"20px"} fontWeight={600}>
+              Satuan: {dataObat?.satuan?.nama}
+            </Text>
+            <Text fontSize={"20px"} fontWeight={600}>
+              Kelas Terapi: {dataObat?.kelasterapi?.nama}
+            </Text>
+            <Text fontSize={"20px"} fontWeight={600}>
+              Kategori: {dataObat?.kategori?.nama}
+            </Text>
+            <Text fontSize={"20px"} fontWeight={600}>
+              Tanggal Input: {formatTanggal(dataObat?.createdAt)}
+            </Text>
+            <Text fontSize={"20px"} fontWeight={600}>
+              Kategori: {dataObat?.kategori?.nama}
+            </Text>
+          </Box>
           <Flex>
-            <Image
-              borderRadius={"5px"}
-              alt="property image"
-              width="600px"
-              height="400px"
-              me="10px"
-              overflow="hiden"
-              objectFit="cover"
-              src={import.meta.env.VITE_REACT_APP_API_BASE_URL + dataObat?.pic}
-            />
             <Box>
-              <Box>
-                <Text fontSize={"20px"} fontWeight={600}>
-                  Nama Obat: {dataObat?.nama}
-                </Text>
-                <Text fontSize={"20px"} fontWeight={600}>
-                  Satuan: {dataObat?.satuan?.nama}
-                </Text>
-                <Text fontSize={"20px"} fontWeight={600}>
-                  Kelas Terapi: {dataObat?.kelasterapi?.nama}
-                </Text>
-                <Text fontSize={"20px"} fontWeight={600}>
-                  Kategori: {dataObat?.kategori?.nama}
-                </Text>
-                <Text fontSize={"20px"} fontWeight={600}>
-                  Tanggal Input: {formatTanggal(dataObat?.createdAt)}
-                </Text>
-              </Box>
-              <Flex justifyContent={"flex-end"}>
-                <Box>
-                  <Flex>
-                    <Text fontSize={"13px"} width={"80px"} me={"10px"}>
-                      Nomor Batch
-                    </Text>
-                    <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                      EXP
-                    </Text>{" "}
-                    <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                      Harga Satuan
-                    </Text>{" "}
-                  </Flex>
-                </Box>
-                <Spacer />
+              {" "}
+              <Image
+                borderRadius={"5px"}
+                alt="property image"
+                width="600px"
+                height="600px"
+                me="10px"
+                overflow="hiden"
+                objectFit="cover"
+                src={
+                  import.meta.env.VITE_REACT_APP_API_BASE_URL + dataObat?.pic
+                }
+              />
+            </Box>
+            <Box ms={"20px"}>
+              <Table variant="simple" size="sm" mt={2}>
+                <Thead>
+                  <Tr>
+                    <Th fontSize={"14px"}>Nomor Batch</Th>
+                    <Th fontSize={"14px"}>EXP</Th>
+                    <Th fontSize={"14px"}>Harga Satuan</Th>
+                    <Th fontSize={"14px"} isNumeric>
+                      Stok
+                    </Th>
 
-                <Flex justifyContent={"flex-end"}>
-                  <Text
-                    align={"right"}
-                    fontSize={"13px"}
-                    width={"100px"}
-                    ms={"10px"}
-                  >
-                    Stok
-                  </Text>
-                </Flex>
-              </Flex>
-              <Box>
-                {dataObat?.noBatches?.map((val, idx) => {
-                  const newExp = formatDate(val.exp);
-                  return (
-                    <>
-                      <Flex key={val.noBatch} justifyContent={"flex-end"}>
-                        <Box>
-                          <Flex>
-                            <Text fontSize={"13px"} width={"80px"} me={"10px"}>
-                              {val.noBatch}
-                            </Text>
-                            <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                              {newExp}
-                            </Text>{" "}
-                            <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                              {new Intl.NumberFormat("id-ID", {
-                                style: "currency",
-                                currency: "IDR",
-                              }).format(val.harga)}
-                            </Text>{" "}
-                          </Flex>
-                        </Box>
-                        <Spacer />
+                    <Th fontSize={"14px"} isNumeric>
+                      detail
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {dataObat?.noBatches?.map((val) => {
+                    const newExp = formatDate(val.exp);
+                    return (
+                      <Tr key={val.noBatch}>
+                        <Td fontSize={"14px"} maxWidth="100px">
+                          {val.noBatch}
+                        </Td>
+                        <Td fontSize={"14px"} maxWidth="130px">
+                          {newExp}
+                        </Td>
+                        <Td fontSize={"14px"} maxWidth="130px">
+                          {new Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                          }).format(val.harga)}
+                        </Td>
+                        <Td fontSize={"14px"} isNumeric maxWidth="130px">
+                          {val.stok}
+                        </Td>
 
-                        <Flex justifyContent={"flex-end"}>
-                          <Text
-                            align={"right"}
-                            fontSize={"13px"}
-                            width={"100px"}
-                            ms={"10px"}
+                        <Td>
+                          <Center
+                            onClick={() => {
+                              setSelectedBatch(val);
+                              onDetailOpen();
+                            }}
+                            borderRadius={"5px"}
+                            as="button"
+                            h="25px"
+                            w="25px"
+                            fontSize="12px"
+                            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                            color="white"
+                            _hover={{
+                              bg: "black",
+                            }}
+                            bg="green"
                           >
-                            {val.stok}
-                          </Text>
-                        </Flex>
-                      </Flex>
-                    </>
-                  );
-                })}
-                <Text fontSize={"13px"} fontWeight={600} mb={"50px"}>
-                  jumlah Stok:{" "}
-                  {dataObat?.noBatches?.reduce(
-                    (total, batch) => total + batch.stok,
-                    0
-                  )}
-                </Text>
-              </Box>
+                            <BsChevronDoubleDown />
+                          </Center>
+                        </Td>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+                <Tfoot>
+                  <Tr>
+                    <Th colSpan={2} fontSize={"14px"}>
+                      Jumlah Stok
+                    </Th>
+                    <Th fontSize={"14px"} isNumeric>
+                      {dataObat?.noBatches?.reduce(
+                        (total, batch) => total + batch.stok,
+                        0
+                      )}
+                    </Th>
+                  </Tr>
+                </Tfoot>
+              </Table>
             </Box>
           </Flex>
         </Container>
@@ -384,6 +428,9 @@ function DetailObat(props) {
             <Text me={"15px"} minW={"100px"}>
               Sisa Stok
             </Text>
+            <Text me={"15px"} minW={"100px"}>
+              Jenis
+            </Text>
           </Flex>
           {renderRiwayat()}
           <div
@@ -416,6 +463,82 @@ function DetailObat(props) {
           </div>
         </Container>
       </Box>
+      {selectedBatch && (
+        <Modal
+          closeOnOverlayClick={false}
+          isOpen={isDetailOpen}
+          onClose={() => {
+            setSelectedBatch(null);
+            onDetailClose();
+          }}
+        >
+          <ModalOverlay />
+          <ModalContent borderRadius={0} maxW="800px">
+            <ModalHeader>Detail Nomor Batch</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              {" "}
+              <Flex>
+                <Image
+                  src={
+                    import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                    selectedBatch.pic
+                  }
+                  alt="Batch Image"
+                  width="300px"
+                  height="300px"
+                  objectFit="cover"
+                />
+                <Table variant="simple" size="sm">
+                  <Tbody>
+                    <Tr>
+                      <Td>Nomor Batch</Td>
+                      <Td>{selectedBatch.noBatch}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Asal</Td>
+                      <Td>{selectedBatch.perusahaan.nama}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Harga</Td>
+                      <Td>
+                        {new Intl.NumberFormat("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        }).format(selectedBatch.harga)}
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>EXP</Td>
+                      <Td>{formatDate(selectedBatch.exp)}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Stok</Td>
+                      <Td>{selectedBatch.stok}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Kotak</Td>
+                      <Td>
+                        {" "}
+                        {`${Math.floor(
+                          selectedBatch.stok / selectedBatch.kotak
+                        )} kotak` +
+                          (selectedBatch.stok % selectedBatch.kotak !== 0
+                            ? ` dan ${
+                                selectedBatch.stok % selectedBatch.kotak
+                              } ecer`
+                            : "")}
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </Flex>
+            </ModalBody>
+
+            <ModalFooter></ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </Layout>
   );
 }

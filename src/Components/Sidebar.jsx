@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Drawer,
   DrawerBody,
@@ -13,7 +12,14 @@ import {
   Flex,
   Image,
   HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
   Button,
+  Spacer,
+  Avatar,
   Text,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
@@ -26,19 +32,61 @@ import { BsCapsule } from "react-icons/bs";
 import { BsGear } from "react-icons/bs";
 import Logo from "../assets/logo.png";
 import { Link, useHistory } from "react-router-dom";
+import { BsBarChartLine } from "react-icons/bs";
 import TambahAprahan from "./TambahAprahan";
-
+import { BsTruck } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import auth_types from "../Redux/Reducers/Types/userTypes";
+import { authFirebase } from "../Config/firebase";
+import {
+  onAuthStateChanged,
+  signOut,
+  getAuth,
+  sendEmailVerification,
+} from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { BsTrash3 } from "react-icons/bs";
 function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
   const btnRef = React.useRef();
   const history = useHistory();
+  const auth = authFirebase;
+  const auth2 = getAuth();
   const menuSidebar = [
     { menu: "Daftar Obat", logo: <BsCapsule />, URL: "/gfk/daftar-obat" },
     { menu: "Puskesmas", logo: <BiHome />, URL: "/gfk/puskesmas" },
     { menu: "Amprahan", logo: <BsCart3 />, URL: "/gfk/amprahan" },
-    { menu: "Laporan", logo: <BsClipboard2Check />, URL: "/gfk/laporan" },
+    { menu: "Obat Masuk", logo: <BsTruck />, URL: "/gfk/obat-masuk" },
+    {
+      menu: "Stock Opname",
+      logo: <BsClipboard2Check />,
+      URL: "/gfk/stok-opname",
+    },
+    { menu: "Laporan", logo: <BsBarChartLine />, URL: "/gfk/laporan" },
+    { menu: "Obat Kadaluwarsa", logo: <BsTrash3 />, URL: "/gfk/kadaluwarsa" },
     { menu: "Pengaturan", logo: <BsGear />, URL: "/gfk/pengaturan" },
   ];
+
+  const { id, ProfilePic, ProfileName, firebaseProviderId, UserRoles } =
+    useSelector((state) => state.user);
+  //console.log(UserRoles);
+  console.log(useSelector((state) => state.user));
+  const logout = async () => {
+    await signOut(auth).catch((error) => alert(error));
+    dispatch({
+      type: auth_types.Redux,
+      payload: {
+        id: "",
+        email: "",
+        emailVerified: "",
+        firebaseProviderId: "",
+      },
+    });
+    history.push("/login");
+  };
+
   return (
     <>
       <Box>
@@ -78,6 +126,54 @@ function Sidebar() {
           </DrawerHeader>
 
           <DrawerBody>
+            <Flex w="100%" mx="auto" justifyContent="space-between">
+              <Spacer />
+              <Flex fontWeight="bold" fontSize="18px" my="auto" mr="20px">
+                <Menu>
+                  {id ? (
+                    <Box>
+                      <MenuButton
+                        fontWeight="bold"
+                        fontSize="18px"
+                        my="auto"
+                        ms={"8px"}
+                      >
+                        {ProfileName} aaaaa
+                      </MenuButton>
+                    </Box>
+                  ) : (
+                    <Box>
+                      <i className="fa-solid fa-caret-down"></i>
+                      <MenuButton
+                        fontWeight="bold"
+                        fontSize="18px"
+                        my="auto"
+                        ms={"3px"}
+                      >
+                        {ProfileName}
+                      </MenuButton>
+                    </Box>
+                  )}
+                  <MenuList>
+                    <MenuItem onClick={() => history.push("/gfk/profile")}>
+                      Profile
+                    </MenuItem>
+                    <MenuDivider />
+
+                    <MenuDivider />
+                    <MenuItem onClick={logout}>Logout</MenuItem>
+                    <MenuDivider />
+                  </MenuList>
+                </Menu>
+              </Flex>
+              <Avatar
+                size="md"
+                objectFit={"cover"}
+                overflow="hidden"
+                my="auto"
+                src={import.meta.env.VITE_REACT_APP_API_BASE_URL + ProfilePic}
+              />
+            </Flex>
             {menuSidebar.map((val, idx) => {
               return (
                 <HStack

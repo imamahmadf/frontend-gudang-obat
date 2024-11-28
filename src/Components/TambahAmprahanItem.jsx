@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+
 import { BsCart4 } from "react-icons/bs";
 import {
   Box,
@@ -29,6 +31,11 @@ import {
   MenuItem,
   Menu,
   Alert,
+  Tabs,
+  TabList,
+  TabPanels,
+  TabPanel,
+  Tab,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -42,6 +49,9 @@ function TambahAmprahanItem(props) {
     onClose: onAmprahanClose,
   } = useDisclosure();
   const [tujuanAmprahan, setTujuanAmprahan] = useState([]);
+  const [tujuan, setTujuan] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(props.data[0] || null);
+
   function formatDate(dateString) {
     const months = [
       "Jan",
@@ -65,6 +75,20 @@ function TambahAmprahanItem(props) {
     return `${month}, ${year}`;
   }
 
+  async function statusAmprahan() {
+    await axios
+      .get(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setTujuan(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   async function getAmprahan() {
     await axios
       .get(
@@ -74,7 +98,7 @@ function TambahAmprahanItem(props) {
       )
       .then((res) => {
         setTujuanAmprahan(res.data);
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.error(err.message);
@@ -84,24 +108,31 @@ function TambahAmprahanItem(props) {
   function renderNoBatch() {
     return props.data.map((val) => {
       // console.log(val);
-      const newExp = formatDate(val.exp);
       return (
         <option key={val.noBatch} value={val.id}>
-          {val.noBatch} - {newExp} - {val.stok}
+          {val.noBatch}
         </option>
       );
     });
   }
 
-  function renderTujuan() {
-    return tujuanAmprahan.map((val) => {
-      return (
-        <option key={val.id} value={val.id}>
-          {val.uptd.nama}
-        </option>
-      );
-    });
-  }
+  const handleBatchChange = (e) => {
+    const selectedId = parseInt(e.target.value);
+    const selected = props.data.find((val) => val.id === selectedId);
+    setSelectedBatch(selected);
+    formik.setFieldValue("noBatchId", selectedId);
+  };
+
+  const validationSchema = Yup.object().shape({
+    noBatchId: Yup.number("masukkan angka").required("kategori wajib diisi"),
+    amprahanId: Yup.number("masukkan angka").required("satuanId wajib diisi"),
+    permintaan: Yup.number("masukkan angka")
+      .required("satuanId wajib diisi")
+      .max(
+        selectedBatch ? selectedBatch.stok : Infinity,
+        `Stok tidak boleh melebihi ${selectedBatch ? selectedBatch.stok : 0}`
+      ),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -110,11 +141,7 @@ function TambahAmprahanItem(props) {
       //   userId: 0,
       permintaan: 0,
     },
-    validationSchema: Yup.object().shape({
-      noBatchId: Yup.number("masukkan angka").required("kategori wajib diisi"),
-      amprahanId: Yup.number("masukkan angka").required("satuanId wajib diisi"),
-      permintaan: Yup.number("masukkan angka").required("satuanId wajib diisi"),
-    }),
+    validationSchema: validationSchema,
     validateOnChange: false,
 
     onSubmit: async (values) => {
@@ -126,15 +153,15 @@ function TambahAmprahanItem(props) {
         .post(
           `${
             import.meta.env.VITE_REACT_APP_API_BASE_URL
-          }/amprahan/post/amprahan-item?noBatchId=${noBatchId}&userId=1&amprahanId=${amprahanId}&permintaan=${permintaan}&stokAwal=${
-            stokAwal.stok
-          }&obatId=${props.id}`
+          }/amprahan/post/amprahan-item?noBatchId=${noBatchId}&userId=1&amprahanId=${
+            tujuan[0]?.id
+          }&permintaan=${permintaan}&stokAwal=${stokAwal.stok}&obatId=${
+            props.id
+          }`
         )
         .then((res) => {
-          alert(res.data.message);
-          setTimeout(() => {
-            history.push("/daftar-obat");
-          }, 2000);
+          // alert(res.data.message, "wah berhasil");
+          onAmprahanClose();
         })
         .catch((err) => {
           console.error(err);
@@ -144,7 +171,12 @@ function TambahAmprahanItem(props) {
 
   useEffect(() => {
     getAmprahan();
-  }, []);
+    statusAmprahan();
+    if (props.data.length > 0) {
+      setSelectedBatch(props.data[0]);
+      formik.setFieldValue("noBatchId", props.data[0].id);
+    }
+  }, [props.data]);
   return (
     <Box>
       <Tooltip label="Delete Property" aria-label="A tooltip">
@@ -174,32 +206,34 @@ function TambahAmprahanItem(props) {
       >
         <ModalOverlay />
         <ModalContent borderRadius={0}>
-          <ModalHeader>Shory by:</ModalHeader>
+          <ModalHeader>Tujuan:{tujuan[0]?.uptd?.nama}</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody pb={6} name="time">
             {" "}
             <FormControl>
-              <FormLabel>Tujuan Amprahan</FormLabel>
-              <Select
-                mt="10px"
-                placeholder="Tujuan Amprahan"
-                border="1px"
-                borderRadius={"8px"}
-                borderColor={"rgba(229, 231, 235, 1)"}
-                onChange={(e) => {
-                  formik.setFieldValue("amprahanId", parseInt(e.target.value));
-                }}
-              >
-                {renderTujuan()}
-              </Select>
-              {formik.errors.amprahanId ? (
-                <Alert status="error" color="red" text="center">
-                  <i className="fa-solid fa-circle-exclamation"></i>
-                  <Text ms="10px">{formik.errors.amprahanId}</Text>
-                </Alert>
-              ) : null}
-            </FormControl>
+              {/* //////// */}
+
+              {/* /////// */}
+            </FormControl>{" "}
+            {selectedBatch && (
+              <Table variant="simple" size="md">
+                <Thead>
+                  <Tr>
+                    <Th>EXP</Th>
+                    <Th>Stok</Th>
+                    <Th>Kotak</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>{formatDate(selectedBatch.exp)}</Td>
+                    <Td>{selectedBatch.stok}</Td>
+                    <Td>{selectedBatch.kotak}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            )}
             <FormControl>
               <FormLabel>Pilih Nomor Batch</FormLabel>
               <Select
@@ -208,9 +242,8 @@ function TambahAmprahanItem(props) {
                 border="1px"
                 borderRadius={"8px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
-                onChange={(e) => {
-                  formik.setFieldValue("noBatchId", parseInt(e.target.value));
-                }}
+                onChange={handleBatchChange}
+                value={selectedBatch ? selectedBatch.id : ""}
               >
                 {renderNoBatch()}
               </Select>
@@ -230,10 +263,13 @@ function TambahAmprahanItem(props) {
                 border="1px"
                 borderRadius={"8px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
+                max={selectedBatch ? selectedBatch.stok : undefined}
                 onChange={(e) => {
-                  formik.setFieldValue("permintaan", e.target.value);
+                  const value = parseInt(e.target.value, 10);
+                  formik.setFieldValue("permintaan", value);
                 }}
-              />{" "}
+                value={formik.values.permintaan}
+              />
               {formik.errors.permintaan ? (
                 <Alert status="error" color="red" text="center">
                   <i className="fa-solid fa-circle-exclamation"></i>

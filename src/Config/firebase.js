@@ -4,13 +4,13 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAsuwsydXDWG64ETA0GYAivBc1HUorJCqM",
-  authDomain: "gfk-paser.firebaseapp.com",
-  projectId: "gfk-paser",
-  storageBucket: "gfk-paser.appspot.com",
-  messagingSenderId: "536902020774",
-  appId: "1:536902020774:web:5719ceac06d01592ca0e67",
-  measurementId: "G-LRMX5E63SV",
+  apiKey: "AIzaSyClZVgi7ngaqG6r1d_2pzrmopeHO-B6b3Q",
+  authDomain: "gfk-paser-c6e69.firebaseapp.com",
+  projectId: "gfk-paser-c6e69",
+  storageBucket: "gfk-paser-c6e69.firebasestorage.app",
+  messagingSenderId: "631314418567",
+  appId: "1:631314418567:web:45e7c80df8526012822122",
+  measurementId: "G-YKD8F4T1B3",
 };
 
 // Initialize Firebase

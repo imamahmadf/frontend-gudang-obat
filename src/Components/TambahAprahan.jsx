@@ -32,11 +32,39 @@ function TambahAprahan() {
   const [puskesmas, setPuskesmas] = useState([]);
   const history = useHistory();
 
+  const daftarStatus = [
+    {
+      id: 1,
+      namaStatus: "amprahan",
+    },
+    {
+      id: 2,
+      namaStatus: "Bon",
+    },
+    {
+      id: 3,
+      namaStatus: "Pengadaan",
+    },
+    {
+      id: 4,
+      namaStatus: "obat rusak",
+    },
+  ];
   function renderPuskesmas() {
     return puskesmas.map((val) => {
       return (
         <option key={val.id} value={val.id}>
           {val.nama}
+        </option>
+      );
+    });
+  }
+
+  function renderStatus() {
+    return daftarStatus.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.namaStatus}
         </option>
       );
     });
@@ -56,29 +84,30 @@ function TambahAprahan() {
   const formik = useFormik({
     initialValues: {
       puskesmasId: 0,
-      tanggal: "",
+      statusId: 0,
     },
 
     validationSchema: Yup.object().shape({
       puskesmasId: Yup.number("masukkan angka").required(
         "Perusahaan wajib diisi"
       ),
-      tanggal: Yup.string().required("tanganggal amprahan wijid diisi"),
+      statusId: Yup.number("masukkan angka").required("Status wajib diisi"),
     }),
     validateOnChange: false,
     onSubmit: async (values) => {
-      const { puskesmasId, tanggal } = values;
-      // console.log("aaaaaaaaaaaaaaa", puskesmasId);
+      const { puskesmasId, statusId } = values;
+      const tanggal = 1;
+      console.log("aaaaaaaaaaaaaaa", puskesmasId, statusId);
       await axios
         .post(
           `${
             import.meta.env.VITE_REACT_APP_API_BASE_URL
-          }/amprahan/post?puskesmasId=${puskesmasId}&tanggal=${tanggal}`
+          }/amprahan/post?puskesmasId=${puskesmasId}&statusId=${statusId}`
         )
         .then((res) => {
           alert(res.data.message);
           setTimeout(() => {
-            history.push("/daftar-obat");
+            history.push("/gfk/daftar-obat");
           }, 2000);
         })
         .catch((err) => {
@@ -111,10 +140,31 @@ function TambahAprahan() {
           <ModalBody>
             aaaaaa
             <FormControl>
-              <FormLabel>Pilih Kelas Terapi</FormLabel>
+              <FormLabel>Pilih Status</FormLabel>
               <Select
                 mt="10px"
-                placeholder="Kelas Terapi"
+                placeholder="Status"
+                border="1px"
+                borderRadius={"8px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                onChange={(e) => {
+                  formik.setFieldValue("statusId", parseInt(e.target.value));
+                }}
+              >
+                {renderStatus()}
+              </Select>
+              {formik.errors.statusId ? (
+                <Alert status="error" color="red" text="center">
+                  <i className="fa-solid fa-circle-exclamation"></i>
+                  <Text ms="10px">{formik.errors.statusId}</Text>
+                </Alert>
+              ) : null}
+            </FormControl>
+            <FormControl>
+              <FormLabel>Pilih Puskesmas</FormLabel>
+              <Select
+                mt="10px"
+                placeholder="Puskesmas"
                 border="1px"
                 borderRadius={"8px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
@@ -128,26 +178,6 @@ function TambahAprahan() {
                 <Alert status="error" color="red" text="center">
                   <i className="fa-solid fa-circle-exclamation"></i>
                   <Text ms="10px">{formik.errors.puskesmasId}</Text>
-                </Alert>
-              ) : null}
-            </FormControl>{" "}
-            <FormControl pb="20px">
-              <FormLabel>Tanggal</FormLabel>
-              <Input
-                mt={"10px"}
-                placeholder="EXP"
-                border="1px"
-                borderRadius={"8px"}
-                borderColor={"rgba(229, 231, 235, 1)"}
-                type="date"
-                onChange={(e) => {
-                  formik.setFieldValue("tanggal", e.target.value);
-                }}
-              />
-              {formik.errors.tanggal ? (
-                <Alert status="error" color="red" text="center">
-                  {/* <i className="fa-solid fa-circle-exclamation"></i> */}
-                  <Text ms="10px">{formik.errors.tanggal}</Text>
                 </Alert>
               ) : null}
             </FormControl>

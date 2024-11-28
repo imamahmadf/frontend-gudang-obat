@@ -39,6 +39,7 @@ import { BsFillFunnelFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 import TambahAmprahanItem from "../Components/TambahAmprahanItem";
 import Layout from "../Components/Layout";
+import { useDispatch, useSelector } from "react-redux";
 
 function DaftarObatAlkes() {
   const history = useHistory();
@@ -51,11 +52,13 @@ function DaftarObatAlkes() {
   const [time, setTime] = useState("");
   const [dataObat, setDataObat] = useState([]);
   const [aset, setAset] = useState([]);
+  const [status, setStatus] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const changePage = ({ selected }) => {
     setPage(selected);
   };
-
+  const global = useSelector((state) => state.user);
+  console.log(global, "CEK REDUXX");
   const {
     isOpen: isFilterOpen,
     onOpen: onFilterOpen,
@@ -83,6 +86,20 @@ function DaftarObatAlkes() {
     const year = date.getFullYear();
 
     return `${month}, ${year}`;
+  }
+
+  async function fetchStatus() {
+    await axios
+      .get(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
+      )
+      .then((res) => {
+        setStatus(res.data.result);
+        console.log(res.data[0], "STATUSSSS");
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
   }
 
   async function fetchDataObat() {
@@ -131,7 +148,7 @@ function DaftarObatAlkes() {
           py={"15px"}
           borderTop={"1px"}
           borderColor={"rgba(229, 231, 235, 1)"}
-          key={idx}
+          key={val.id}
         >
           <Flex>
             <Flex>
@@ -165,38 +182,48 @@ function DaftarObatAlkes() {
                 {val.noBatches.map((val2, idx2) => {
                   const newExp = formatDate(val2.exp);
                   return (
-                    <>
-                      <Flex key={val2.noBatch} justifyContent={"flex-end"}>
-                        <Box>
-                          <Flex>
-                            <Text fontSize={"13px"} width={"80px"} me={"10px"}>
-                              {val2.noBatch}
-                            </Text>
-                            <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                              {newExp}
-                            </Text>{" "}
-                            <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                              {new Intl.NumberFormat("id-ID", {
-                                style: "currency",
-                                currency: "IDR",
-                              }).format(val2.harga)}
-                            </Text>{" "}
-                          </Flex>
-                        </Box>
-                        <Spacer />
-
-                        <Flex justifyContent={"flex-end"}>
+                    <Flex key={val2.noBatch} justifyContent={"flex-end"}>
+                      <Box>
+                        <Flex>
+                          <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                            {val2.noBatch}
+                          </Text>
                           <Text
-                            align={"right"}
                             fontSize={"13px"}
                             width={"100px"}
-                            ms={"10px"}
+                            me={"10px"}
+                            backgroundColor={
+                              new Date(newExp) <=
+                              new Date(
+                                new Date().setMonth(new Date().getMonth() + 3)
+                              )
+                                ? "red"
+                                : ""
+                            }
                           >
-                            {val2.stok}
+                            {newExp}
                           </Text>
+                          <Text fontSize={"13px"} width={"100px"} me={"10px"}>
+                            {new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                            }).format(val2.harga)}
+                          </Text>{" "}
                         </Flex>
+                      </Box>
+                      <Spacer />
+
+                      <Flex justifyContent={"flex-end"}>
+                        <Text
+                          align={"right"}
+                          fontSize={"13px"}
+                          width={"100px"}
+                          ms={"10px"}
+                        >
+                          {val2.stok}
+                        </Text>
                       </Flex>
-                    </>
+                    </Flex>
                   );
                 })}
               </Flex>
@@ -212,11 +239,21 @@ function DaftarObatAlkes() {
             </Box>
             <Flex marginStart={"60px"}>
               {" "}
-              <TambahAmprahanItem userId={1} data={val.noBatches} id={val.id} />
+              {status ? null : (
+                <TambahAmprahanItem
+                  userId={1}
+                  data={val.noBatches}
+                  id={val.id}
+                />
+              )}
               <Menu>
-                <MenuButton p={0} h="25px" w="25px" fontSize="12px" as={Button}>
-                  {" "}
-                </MenuButton>
+                <MenuButton
+                  p={0}
+                  h="25px"
+                  w="25px"
+                  fontSize="12px"
+                  as={Button}
+                ></MenuButton>
                 <MenuList>
                   <MenuItem
                     onClick={() => {
@@ -243,7 +280,8 @@ function DaftarObatAlkes() {
 
   useEffect(() => {
     fetchDataObat();
-    //console.log(bank);
+    fetchStatus();
+    console.log(status);
   }, [keyword, page]);
   return (
     <>
@@ -255,14 +293,29 @@ function DaftarObatAlkes() {
             border={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
             maxW={"1280px"}
+            marginBottom={"20px"}
+            padding={"20px"}
+          >
+            <Box backgroundColor={"red"}>
+              <Text>
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(aset)}
+              </Text>
+            </Box>
+            <Box>
+              <Text></Text>
+            </Box>
+          </Container>
+          <Container
+            bgColor={"white"}
+            borderRadius={"5px"}
+            border={"1px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+            maxW={"1280px"}
           >
             {" "}
-            <Text>
-              {new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-              }).format(aset)}
-            </Text>
             <Box pt={"24px"} pb={"16px"} px={"30px"}>
               <HStack>
                 <HStack>

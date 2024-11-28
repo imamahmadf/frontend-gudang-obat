@@ -63,16 +63,22 @@ function tambahObatBaru() {
       nama: Yup.string().required("Nama Obat wajib diisi"),
 
       pic: Yup.string().required("Foto wajib diisi"),
-      kelasTerapiId: Yup.number("masukkan angka").required(
-        "Kelas terapi wajib disi"
-      ),
-      kategoriId: Yup.number("masukkan angka").required("kategori wajib diisi"),
-      satuanId: Yup.number("masukkan angka").required("satuanId wajib diisi"),
-      profileId: Yup.number("masukkan angka")
+      kelasTerapiId: Yup.number()
+        .min(1, "Pilih kelas terapi")
+        .required("Kelas terapi wajib disi"),
+      kategoriId: Yup.number()
+        .min(1, "Pilih kategori")
+        .required("kategori wajib diisi"),
+      satuanId: Yup.number()
+        .min(1, "Pilih satuan")
+        .required("satuanId wajib diisi"),
+      profileId: Yup.number()
+        .min(1, "Pilih profile")
         .required("profile wajib diisi")
         .typeError("profile wajib isi"),
     }),
-    validateOnChange: false,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values) => {
       console.log(values, "tes formik");
       const { nama, kelasTerapiId, kategoriId, satuanId, pic, profileId } =
@@ -226,10 +232,10 @@ function tambahObatBaru() {
                 placeholder="Nama Obat"
                 borderRadius="8px"
                 onChange={(e) => formik.setFieldValue("nama", e.target.value)}
+                onBlur={formik.handleBlur}
               />
-              {formik.errors.nama ? (
+              {formik.touched.nama && formik.errors.nama ? (
                 <Alert status="error" color="red" text="center">
-                  {/* <i className="fa-solid fa-circle-exclamation"></i> */}
                   <Text ms="10px">{formik.errors.nama}</Text>
                 </Alert>
               ) : null}
@@ -248,12 +254,12 @@ function tambahObatBaru() {
                     parseInt(e.target.value)
                   );
                 }}
+                onBlur={formik.handleBlur}
               >
                 {renderKelasTerapi()}
               </Select>
-              {formik.errors.kelasTerapiId ? (
+              {formik.touched.kelasTerapiId && formik.errors.kelasTerapiId ? (
                 <Alert status="error" color="red" text="center">
-                  <i className="fa-solid fa-circle-exclamation"></i>
                   <Text ms="10px">{formik.errors.kelasTerapiId}</Text>
                 </Alert>
               ) : null}
@@ -269,12 +275,12 @@ function tambahObatBaru() {
                 onChange={(e) => {
                   formik.setFieldValue("kategoriId", parseInt(e.target.value));
                 }}
+                onBlur={formik.handleBlur}
               >
                 {renderKategori()}
               </Select>
-              {formik.errors.kategoriId ? (
+              {formik.touched.kategoriId && formik.errors.kategoriId ? (
                 <Alert status="error" color="red" text="center">
-                  <i className="fa-solid fa-circle-exclamation"></i>
                   <Text ms="10px">{formik.errors.kategoriId}</Text>
                 </Alert>
               ) : null}
@@ -290,12 +296,12 @@ function tambahObatBaru() {
                 onChange={(e) => {
                   formik.setFieldValue("satuanId", parseInt(e.target.value));
                 }}
+                onBlur={formik.handleBlur}
               >
                 {renderSatuan()}
               </Select>
-              {formik.errors.satuanId ? (
+              {formik.touched.satuanId && formik.errors.satuanId ? (
                 <Alert status="error" color="red" text="center">
-                  <i className="fa-solid fa-circle-exclamation"></i>
                   <Text ms="10px">{formik.errors.satuanId}</Text>
                 </Alert>
               ) : null}
@@ -311,12 +317,12 @@ function tambahObatBaru() {
                 onChange={(e) => {
                   formik.setFieldValue("profileId", parseInt(e.target.value));
                 }}
+                onBlur={formik.handleBlur}
               >
                 {renderProfile()}
               </Select>
-              {formik.errors.profileId ? (
+              {formik.touched.profileId && formik.errors.profileId ? (
                 <Alert status="error" color="red" text="center">
-                  {/* <i className="fa-solid fa-circle-exclamation"></i> */}
                   <Text ms="10px">{formik.errors.profileId}</Text>
                 </Alert>
               ) : null}

@@ -93,8 +93,16 @@ function Pengaturan() {
 
   return (
     <Layout>
-      <Box>
-        <Container>
+      <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+        <Container
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px"}
+          borderColor={"rgba(229, 231, 235, 1)"}
+          maxW={"1280px"}
+          marginBottom={"20px"}
+          padding={"20px"}
+        >
           <FormControl pb="20px">
             <FormLabel>Nama Perushaan</FormLabel>
             <Input
