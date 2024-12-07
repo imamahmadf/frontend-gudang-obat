@@ -6,6 +6,7 @@ function Puskesmas() {
   return (
     <>
       <Box>ini puskesmas</Box>
+      <Text display={{ ss: "block", sl: "none" }}>cek aja ya</Text>
     </>
   );
 }

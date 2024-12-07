@@ -35,6 +35,7 @@ function tambahObat() {
   const [perusahaanId, setPerusahaanId] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileSizeMsg, setFileSizeMsg] = useState("");
+  const [sumberDanaId, setSumberDanaId] = useState([]);
   const history = useHistory();
 
   const handleFile = (event) => {
@@ -56,6 +57,17 @@ function tambahObat() {
       );
     });
   }
+
+  function renderSumberDana() {
+    return sumberDanaId.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.sumber}
+        </option>
+      );
+    });
+  }
+
   async function fetchNamaPerusahaan() {
     await axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/uptd/perusahaan`)
@@ -71,8 +83,9 @@ function tambahObat() {
     await axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/get-nama`)
       .then((res) => {
-        console.log(res.data.result[0], "tessss");
+        console.log(res.data, "tessss");
         setNamaObat(res.data);
+        setSumberDanaId(res.data.seedSumberDana);
       })
       .catch((err) => {
         console.error(err.Message);
@@ -85,9 +98,10 @@ function tambahObat() {
     initialValues: {
       noBatch: "",
       exp: "",
-      harga: "",
+      // harga: "",
       stok: "",
       perushaaan: 0,
+      sumberDana: 0,
       kotak: "",
     },
     // onSubmit: (values) => {
@@ -96,19 +110,23 @@ function tambahObat() {
     validationSchema: Yup.object().shape({
       noBatch: Yup.string().required("Mo. Batch wajib diisi"),
       exp: Yup.string().required("tanganggal kadaluarsa wajib diisi"),
-      harga: Yup.number("masukkan angka").required("harga satuan wajib disi"),
+      // harga: Yup.number("masukkan angka").required("harga satuan wajib disi"),
       kotak: Yup.number("masukkan angka").required(
         "masukkan jumlah obat perkotak"
       ),
       perusahaan: Yup.number("masukkan angka").required(
         "Perusahaan wajib diisi"
       ),
+      sumberDana: Yup.number("masukkan angka").required(
+        "Sumber Dana wajib diisi"
+      ),
       stok: Yup.number("masukkan angka").required("stok obat wajib disi"),
     }),
     validateOnChange: false,
     onSubmit: async (values) => {
       console.log(values, "tes formik");
-      const { noBatch, exp, harga, stok, perusahaan, kotak } = values;
+      const { noBatch, exp, harga, stok, perusahaan, kotak, sumberDana } =
+        values;
 
       // kirim data ke back-end    const formData = new FormData();
       const formData = new FormData();
@@ -120,7 +138,7 @@ function tambahObat() {
       formData.append("perusahaan", perusahaan);
       formData.append("obatId", selectedObat.value);
       formData.append("kotak", kotak);
-
+      formData.append("sumberDana", sumberDana);
       await axios
         .post(
           `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/post`,
@@ -286,12 +304,6 @@ function tambahObat() {
                     formik.setFieldValue("harga", e.target.value);
                   }}
                 />
-                {formik.errors.harga ? (
-                  <Alert status="error" color="red" text="center">
-                    {/* <i className="fa-solid fa-circle-exclamation"></i> */}
-                    <Text ms="10px">{formik.errors.harga}</Text>
-                  </Alert>
-                ) : null}
               </InputGroup>
             </FormControl>
             <FormControl pb="20px">
@@ -352,6 +364,27 @@ function tambahObat() {
                 <Alert status="error" color="red" text="center">
                   <i className="fa-solid fa-circle-exclamation"></i>
                   <Text ms="10px">{formik.errors.perusahaanId}</Text>
+                </Alert>
+              ) : null}
+            </FormControl>
+            <FormControl mt={"20px"}>
+              <FormLabel>Pilih Sumber Dana</FormLabel>
+              <Select
+                mt="5px"
+                placeholder="Sumber Dana"
+                border="1px"
+                borderRadius={"8px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                onChange={(e) => {
+                  formik.setFieldValue("sumberDana", parseInt(e.target.value));
+                }}
+                onBlur={formik.handleBlur}
+              >
+                {renderSumberDana()}
+              </Select>
+              {formik.touched.sumberDana && formik.errors.sumberDana ? (
+                <Alert status="error" color="red" text="center">
+                  <Text ms="10px">{formik.errors.sumberDana}</Text>
                 </Alert>
               ) : null}
             </FormControl>

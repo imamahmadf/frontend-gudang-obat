@@ -22,28 +22,32 @@ import addFoto from "./../assets/add_photo.png";
 import { BsFillFunnelFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 import Layout from "../Components/Layout";
+import { useDispatch, useSelector } from "react-redux";
 function tambahObatBaru() {
   const inputFileRef = useRef(null);
   const [kelasTerapiId, setKelasTerapiId] = useState([]);
   const [kategoriId, setKategoriId] = useState([]);
   const [satuanId, setSatuanId] = useState([]);
   const [profile, setProfile] = useState([]);
+  const [sumberDanaId, setSumberDanaId] = useState([]);
 
   const history = useHistory();
-  const [selectedFile, setSelectedFile] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
 
-  const [fileSizeMsg, setFileSizeMsg] = useState("");
+  // const [fileSizeMsg, setFileSizeMsg] = useState("");
 
-  const handleFile = (event) => {
-    if (event.target.files[0].size / 1024 > 1024) {
-      setFileSizeMsg("File size is greater than maximum limit");
-    } else {
-      setSelectedFile(event.target.files[0]);
-      let preview = document.getElementById("imgpreview");
-      preview.src = URL.createObjectURL(event.target.files[0]);
-      formik.setFieldValue("pic", event.target.files[0]);
-    }
-  };
+  // const handleFile = (event) => {
+  //   if (event.target.files[0].size / 1024 > 1024) {
+  //     setFileSizeMsg("File size is greater than maximum limit");
+  //   } else {
+  //     setSelectedFile(event.target.files[0]);
+  //     let preview = document.getElementById("imgpreview");
+  //     preview.src = URL.createObjectURL(event.target.files[0]);
+  //     formik.setFieldValue("pic", event.target.files[0]);
+  //   }
+  // };
+
+  const profileReduxId = useSelector((state) => state.user.profileId);
 
   YupPassword(Yup);
   //formik initialization
@@ -52,8 +56,9 @@ function tambahObatBaru() {
       nama: "",
       kelasTerapiId: 0,
       kategoriId: 0,
+      sumberDanaId: 0,
       satuanId: 0,
-      pic: selectedFile,
+      // pic: selectedFile,
       profileId: 0,
     },
     // onSubmit: (values) => {
@@ -62,7 +67,7 @@ function tambahObatBaru() {
     validationSchema: Yup.object().shape({
       nama: Yup.string().required("Nama Obat wajib diisi"),
 
-      pic: Yup.string().required("Foto wajib diisi"),
+      // pic: Yup.string().required("Foto wajib diisi"),
       kelasTerapiId: Yup.number()
         .min(1, "Pilih kelas terapi")
         .required("Kelas terapi wajib disi"),
@@ -72,6 +77,9 @@ function tambahObatBaru() {
       satuanId: Yup.number()
         .min(1, "Pilih satuan")
         .required("satuanId wajib diisi"),
+      sumberDanaId: Yup.number()
+        .min(1, "Pilih satuan")
+        .required("sumberDana wajib diisi"),
       profileId: Yup.number()
         .min(1, "Pilih profile")
         .required("profile wajib diisi")
@@ -81,25 +89,21 @@ function tambahObatBaru() {
     validateOnBlur: true,
     onSubmit: async (values) => {
       console.log(values, "tes formik");
-      const { nama, kelasTerapiId, kategoriId, satuanId, pic, profileId } =
-        values;
+      const {
+        nama,
+        kelasTerapiId,
+        kategoriId,
+        satuanId,
+        profileId,
+        sumberDanaId,
+      } = values;
 
       // kirim data ke back-end
-      const formData = new FormData();
-
-      formData.append("nama", nama);
-      formData.append("kelasTerapiId", kelasTerapiId);
-      formData.append("pic", pic);
-      formData.append("kategoriId", kategoriId);
-      formData.append("satuanId", satuanId);
-      formData.append("profileId", profileId);
-
-      //console.log("berhasil masuk formik");
-
       await axios
         .post(
-          `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/post`,
-          formData
+          `${
+            import.meta.env.VITE_REACT_APP_API_BASE_URL
+          }/obat/post?nama=${nama}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&sumberDanaId=${sumberDanaId}&profileReduxId=${profileReduxId}`
         )
         .then(async (res) => {
           //console.log(res.data);
@@ -120,6 +124,7 @@ function tambahObatBaru() {
         setKelasTerapiId(res.data.seederKelasTerapi);
         setKategoriId(res.data.seederKategori);
         setSatuanId(res.data.seederSatuan);
+        setSumberDanaId(res.data.seedSumberDana);
         setProfile(res.data.profileStaff);
       })
       .catch((err) => {
@@ -132,6 +137,16 @@ function tambahObatBaru() {
       return (
         <option key={val.id} value={val.id}>
           {val.nama}
+        </option>
+      );
+    });
+  }
+
+  function renderSumberDana() {
+    return sumberDanaId.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.sumber}
         </option>
       );
     });
@@ -169,6 +184,7 @@ function tambahObatBaru() {
   }
   useEffect(() => {
     fetchNamaObat();
+    console.log(profileReduxId, "TES REDUX PROFILE ID");
   }, []);
 
   return (
@@ -184,7 +200,7 @@ function tambahObatBaru() {
             p={"30px"}
           >
             {" "}
-            <FormControl>
+            {/* <FormControl>
               <Input
                 onChange={handleFile}
                 ref={inputFileRef}
@@ -194,8 +210,8 @@ function tambahObatBaru() {
 
                 // hidden="hidden"
               />
-            </FormControl>
-            <FormControl>
+            </FormControl> */}
+            {/* <FormControl>
               <Image
                 src={addFoto}
                 id="imgpreview"
@@ -213,19 +229,19 @@ function tambahObatBaru() {
                   <Text ms="10px">picture cannot be empty</Text>
                 </Alert>
               ) : null}
-            </FormControl>
-            <FormControl mt="20px">
+            </FormControl> */}
+            {/* <FormControl mt="20px">
               <FormHelperText>Max size: 1MB</FormHelperText>
               <Button w="100%" onClick={() => inputFileRef.current.click()}>
                 Add Photo
               </Button>
               {fileSizeMsg ? (
                 <Alert status="error" color="red" text="center">
-                  {/* <i className="fa-solid fa-circle-exclamation"></i> */}
+             
                   <Text ms="10px">{fileSizeMsg}</Text>
                 </Alert>
               ) : null}
-            </FormControl>
+            </FormControl> */}
             <FormControl mt="20px" id="name">
               <Input
                 type="text"
@@ -303,6 +319,30 @@ function tambahObatBaru() {
               {formik.touched.satuanId && formik.errors.satuanId ? (
                 <Alert status="error" color="red" text="center">
                   <Text ms="10px">{formik.errors.satuanId}</Text>
+                </Alert>
+              ) : null}
+            </FormControl>
+            <FormControl mt={"20px"}>
+              <FormLabel>Pilih Sumber Dana</FormLabel>
+              <Select
+                mt="5px"
+                placeholder="Sumber Dana"
+                border="1px"
+                borderRadius={"8px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                onChange={(e) => {
+                  formik.setFieldValue(
+                    "sumberDanaId",
+                    parseInt(e.target.value)
+                  );
+                }}
+                onBlur={formik.handleBlur}
+              >
+                {renderSumberDana()}
+              </Select>
+              {formik.touched.sumberDanaId && formik.errors.sumberDanaId ? (
+                <Alert status="error" color="red" text="center">
+                  <Text ms="10px">{formik.errors.sumberDanaId}</Text>
                 </Alert>
               ) : null}
             </FormControl>

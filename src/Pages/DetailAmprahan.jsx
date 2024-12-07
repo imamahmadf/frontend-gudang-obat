@@ -163,158 +163,254 @@ function DetailAmprahan(props) {
       const newExp = formatDate(val.noBatch.exp);
 
       return (
-        <Box key={idx}>
-          <Center
-            py={"10px"}
-            borderBottom={"1px"}
+        <>
+          <Box key={idx} display={{ ss: "none", sl: "block" }}>
+            <Center
+              py={"10px"}
+              borderBottom={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+            >
+              <Image
+                width={"55px"}
+                height={"55px"}
+                borderRadius={"5px"}
+                overflow="hiden"
+                objectFit="cover"
+                me={"5px"}
+                src={
+                  val.noBatch.pic
+                    ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                      val.noBatch.pic
+                    : addFoto
+                }
+              />
+              <Text width={"190px"} me={"10px"}>
+                {val.noBatch.obat.nama}
+              </Text>
+              <Text width={"100px"} me={"10px"}>
+                {val.noBatch.noBatch}
+              </Text>
+              <Text me={"10px"} width={"80px"}>
+                {newExp}
+              </Text>
+              <Text me={"10px"} width={"80px"}>
+                {val.noBatch.obat.satuan.nama}
+              </Text>
+              <Text me={"10px"} width={"100px"}>
+                {val.permintaan}
+              </Text>
+              <Text me={"10px"} width={"80px"}>
+                {`${Math.floor(val.permintaan / val.noBatch.kotak)} kotak` +
+                  (val.permintaan % val.noBatch.kotak !== 0
+                    ? ` dan ${val.permintaan % val.noBatch.kotak} ecer`
+                    : "")}
+              </Text>
+              {detailAmprahan.isOpen === 0 ? null : (
+                <>
+                  <Tooltip label="Ubah" aria-label="A tooltip">
+                    <Center
+                      onClick={() => {
+                        setEditIndex(idx);
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="30px"
+                      w="30px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      me={"10px"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                      bg="green"
+                      // onClick={onOpen}
+                    >
+                      <BsPencilFill />
+                    </Center>
+                  </Tooltip>{" "}
+                  <Tooltip label="Hapus" aria-label="A tooltip">
+                    <Center
+                      onClick={() => {
+                        setDeleteIndex(idx);
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="30px"
+                      w="30px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      _hover={{
+                        bg: "black",
+                      }}
+                      bg="red"
+                      // onClick={onOpen}
+                    >
+                      <BsCartXFill />
+                    </Center>
+                  </Tooltip>{" "}
+                </>
+              )}
+            </Center>
+            <Modal
+              closeOnOverlayClick={false}
+              isOpen={editIndex === idx || deleteIndex === idx}
+              onClose={() => {
+                setEditIndex(null);
+                setDeleteIndex(null);
+              }}
+            >
+              <ModalOverlay />
+              <ModalContent borderRadius={0}>
+                <ModalHeader>
+                  {editIndex === idx ? "Ubah Permintaan" : "Hapus Permintaan"}
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  {editIndex === idx ? (
+                    <FormControl pb="20px">
+                      <Input
+                        mt={"10px"}
+                        type="number"
+                        placeholder="stok"
+                        border="1px"
+                        borderRadius={"8px"}
+                        borderColor={"rgba(229, 231, 235, 1)"}
+                        defaultValue={val.permintaan}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                    </FormControl>
+                  ) : (
+                    <Text>
+                      Apakah Anda yakin ingin menghapus permintaan ini?
+                    </Text>
+                  )}
+                </ModalBody>
+
+                <ModalFooter>
+                  {editIndex === idx ? (
+                    <Button
+                      onClick={(e) => {
+                        ubahPermintaan(val);
+                      }}
+                      bg={"green"}
+                      color={"white"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                    >
+                      Ubah
+                    </Button>
+                  ) : (
+                    <Button
+                      height={"20px"}
+                      width={"60px"}
+                      fontSize={"12px"}
+                      onClick={(e) => {
+                        hapusPermintaan(val);
+                      }}
+                    >
+                      Hapus
+                    </Button>
+                  )}
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </Box>
+          <Box
+            p={"10px"}
+            display={{ ss: "block", sl: "none" }}
+            my={"20px"}
+            borderRadius={"5px"}
+            border={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
           >
-            <Image
-              width={"55px"}
-              height={"55px"}
-              borderRadius={"5px"}
-              overflow="hiden"
-              objectFit="cover"
-              me={"5px"}
-              src={
-                val.noBatch.pic
-                  ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                    val.noBatch.pic
-                  : addFoto
-              }
-            />
-            <Text width={"190px"} me={"10px"}>
-              {val.noBatch.obat.nama}
-            </Text>
-            <Text width={"100px"} me={"10px"}>
-              {val.noBatch.noBatch}
-            </Text>
-            <Text me={"10px"} width={"80px"}>
-              {newExp}
-            </Text>
-            <Text me={"10px"} width={"80px"}>
-              {val.noBatch.obat.satuan.nama}
-            </Text>
-            <Text me={"10px"} width={"100px"}>
-              {val.permintaan}
-            </Text>
-            <Text me={"10px"} width={"80px"}>
-              {`${Math.floor(val.permintaan / val.noBatch.kotak)} kotak` +
-                (val.permintaan % val.noBatch.kotak !== 0
-                  ? ` dan ${val.permintaan % val.noBatch.kotak} ecer`
-                  : "")}
-            </Text>
-            {detailAmprahan.isOpen === 0 ? null : (
-              <>
-                <Tooltip label="Ubah" aria-label="A tooltip">
-                  <Center
-                    onClick={() => {
-                      setEditIndex(idx);
-                    }}
-                    borderRadius={"5px"}
-                    as="button"
-                    h="30px"
-                    w="30px"
-                    fontSize="15px"
-                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    color="white"
-                    me={"10px"}
-                    _hover={{
-                      bg: "black",
-                    }}
-                    bg="green"
-                    // onClick={onOpen}
-                  >
-                    <BsPencilFill />
-                  </Center>
-                </Tooltip>{" "}
-                <Tooltip label="Hapus" aria-label="A tooltip">
-                  <Center
-                    onClick={() => {
-                      setDeleteIndex(idx);
-                    }}
-                    borderRadius={"5px"}
-                    as="button"
-                    h="30px"
-                    w="30px"
-                    fontSize="15px"
-                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    color="white"
-                    _hover={{
-                      bg: "black",
-                    }}
-                    bg="red"
-                    // onClick={onOpen}
-                  >
-                    <BsCartXFill />
-                  </Center>
-                </Tooltip>{" "}
-              </>
-            )}
-          </Center>
-          <Modal
-            closeOnOverlayClick={false}
-            isOpen={editIndex === idx || deleteIndex === idx}
-            onClose={() => {
-              setEditIndex(null);
-              setDeleteIndex(null);
-            }}
-          >
-            <ModalOverlay />
-            <ModalContent borderRadius={0}>
-              <ModalHeader>
-                {editIndex === idx ? "Ubah Permintaan" : "Hapus Permintaan"}
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                {editIndex === idx ? (
-                  <FormControl pb="20px">
-                    <Input
-                      mt={"10px"}
-                      type="number"
-                      placeholder="stok"
-                      border="1px"
-                      borderRadius={"8px"}
-                      borderColor={"rgba(229, 231, 235, 1)"}
-                      defaultValue={val.permintaan}
-                      onChange={(e) => setInputValue(e.target.value)}
-                    />
-                  </FormControl>
-                ) : (
-                  <Text>Apakah Anda yakin ingin menghapus permintaan ini?</Text>
-                )}
-              </ModalBody>
-
-              <ModalFooter>
-                {editIndex === idx ? (
-                  <Button
-                    onClick={(e) => {
-                      ubahPermintaan(val);
-                    }}
-                    bg={"green"}
-                    color={"white"}
-                    _hover={{
-                      bg: "black",
-                    }}
-                  >
-                    Ubah
-                  </Button>
-                ) : (
-                  <Button
-                    height={"20px"}
-                    width={"60px"}
-                    fontSize={"12px"}
-                    onClick={(e) => {
-                      hapusPermintaan(val);
-                    }}
-                  >
-                    Hapus
-                  </Button>
-                )}
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
+            {" "}
+            <HStack mb={"10px"}>
+              {" "}
+              <Text fontSize={"16px"} me={"10px"} fontWeight={700}>
+                {val.noBatch.obat.nama}
+              </Text>{" "}
+              <Spacer />
+              {detailAmprahan.isOpen === 0 ? null : (
+                <>
+                  <Tooltip label="Ubah" aria-label="A tooltip">
+                    <Center
+                      onClick={() => {
+                        setEditIndex(idx);
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="30px"
+                      w="30px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      me={"5px"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                      bg="green"
+                      // onClick={onOpen}
+                    >
+                      <BsPencilFill />
+                    </Center>
+                  </Tooltip>{" "}
+                  <Tooltip label="Hapus" aria-label="A tooltip">
+                    <Center
+                      onClick={() => {
+                        setDeleteIndex(idx);
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="30px"
+                      w="30px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      _hover={{
+                        bg: "black",
+                      }}
+                      bg="red"
+                      // onClick={onOpen}
+                    >
+                      <BsCartXFill />
+                    </Center>
+                  </Tooltip>{" "}
+                </>
+              )}
+            </HStack>
+            <Flex>
+              <Image
+                width={"80px"}
+                height={"100px"}
+                borderRadius={"5px"}
+                overflow="hiden"
+                objectFit="cover"
+                me={"5px"}
+                src={
+                  val.noBatch.pic
+                    ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                      val.noBatch.pic
+                    : addFoto
+                }
+              />
+              <Box w={"100%"}>
+                {" "}
+                <Flex>
+                  {" "}
+                  <Text width={"50%"}>{val.noBatch.noBatch}</Text>
+                  <Text width={"50%"}>{newExp}</Text>
+                </Flex>
+                <Text me={"10px"}>
+                  {val.permintaan} {val.noBatch.obat.satuan.nama}
+                </Text>
+                <Text me={"10px"}></Text>
+              </Box>
+            </Flex>
+          </Box>
+        </>
       );
     });
   }

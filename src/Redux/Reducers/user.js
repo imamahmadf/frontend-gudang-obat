@@ -6,6 +6,7 @@ const init_state = {
   emailVerified: "",
   firebaseProviderId: "",
   amprahanOpen: 0,
+  profileId: 0,
   //   TenantId: 0,
   //   TenantName: "",
   ProfileName: "",

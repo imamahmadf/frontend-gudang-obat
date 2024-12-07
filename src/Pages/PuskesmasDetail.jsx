@@ -48,6 +48,7 @@ function PuskesmasDetail(props) {
   }, []);
   return (
     <Box>
+      <Text display={{ ss: "block", sl: "none" }}>cek aja ya</Text>
       <Box>ini puskesmas {props.match.params.id}</Box>
     </Box>
   );

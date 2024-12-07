@@ -3,7 +3,7 @@ export const buttonStyles = {
     primary: (props) => ({
       bg: "linear-gradient(to bottom left, #00008B, #87CEFA)",
       color: "black",
-      borderRadius: "15px",
+      borderRadius: "10px",
       width: "320px",
       height: "55px",
       fontSize: "16px",

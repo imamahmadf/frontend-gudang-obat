@@ -74,9 +74,8 @@ function Amprahan() {
     return allAmprahan.map((val, idx) => {
       const newTanggal = formatTanggal(val.tanggal);
       return (
-        <Center flexDirection={"column"}>
+        <Center key={val.id} flexDirection={"column"}>
           <Flex
-            key={val.id}
             my={"10px"}
             borderBottom={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}

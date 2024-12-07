@@ -29,6 +29,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
+import addFoto from "./../assets/add_photo.png";
 import Layout from "../Components/Layout";
 import ReactPaginate from "react-paginate";
 import "../Style/pagination.css";
@@ -173,26 +174,16 @@ function DetailObat(props) {
             {val.amprahan.uptd.nama}
           </Text>
           <Text me={"15px"} minW={"100px"}>
-            {val.amprahan.uptd.status == 2 ? val.permintaan : "-"}
+            {val.amprahan.uptd.statusTujuanId == 2 ? val.permintaan : "-"}
           </Text>
           <Text me={"15px"} minW={"100px"}>
-            {val.amprahan.uptd.status == 1 ? val.permintaan : "-"}
+            {val.amprahan.uptd.statusTujuanId == 1 ? val.permintaan : "-"}
           </Text>
           <Text me={"15px"} minW={"100px"}>
             {val.sisa}
           </Text>
           <Text me={"15px"} minW={"100px"}>
-            {val.amprahan.status === 1
-              ? "amprahan"
-              : val.amprahan.status === 2
-              ? "Bon"
-              : val.amprahan.status === 3
-              ? "program"
-              : val.amprahan.status === 4
-              ? "alokasi"
-              : val.amprahan.status === 5
-              ? "obat Masuk"
-              : "Obat EXP"}
+            {val.amprahan.StatusAmprahan.nama}
           </Text>
         </Flex>
       );
@@ -267,7 +258,10 @@ function DetailObat(props) {
                 overflow="hiden"
                 objectFit="cover"
                 src={
-                  import.meta.env.VITE_REACT_APP_API_BASE_URL + dataObat?.pic
+                  dataObat?.noBatches?.[0].pic
+                    ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                      (dataObat?.noBatches?.[0]?.pic || "")
+                    : addFoto
                 }
               />
             </Box>
@@ -403,7 +397,7 @@ function DetailObat(props) {
             </Select>
           </FormControl>{" "}
           <Flex
-            backgroundColor={"blue"}
+            backgroundColor={"primary"}
             color={"white"}
             py={"10px"}
             borderBottom={"1px"}
@@ -481,8 +475,10 @@ function DetailObat(props) {
               <Flex>
                 <Image
                   src={
-                    import.meta.env.VITE_REACT_APP_API_BASE_URL +
                     selectedBatch.pic
+                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                        selectedBatch.pic
+                      : addFoto
                   }
                   alt="Batch Image"
                   width="300px"
@@ -498,6 +494,10 @@ function DetailObat(props) {
                     <Tr>
                       <Td>Asal</Td>
                       <Td>{selectedBatch.perusahaan.nama}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Sumber Dana</Td>
+                      <Td>{selectedBatch.sumberDana?.sumber}</Td>
                     </Tr>
                     <Tr>
                       <Td>Harga</Td>

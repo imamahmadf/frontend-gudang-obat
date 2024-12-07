@@ -98,7 +98,7 @@ function TambahAmprahanItem(props) {
       )
       .then((res) => {
         setTujuanAmprahan(res.data);
-        console.log(res.data);
+        console.log(res.data, "TUJUAJN APRHANNN");
       })
       .catch((err) => {
         console.error(err.message);

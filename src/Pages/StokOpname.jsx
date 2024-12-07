@@ -23,6 +23,7 @@ import {
   Th,
   Td,
 } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import FotoHome from "../assets/GFK.jpeg";
 import axios from "axios";
 import Layout from "../Components/Layout";
@@ -33,6 +34,13 @@ function StokOpname() {
 
   const [Penanggungjawab, setPenanggungjawab] = useState(0);
   const [dataStokOpname, setDataStokOpname] = useState([]);
+
+  const {
+    isOpen: isTutupSOOpen,
+    onOpen: onTutupSOOpen,
+    onClose: onTutupSOClose,
+  } = useDisclosure();
+
   function renderProfile() {
     return profile.map((val) => {
       return (
@@ -99,6 +107,37 @@ function StokOpname() {
     fetchDataStokOpname();
   }, [Penanggungjawab]);
 
+  async function tutupSO() {
+    // Menyaring data untuk mendapatkan hanya yang memiliki status noBatch = 2
+    const filteredData = dataStokOpname
+      .map((item) => {
+        const filteredBatches = item.noBatches.filter(
+          (batch) => batch.status === 2
+        );
+        return {
+          nama: item.nama,
+          totalStok: item.totalStok,
+          noBatches: filteredBatches.map((batch) => batch.id),
+        };
+      })
+      .filter((item) => item.noBatches.length > 0); // Hanya ambil item yang memiliki noBatches
+    console.log(filteredData, "FILER DATAAA!!!!");
+    // Mengirim data ke API
+    await axios
+      .post(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/stok-opname/post/tutup-so`,
+        filteredData
+      )
+      .then((response) => {
+        console.log("Data berhasil dikirim:", response.data);
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat mengirim data:", error);
+      });
+  }
+
   async function exportToExcel() {
     const workbook = new ExcelJS.Workbook();
 
@@ -159,6 +198,8 @@ function StokOpname() {
             <Button onClick={exportToExcel} colorScheme="teal" mb={4}>
               Ekspor ke Excel
             </Button>
+
+            <Button onClick={onTutupSOOpen}>TUTUP SO</Button>
             <Box minWidth={"600px"}>
               <FormLabel>Penanggungjawab</FormLabel>
               <Select
@@ -186,20 +227,48 @@ function StokOpname() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {dataStokOpname.map((item, idx) =>
-                    item.noBatches.map((batch) => (
-                      <Tr key={batch.noBatch}>
-                        <Td>{item.nama}</Td>
-                        <Td>{batch.noBatch}</Td>
-                        <Td>{new Date(batch.exp).toLocaleDateString()}</Td>
-                      </Tr>
-                    ))
+                  {dataStokOpname.map((item) =>
+                    item.noBatches
+                      .filter((batch) => batch.status === 1)
+                      .map((batch) => (
+                        <Tr key={batch.noBatch}>
+                          <Td>{item.nama}</Td>
+                          <Td>{batch.noBatch}</Td>
+                          <Td>{new Date(batch.exp).toLocaleDateString()}</Td>
+                        </Tr>
+                      ))
                   )}
                 </Tbody>
               </Table>
             </Box>
           </Container>
         </Box>
+
+        <Modal
+          closeOnOverlayClick={false}
+          isOpen={isTutupSOOpen}
+          onClose={onTutupSOClose}
+        >
+          <ModalOverlay />
+          <ModalContent borderRadius={0}>
+            <ModalHeader>Selesaikan SO</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <Text>Apakah Anda Yakin ingin menutup SO?</Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                height={"20px"}
+                width={"60px"}
+                fontSize={"12px"}
+                onClick={tutupSO}
+              >
+                Terima
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Layout>
     </>
   );

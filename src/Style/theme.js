@@ -15,14 +15,15 @@ const breakpoints = {
 
 export const myNewTheme = extendTheme({
   colors: {
-    primary: "rgba(251, 233, 70, 1)",
-    secondary: "rgba(255, 255, 255, 1)",
+    primary: "rgba(61, 103, 52, 1)",
+    secondary: "rgba(241, 241, 241, 1)",
+    danger: "rgba(198, 46, 46, 1)",
   },
   components: {
     Button,
   },
 
-  //   breakpoints: { ...breakpoints },
+  breakpoints: { ...breakpoints },
   //   fonts: {
   //     heading: `Work Sans`,
   //     body: `Work Sans`,

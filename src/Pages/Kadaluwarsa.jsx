@@ -75,7 +75,7 @@ function Kadaluwarsa() {
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/kadaluwarsa`,
         {
           obatId: selectedBatch.id,
-          stok: selectedBatchDetail.stok,
+          stokEXP: selectedBatchDetail.stok,
           perusahaanId: selectedBatchDetail.perusahaanId,
           noBatchId: selectedBatchDetail.id,
           userId: 1,
@@ -139,7 +139,14 @@ function Kadaluwarsa() {
           height={"100vh"}
           w="100%"
         >
-          <Container pt={"300px"} height={"1000px"} maxW={"1280px"}>
+          <Container pt={"100px"} height={"1000px"} maxW={"1280px"}>
+            <Button
+              onClick={() => {
+                history.push(`/gfk/daftar-kadaluwarsa`);
+              }}
+            >
+              Daftar Kadaluwarsa
+            </Button>
             <Box>
               <Table variant="striped">
                 <Thead>
@@ -153,38 +160,40 @@ function Kadaluwarsa() {
                 </Thead>
                 <Tbody>
                   {dataObat?.map((obat) =>
-                    obat.noBatches.map((batch) => (
-                      <Tr key={batch.id}>
-                        <Td>{obat.nama}</Td>
-                        <Td>{batch.exp ? formatDate(batch.exp) : "N/A"}</Td>
-                        <Td>{batch.noBatch || "N/A"}</Td>
-                        <Td>{batch.stok || "N/A"}</Td>
-                        <Td>
-                          <Center
-                            onClick={() => {
-                              setSelectedBatch(obat);
-                              setSelectedBatchDetail(batch);
-                              onDetailOpen();
-                            }}
-                            borderRadius={"5px"}
-                            as="button"
-                            h="25px"
-                            w="25px"
-                            fontSize="12px"
-                            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                            color="white"
-                            _hover={{
-                              bg: "black",
-                            }}
-                            bg="green"
-                          >
-                            <BsChevronDoubleDown />
-                          </Center>
-                        </Td>
-                      </Tr>
-                    ))
+                    obat.noBatches
+                      .filter((batch) => batch.stok > 0)
+                      .map((batch) => (
+                        <Tr key={batch.id}>
+                          <Td>{obat.nama}</Td>
+                          <Td>{batch.exp ? formatDate(batch.exp) : "N/A"}</Td>
+                          <Td>{batch.noBatch || "N/A"}</Td>
+                          <Td>{batch.stok || "N/A"}</Td>
+                          <Td>
+                            <Center
+                              onClick={() => {
+                                setSelectedBatch(obat);
+                                setSelectedBatchDetail(batch);
+                                onDetailOpen();
+                              }}
+                              borderRadius={"5px"}
+                              as="button"
+                              h="25px"
+                              w="25px"
+                              fontSize="12px"
+                              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                              color="white"
+                              _hover={{
+                                bg: "black",
+                              }}
+                              bg="green"
+                            >
+                              <BsChevronDoubleDown />
+                            </Center>
+                          </Td>
+                        </Tr>
+                      ))
                   )}
-                </Tbody>{" "}
+                </Tbody>
               </Table>
             </Box>
           </Container>

@@ -23,6 +23,7 @@ import Login from "./Pages/Login";
 import auth_types from "./Redux/Reducers/Types/userTypes";
 import Kadaluwarsa from "./Pages/Kadaluwarsa";
 import StokOpname from "./Pages/StokOpname";
+import DaftarKadaluwarsa from "./Pages/DaftarKadaluwarsa";
 import {
   getAuth,
   onAuthStateChanged,
@@ -94,11 +95,12 @@ function App() {
             dispatch({
               type: auth_types.Redux,
               payload: {
-                id: res.data.globalState.id,
-                email: res.data.globalState.email,
+                id: res.data.globalState?.id,
+                email: res.data.globalState?.email,
                 emailVerified,
-                firebaseProviderId: res.data.globalState.firebaseProviderId,
-                UserRoles: res.data.globalState.UserRoles,
+                firebaseProviderId: res.data.globalState?.firebaseProviderId,
+                UserRoles: res.data.globalState?.UserRoles,
+                profileId: res.data.globalState?.profile?.id,
                 // TenantId: res.data.globalState.Tenant.id || 0,
                 // TenantName: res.data.globalState?.Tenant?.name,
                 ProfileName: res.data.globalState?.profile?.nama,
@@ -147,6 +149,11 @@ function App() {
           <Route component={Profile} path="/gfk/profile" exact />
           <Route component={Kadaluwarsa} path="/gfk/kadaluwarsa" exact />
           <Route component={StokOpname} path="/gfk/stok-opname" exact />
+          <Route
+            component={DaftarKadaluwarsa}
+            path="/gfk/daftar-kadaluwarsa"
+            exact
+          />
           <Route component={Login} path="/login" exact />
           <Route component={Register} path="/register" exact />
           <Route component={Home} path="/" />
