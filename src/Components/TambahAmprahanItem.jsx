@@ -179,7 +179,7 @@ function TambahAmprahanItem(props) {
   }, [props.data]);
   return (
     <Box>
-      <Tooltip label="Delete Property" aria-label="A tooltip">
+      <Tooltip label="amprahan/bon" aria-label="A tooltip">
         <Center
           onClick={onAmprahanOpen}
           borderRadius={"5px"}

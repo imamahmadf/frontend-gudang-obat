@@ -6,7 +6,6 @@ import LogoAPP from "../assets/logo app.png";
 function Navbar() {
   return (
     <Box
-      display={{ ss: "none", sm: "none", sl: "inline" }}
       bg="white"
       pos="fixed"
       top="0"

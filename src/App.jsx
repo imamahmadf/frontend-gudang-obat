@@ -24,6 +24,12 @@ import auth_types from "./Redux/Reducers/Types/userTypes";
 import Kadaluwarsa from "./Pages/Kadaluwarsa";
 import StokOpname from "./Pages/StokOpname";
 import DaftarKadaluwarsa from "./Pages/DaftarKadaluwarsa";
+import Alokasi from "./Pages/Alokasi";
+import AlokasiItem from "./Pages/AlokasiItem";
+import DaftarAlokasi from "./Pages/DaftarAlokasi";
+import DetailAlokasi from "./Pages/DetailAlokasi";
+import PengaturanUser from "./Pages/PengaturanUser";
+import AptekaRoute from "./Components/AptekaRoute";
 import {
   getAuth,
   onAuthStateChanged,
@@ -101,8 +107,6 @@ function App() {
                 firebaseProviderId: res.data.globalState?.firebaseProviderId,
                 UserRoles: res.data.globalState?.UserRoles,
                 profileId: res.data.globalState?.profile?.id,
-                // TenantId: res.data.globalState.Tenant.id || 0,
-                // TenantName: res.data.globalState?.Tenant?.name,
                 ProfileName: res.data.globalState?.profile?.nama,
                 ProfilePic: res.data.globalState?.profile?.profilePic,
               },
@@ -123,36 +127,120 @@ function App() {
     <>
       <BrowserRouter>
         <Switch>
-          <Route component={DaftarObatAlkes} path="/gfk/daftar-obat" exact />
-          <Route component={TambahObat} path="/gfk/tambah-obat" exact />
-          <Route
+          <AptekaRoute
+            component={DaftarObatAlkes}
+            path="/gfk/daftar-obat"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
+            component={TambahObat}
+            path="/gfk/tambah-obat"
+            exact
+            roleRoute={[3, 4, 8]}
+          />
+          <AptekaRoute
             component={TambahObatBaru}
             path="/gfk/tambah-obat-baru"
             exact
+            roleRoute={[4, 8]}
           />
-          <Route component={EditObat} path="/edit-obat/:obatId" />
-          <Route component={DetailObat} path="/gfk/detail-obat/:obatId" exact />
-          <Route component={Puskesmas} path="/gfk/puskesmas" exact />
-          <Route
+          <AptekaRoute component={EditObat} path="/gfk/edit-obat/:obatId" />
+          <AptekaRoute
+            component={DetailObat}
+            path="/gfk/detail-obat/:obatId"
+            exact
+            roleRoute={[1, 3, 8]}
+          />
+          <AptekaRoute
+            component={DetailAlokasi}
+            path="/gfk/detail-alokasi/:alokasiId"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
+            component={Puskesmas}
+            path="/gfk/puskesmas"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
             component={PuskesmasDetail}
             path="/gfk/puskesmas-detail/:id"
             exact
+            roleRoute={[1, 8]}
           />{" "}
-          <Route component={Amprahan} path="/gfk/amprahan" exact />
-          <Route
+          <AptekaRoute
+            component={Amprahan}
+            path="/gfk/amprahan"
+            exact
+            roleRoute={[7, 8]}
+          />
+          <AptekaRoute
             component={DetailAmprahan}
             path="/gfk/amprahan/:amprahanId"
             exact
+            roleRoute={[1, 8]}
           />
-          <Route component={ObatMasuk} path="/gfk/obat-masuk" exact />
-          <Route component={Pengaturan} path="/gfk/pengaturan" exact />
-          <Route component={Profile} path="/gfk/profile" exact />
-          <Route component={Kadaluwarsa} path="/gfk/kadaluwarsa" exact />
-          <Route component={StokOpname} path="/gfk/stok-opname" exact />
+          <AptekaRoute
+            component={AlokasiItem}
+            path="/gfk/alokasi-item/:obatId"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
+            component={ObatMasuk}
+            path="/gfk/obat-masuk"
+            exact
+            roleRoute={[5, 8]}
+          />
+          <AptekaRoute
+            component={Pengaturan}
+            path="/gfk/pengaturan"
+            roleRoute={[7, 8]}
+            exact
+          />
+          <AptekaRoute
+            component={Profile}
+            path="/gfk/profile"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
+            component={Kadaluwarsa}
+            path="/gfk/kadaluwarsa"
+            exact
+            roleRoute={[6, 8]}
+          />
+          <AptekaRoute
+            component={StokOpname}
+            path="/gfk/stok-opname"
+            exact
+            roleRoute={[6, 8]}
+          />
+          <Route
+            component={Alokasi}
+            path="/gfk/alokasi"
+            exact
+            roleRoute={[7, 8]}
+          />
+          <Route
+            component={DaftarAlokasi}
+            path="/gfk/daftar-alokasi"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <Route
+            component={PengaturanUser}
+            path="/gfk/pengaturan/user"
+            exact
+            roleRoute={[7, 8]}
+          />
           <Route
             component={DaftarKadaluwarsa}
             path="/gfk/daftar-kadaluwarsa"
             exact
+            roleRoute={[1, 8]}
           />
           <Route component={Login} path="/login" exact />
           <Route component={Register} path="/register" exact />

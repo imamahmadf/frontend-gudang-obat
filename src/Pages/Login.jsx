@@ -46,6 +46,9 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
+  if (global.id) {
+    history.push("/");
+  }
   const handleWithGoogle = async () => {
     const providerGoogle = new GoogleAuthProvider();
     const credential = await signInWithPopup(authFirebase, providerGoogle);
@@ -128,128 +131,122 @@ function Login() {
 
   return (
     <>
-      <Layout>
-        <Box
-          overflow="hidden"
-          objectFit="cover"
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          height={"100vh"}
-          w="100%"
+      <Box
+        overflow="hidden"
+        objectFit="cover"
+        backgroundPosition="center"
+        backgroundRepeat="no-repeat"
+        height={"100vh"}
+        w="100%"
+      >
+        <Container
+          marginTop={"80px"}
+          borderRadius={"20px"}
+          p={"00px"}
+          height={"1000px"}
+          maxW={"1680px"}
+          boxShadow="0px 8px 16px rgba(0, 0, 0, 0.2)"
         >
-          <Container
-            marginTop={"80px"}
-            borderRadius={"20px"}
-            p={"00px"}
-            height={"1000px"}
-            maxW={"1680px"}
-            boxShadow="0px 8px 16px rgba(0, 0, 0, 0.2)"
-          >
-            <Flex flexDirection={flexDirection} wrap="wrap" height="100%">
-              <Flex
-                flexDirection={"column"}
-                borderLeftRadius={"20px"}
-                flex="1"
-                p={"200px"}
-                height={"100%"}
-                alignItems="center"
-                justifyContent="center"
-              >
-                <FormControl id="email" pb="12px">
+          <Flex flexDirection={flexDirection} wrap="wrap" height="100%">
+            <Flex
+              flexDirection={"column"}
+              borderLeftRadius={"20px"}
+              flex="1"
+              p={"200px"}
+              height={"100%"}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <FormControl id="email" pb="12px">
+                <Input
+                  h={"50px"}
+                  type="email"
+                  placeholder="Email"
+                  borderRadius="10px"
+                  // onChange={(e) => inputHandler(e, "email")}
+                  onChange={(e) =>
+                    formik.setFieldValue("email", e.target.value)
+                  }
+                />
+                {formik.errors.email ? (
+                  <Alert status="error" color="red" text="center">
+                    <i className="fa-solid fa-circle-exclamation"></i>
+                    <Text ms="10px">{formik.errors.email}</Text>
+                  </Alert>
+                ) : null}
+              </FormControl>{" "}
+              <FormControl id="password" pb="15px">
+                <InputGroup>
                   <Input
-                    h={"50px"}
-                    type="email"
-                    placeholder="Email"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
                     borderRadius="10px"
-                    // onChange={(e) => inputHandler(e, "email")}
+                    h={"50px"}
+                    // onChange={(e) => inputHandler(e, "password")}
                     onChange={(e) =>
-                      formik.setFieldValue("email", e.target.value)
+                      formik.setFieldValue("password", e.target.value)
                     }
                   />
-                  {formik.errors.email ? (
-                    <Alert status="error" color="red" text="center">
-                      <i className="fa-solid fa-circle-exclamation"></i>
-                      <Text ms="10px">{formik.errors.email}</Text>
-                    </Alert>
-                  ) : null}
-                </FormControl>{" "}
-                <FormControl id="password" pb="15px">
-                  <InputGroup>
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      borderRadius="10px"
-                      h={"50px"}
-                      // onChange={(e) => inputHandler(e, "password")}
-                      onChange={(e) =>
-                        formik.setFieldValue("password", e.target.value)
-                      }
-                    />
 
-                    <InputRightElement>
-                      <Button onClick={handleClick} h={"50px"} mt={"10px"}>
-                        <i
-                          className={
-                            showPassword
-                              ? "fa-sharp fa-solid fa-eye"
-                              : "fa-solid fa-eye-slash"
-                          }
-                        />
-                      </Button>
-                    </InputRightElement>
-                  </InputGroup>
-                  {formik.errors.password ? (
-                    <Alert status="error" color="red" text="center">
-                      <i className="fa-solid fa-circle-exclamation"></i>
-                      <Text ms="10px">{formik.errors.password}</Text>
-                    </Alert>
-                  ) : null}
+                  <InputRightElement>
+                    <Button onClick={handleClick} h={"50px"} mt={"10px"}>
+                      <i
+                        className={
+                          showPassword
+                            ? "fa-sharp fa-solid fa-eye"
+                            : "fa-solid fa-eye-slash"
+                        }
+                      />
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+                {formik.errors.password ? (
+                  <Alert status="error" color="red" text="center">
+                    <i className="fa-solid fa-circle-exclamation"></i>
+                    <Text ms="10px">{formik.errors.password}</Text>
+                  </Alert>
+                ) : null}
 
-                  {wrongPass ? (
-                    <Alert status="error" color="red" text="center">
-                      <i className="fa-solid fa-circle-exclamation"></i>
-                      <Text ms="10px">{wrongPass}</Text>
-                    </Alert>
-                  ) : null}
-                </FormControl>
-                <Button
-                  variant="primary"
-                  mb="12px"
-                  // onClick={handleWithEmailPassword}
-                  onClick={formik.handleSubmit}
-                >
-                  Login
-                </Button>{" "}
-                <Text
-                  fontSize="12px"
-                  fontWeight="300"
-                  cursor="pointer"
-                  _hover={{ textDecoration: "underline" }}
-                >
-                  <Link to="/forgot-password">Forgot Password</Link>
-                </Text>
-                <Button
-                  variant="secondary"
-                  mt="20px"
-                  onClick={handleWithGoogle}
-                >
-                  Login With Google
-                </Button>
-              </Flex>
-              <Flex
-                bgColor={"yellow"}
-                flexDirection={"column"}
-                borderRightRadius={"20px"}
-                flex="1"
-                p={"200px"}
-                height={"100%"}
+                {wrongPass ? (
+                  <Alert status="error" color="red" text="center">
+                    <i className="fa-solid fa-circle-exclamation"></i>
+                    <Text ms="10px">{wrongPass}</Text>
+                  </Alert>
+                ) : null}
+              </FormControl>
+              <Button
+                variant="primary"
+                mb="12px"
+                // onClick={handleWithEmailPassword}
+                onClick={formik.handleSubmit}
               >
-                <Image src={imageLogin} />
-              </Flex>
+                Login
+              </Button>{" "}
+              <Text
+                fontSize="12px"
+                fontWeight="300"
+                cursor="pointer"
+                _hover={{ textDecoration: "underline" }}
+              >
+                <Link to="/forgot-password">Forgot Password</Link>
+              </Text>
+              <Button variant="secondary" mt="20px" onClick={handleWithGoogle}>
+                Login With Google
+              </Button>
             </Flex>
-          </Container>
-        </Box>
-      </Layout>
+            <Flex
+              bgColor={"primary"}
+              flexDirection={"column"}
+              borderRightRadius={"20px"}
+              flex="1"
+              p={"200px"}
+              height={"100%"}
+            >
+              <Image src={imageLogin} />
+            </Flex>
+          </Flex>
+        </Container>
+      </Box>
     </>
   );
 }

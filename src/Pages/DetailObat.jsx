@@ -26,6 +26,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
@@ -137,57 +138,74 @@ function DetailObat(props) {
       );
     });
   }
-
   function renderRiwayat() {
-    return dataAmprahan?.map((val, idx) => {
-      const newExp = formatTanggal(val.amprahan.tanggal);
-      // console.log(val, idx, "tes index di detail OBAT");
+    return (
+      <Box style={{ overflowX: "auto" }}>
+        <Table variant="simple" size="sm" mt={2}>
+          <Thead bgColor={"primary"}>
+            <Tr>
+              <Th fontSize={"14px"} color={"white"}>
+                Tanggal
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Nomor Batch
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Tujuan
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Masuk
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Keluar
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Sisa Stok
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Jenis
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {dataAmprahan?.map((val, idx) => {
+              const newExp = formatTanggal(val.amprahan.tanggal);
+              // ... existing logic for sisaStok ...
 
-      let sisaStok = 0;
-      let arraySisaStok = [];
-
-      for (let i = 0; i <= idx; i++) {
-        if (dataAmprahan[i].amprahan.uptd.status == 1) {
-          sisaStok -= dataAmprahan[i].permintaan;
-          arraySisaStok.push(sisaStok);
-        } else {
-          sisaStok += dataAmprahan[i].permintaan;
-          arraySisaStok.push(sisaStok);
-        }
-      }
-
-      return (
-        <Flex
-          key={`${val.id}-${idx}`}
-          py={"10px"}
-          borderBottom={"1px"}
-          borderColor={"rgba(229, 231, 235, 1)"}
-          backgroundColor={idx % 2 === 0 ? "white" : "rgba(229, 231, 235, 1)"}
-        >
-          <Text mx={"15px"} minW={"110px"}>
-            {newExp}
-          </Text>
-          <Text me={"15px"} minW={"110px"}>
-            {val.noBatch.noBatch}
-          </Text>
-          <Text me={"15px"} minW={"150px"}>
-            {val.amprahan.uptd.nama}
-          </Text>
-          <Text me={"15px"} minW={"100px"}>
-            {val.amprahan.uptd.statusTujuanId == 2 ? val.permintaan : "-"}
-          </Text>
-          <Text me={"15px"} minW={"100px"}>
-            {val.amprahan.uptd.statusTujuanId == 1 ? val.permintaan : "-"}
-          </Text>
-          <Text me={"15px"} minW={"100px"}>
-            {val.sisa}
-          </Text>
-          <Text me={"15px"} minW={"100px"}>
-            {val.amprahan.StatusAmprahan.nama}
-          </Text>
-        </Flex>
-      );
-    });
+              return (
+                <Tr key={`${val.id}-${idx}`}>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {newExp}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.noBatch.noBatch}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.amprahan.uptd.nama}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.amprahan.uptd.statusTujuanId == 2
+                      ? val.permintaan
+                      : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.amprahan.uptd.statusTujuanId == 1
+                      ? val.permintaan
+                      : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sisa}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.amprahan.StatusAmprahan.nama}
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </Box>
+    );
   }
 
   async function fetchObat() {
@@ -246,14 +264,14 @@ function DetailObat(props) {
               Kategori: {dataObat?.kategori?.nama}
             </Text>
           </Box>
-          <Flex>
+          <SimpleGrid minChildWidth="420px">
             <Box>
               {" "}
               <Image
                 borderRadius={"5px"}
                 alt="property image"
-                width="600px"
-                height="600px"
+                width={{ ss: "100%", sl: "600px" }}
+                height={{ ss: "300px", sl: "600px" }}
                 me="10px"
                 overflow="hiden"
                 objectFit="cover"
@@ -265,13 +283,15 @@ function DetailObat(props) {
                 }
               />
             </Box>
-            <Box ms={"20px"}>
+            <Box ms={{ ss: "0px", sl: "20px" }} style={{ overflowX: "auto" }}>
               <Table variant="simple" size="sm" mt={2}>
                 <Thead>
                   <Tr>
                     <Th fontSize={"14px"}>Nomor Batch</Th>
                     <Th fontSize={"14px"}>EXP</Th>
-                    <Th fontSize={"14px"}>Harga Satuan</Th>
+                    <Th display={{ ss: "none", sl: "block" }} fontSize={"14px"}>
+                      Harga Satuan
+                    </Th>
                     <Th fontSize={"14px"} isNumeric>
                       Stok
                     </Th>
@@ -292,7 +312,11 @@ function DetailObat(props) {
                         <Td fontSize={"14px"} maxWidth="130px">
                           {newExp}
                         </Td>
-                        <Td fontSize={"14px"} maxWidth="130px">
+                        <Td
+                          display={{ ss: "none", sl: "block" }}
+                          fontSize={"14px"}
+                          maxWidth="130px"
+                        >
                           {new Intl.NumberFormat("id-ID", {
                             style: "currency",
                             currency: "IDR",
@@ -342,7 +366,7 @@ function DetailObat(props) {
                 </Tfoot>
               </Table>
             </Box>
-          </Flex>
+          </SimpleGrid>
         </Container>
         <Container
           p={"15px"}
@@ -396,36 +420,6 @@ function DetailObat(props) {
               <option value="ASC">Latest</option>
             </Select>
           </FormControl>{" "}
-          <Flex
-            backgroundColor={"primary"}
-            color={"white"}
-            py={"10px"}
-            borderBottom={"1px"}
-            borderTop={"1px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-          >
-            <Text mx={"15px"} minW={"110px"}>
-              Tanggal
-            </Text>
-            <Text me={"15px"} minW={"110px"}>
-              Nomor Batch
-            </Text>
-            <Text me={"15px"} minW={"150px"}>
-              Tujuan
-            </Text>
-            <Text me={"15px"} minW={"100px"}>
-              Masuk
-            </Text>
-            <Text me={"15px"} minW={"100px"}>
-              Keluar
-            </Text>
-            <Text me={"15px"} minW={"100px"}>
-              Sisa Stok
-            </Text>
-            <Text me={"15px"} minW={"100px"}>
-              Jenis
-            </Text>
-          </Flex>
           {renderRiwayat()}
           <div
             style={{

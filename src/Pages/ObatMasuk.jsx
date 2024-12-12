@@ -19,14 +19,22 @@ import {
   ModalFooter,
   Button,
   Select,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
 } from "@chakra-ui/react";
 import LogoAPP from "../assets/logo app.png";
 import Layout from "../Components/Layout";
 import { useDisclosure } from "@chakra-ui/react";
 import axios, { Axios } from "axios";
+import addFoto from "./../assets/add_photo.png";
 import { BsPlusCircle } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import { BsFillFunnelFill } from "react-icons/bs";
+import { BsCheckLg } from "react-icons/bs";
 
 function ObatMasuk() {
   const [keyword, setKeyword] = useState("");
@@ -133,195 +141,327 @@ function ObatMasuk() {
   function renderObat() {
     return dataObat?.map((val, idx) => {
       return (
-        <Flex
-          px={"30px"}
-          py={"15px"}
-          borderTop={"1px"}
-          borderColor={"rgba(229, 231, 235, 1)"}
-          key={idx}
-        >
-          <Flex>
+        <>
+          {val.noBatches.map((val2, idx2) => {
+            const newExp = formatDate(val2.exp);
+            return (
+              <>
+                <Box
+                  display={{ ss: "block", sl: "none" }}
+                  p={"10px"}
+                  w={"100%"}
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  borderColor={"rgba(229, 231, 235, 1)"}
+                  my={"20px"}
+                >
+                  <Box>
+                    <Image
+                      borderRadius={"5px"}
+                      alt="foto obat"
+                      width="100%"
+                      height="300px"
+                      me="10px"
+                      overflow="hiden"
+                      objectFit="cover"
+                      src={
+                        val2.pic
+                          ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                            val2.pic
+                          : addFoto
+                      }
+                    />{" "}
+                  </Box>
+                  <Text fontSize={"20px"} fontWeight={600} align={"center"}>
+                    {val.nama}
+                  </Text>{" "}
+                  <Table variant="simple">
+                    <Tbody>
+                      <Tr>
+                        <Th>Kelas Terapi </Th>
+                        <Td>
+                          <Text fontSize={"13px"}>{val.kelasterapi.nama}</Text>{" "}
+                        </Td>
+                      </Tr>{" "}
+                      <Tr>
+                        <Th>Satuan</Th>
+                        <Td>
+                          <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                            {val.satuan.nama}
+                          </Text>{" "}
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Th>EXP</Th>
+                        <Td>
+                          <Box
+                            borderRadius={"5px"}
+                            color={
+                              new Date(newExp) <=
+                              new Date(
+                                new Date().setMonth(new Date().getMonth() + 3)
+                              )
+                                ? "white"
+                                : "black"
+                            }
+                            ps={"10px"}
+                            me={"10px"}
+                            h={"20px"}
+                            backgroundColor={
+                              new Date(newExp) <=
+                              new Date(
+                                new Date().setMonth(new Date().getMonth() + 3)
+                              )
+                                ? "danger"
+                                : ""
+                            }
+                          >
+                            <Text width={"80px"} fontSize={"13px"}>
+                              {newExp}
+                            </Text>
+                          </Box>
+                        </Td>
+                      </Tr>{" "}
+                      <Tr>
+                        <Th>No. Batch</Th>
+                        <Td>
+                          <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                            {val2.noBatch}
+                          </Text>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Th>Asal</Th>
+                        <Td>
+                          <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                            {val2.perusahaan.nama}
+                          </Text>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Th>stok</Th>
+                        <Td>
+                          <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                            {val2.stok}
+                          </Text>
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </Box>
+              </>
+            );
+          })}{" "}
+          <Flex
+            display={{ ss: "none", sl: "flex" }}
+            px={"30px"}
+            py={"15px"}
+            borderTop={"1px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+            key={idx}
+          >
             <Flex>
-              {/* <Image
-                borderRadius={"5px"}
-                alt="foto obat"
-                width="30px"
-                height="40px"
-                me="10px"
-                overflow="hiden"
-                objectFit="cover"
-                src={import.meta.env.VITE_REACT_APP_API_BASE_URL + val.pic}
-              /> */}
               <Text fontSize={"13px"} width={"190px"} me={"10px"}>
                 {val.nama}
               </Text>
-              <Text fontSize={"13px"} width={"160px"} me={"10px"}>
+              <Text fontSize={"13px"} width={"120px"} me={"10px"}>
                 {val.kelasterapi.nama}
               </Text>{" "}
               <Text fontSize={"13px"} width={"80px"} me={"10px"}>
                 {val.satuan.nama}
               </Text>{" "}
-            </Flex>{" "}
-            <Box>
-              <Flex
-                key={val.nama}
-                flexDirection={"column"}
-                justifyContent={"flex-end"}
-                minW={"600px"}
-              >
-                {val.noBatches.map((val2, idx2) => {
-                  const newExp = formatDate(val2.exp);
-                  return (
-                    <>
-                      <Flex key={val2.noBatch} justifyContent={"flex-end"}>
-                        <Box>
-                          <Flex>
-                            <Text fontSize={"13px"} width={"80px"} me={"10px"}>
-                              {val2.noBatch}
-                            </Text>
-                            <Text
-                              fontSize={"13px"}
-                              width={"100px"}
-                              me={"10px"}
-                              backgroundColor={
-                                new Date(newExp) <=
-                                new Date(
-                                  new Date().setMonth(new Date().getMonth() + 3)
-                                )
-                                  ? "red"
-                                  : ""
-                              }
-                            >
-                              {newExp}
-                            </Text>
-                            <Text fontSize={"13px"} width={"100px"} me={"10px"}>
-                              {new Intl.NumberFormat("id-ID", {
-                                style: "currency",
-                                currency: "IDR",
-                              }).format(val2.harga)}
-                            </Text>{" "}
-                            <Image
-                              borderRadius={"5px"}
-                              alt="foto obat"
-                              width="30px"
-                              height="40px"
-                              me="10px"
-                              overflow="hiden"
-                              objectFit="cover"
-                              src={
-                                import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                                val2.pic
-                              }
-                            />{" "}
-                            <Text fontSize={"13px"} width={"80px"} me={"10px"}>
-                              {val2.perusahaan.nama}
-                            </Text>
-                          </Flex>
-                        </Box>
-                        <Spacer />
-                        <Flex justifyContent={"flex-end"}>
-                          <Text
-                            align={"right"}
-                            fontSize={"13px"}
-                            width={"100px"}
-                            ms={"10px"}
-                          >
+              <Box>
+                <Flex
+                  key={val.nama}
+                  flexDirection={"column"}
+                  justifyContent={"flex-end"}
+                >
+                  {val.noBatches.map((val2, idx2) => {
+                    const newExp = formatDate(val2.exp);
+                    return (
+                      <>
+                        <Flex key={val2.noBatch} justifyContent={"flex-end"}>
+                          <Box>
+                            <Flex>
+                              <Text
+                                fontSize={"13px"}
+                                width={"80px"}
+                                me={"10px"}
+                              >
+                                {val2.noBatch}
+                              </Text>
+                              <Box
+                                borderRadius={"5px"}
+                                color={
+                                  new Date(newExp) <=
+                                  new Date(
+                                    new Date().setMonth(
+                                      new Date().getMonth() + 3
+                                    )
+                                  )
+                                    ? "white"
+                                    : "black"
+                                }
+                                ps={"10px"}
+                                me={"10px"}
+                                h={"20px"}
+                                backgroundColor={
+                                  new Date(newExp) <=
+                                  new Date(
+                                    new Date().setMonth(
+                                      new Date().getMonth() + 3
+                                    )
+                                  )
+                                    ? "danger"
+                                    : ""
+                                }
+                              >
+                                <Text width={"80px"} fontSize={"13px"}>
+                                  {newExp}
+                                </Text>
+                              </Box>
+                              <Text
+                                fontSize={"13px"}
+                                width={"100px"}
+                                me={"10px"}
+                              >
+                                {new Intl.NumberFormat("id-ID", {
+                                  style: "currency",
+                                  currency: "IDR",
+                                }).format(val2.harga)}
+                              </Text>{" "}
+                              <Box w={"100px"} me={"10px"}>
+                                <Image
+                                  borderRadius={"5px"}
+                                  alt="foto obat"
+                                  width="30px"
+                                  height="40px"
+                                  me="10px"
+                                  overflow="hiden"
+                                  objectFit="cover"
+                                  src={
+                                    val2.pic
+                                      ? import.meta.env
+                                          .VITE_REACT_APP_API_BASE_URL +
+                                        val2.pic
+                                      : addFoto
+                                  }
+                                />{" "}
+                              </Box>
+                              <Text
+                                fontSize={"13px"}
+                                width={"100px"}
+                                me={"10px"}
+                              >
+                                {val2.perusahaan.nama}
+                              </Text>
+                            </Flex>
+                          </Box>
+                          <Spacer />
+
+                          <Text fontSize={"13px"} width={"140px"} me={"10px"}>
                             {val2.stok}
                           </Text>
+
+                          <Flex justifyContent="flex-end">
+                            <Center
+                              onClick={onFilterOpen}
+                              borderRadius={"5px"}
+                              as="button"
+                              h="30px"
+                              w="30px"
+                              fontSize="15px"
+                              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                              color="white"
+                              me={"10px"}
+                              _hover={{
+                                bg: "black",
+                              }}
+                              bg="primary"
+                            >
+                              <BsCheckLg />
+                            </Center>
+                            <Center
+                              onClick={onDeleteOpen}
+                              borderRadius={"5px"}
+                              as="button"
+                              h="30px"
+                              w="30px"
+                              fontSize="15px"
+                              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                              color="white"
+                              me={"10px"}
+                              _hover={{
+                                bg: "black",
+                              }}
+                              bg="danger"
+                            >
+                              X
+                            </Center>
+                          </Flex>
                         </Flex>{" "}
-                        <Flex marginStart={"60px"}>
-                          {" "}
-                          <IconButton
-                            onClick={onFilterOpen}
-                            color="rgba(175, 175, 175, 1)"
-                            aria-label="toggle filters"
-                            icon={<BsFillFunnelFill />}
-                            backgroundColor="white"
-                            border="1px"
-                            borderRadius={"8px"}
-                            m={2}
-                            _hover={{
-                              bg: "black",
-                              color: "white",
-                            }}
-                          />
-                          <IconButton
-                            onClick={onDeleteOpen}
-                            color="rgba(175, 175, 175, 1)"
-                            aria-label="toggle filters"
-                            icon={<BsFillFunnelFill />}
-                            backgroundColor="white"
-                            border="1px"
-                            borderRadius={"8px"}
-                            m={2}
-                            _hover={{
-                              bg: "black",
-                              color: "white",
-                            }}
-                          />
-                        </Flex>
-                      </Flex>{" "}
-                      <Modal
-                        closeOnOverlayClick={false}
-                        isOpen={isFilterOpen}
-                        onClose={onFilterClose}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius={0}>
-                          <ModalHeader>Shory by:</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody pb={6}>
-                            <Text>{val2.stok}</Text>
-                          </ModalBody>
+                        <Modal
+                          closeOnOverlayClick={false}
+                          isOpen={isFilterOpen}
+                          onClose={onFilterClose}
+                        >
+                          <ModalOverlay />
+                          <ModalContent borderRadius={0}>
+                            <ModalHeader>Shory by:</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6}>
+                              <Text>{val2.stok}</Text>
+                            </ModalBody>
 
-                          <ModalFooter>
-                            <Button
-                              height={"20px"}
-                              width={"60px"}
-                              fontSize={"12px"}
-                              onClick={() => {
-                                terima({ val2, val });
-                              }}
-                            >
-                              Terima
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
-                      <Modal
-                        closeOnOverlayClick={false}
-                        isOpen={isDeleteOpen}
-                        onClose={onDeleteClose}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius={0}>
-                          <ModalHeader>Shory by:</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody pb={6}>
-                            <Text>{val2.stok}</Text> DLETE
-                          </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                height={"20px"}
+                                width={"60px"}
+                                fontSize={"12px"}
+                                onClick={() => {
+                                  terima({ val2, val });
+                                }}
+                              >
+                                Terima
+                              </Button>
+                            </ModalFooter>
+                          </ModalContent>
+                        </Modal>
+                        <Modal
+                          closeOnOverlayClick={false}
+                          isOpen={isDeleteOpen}
+                          onClose={onDeleteClose}
+                        >
+                          <ModalOverlay />
+                          <ModalContent borderRadius={0}>
+                            <ModalHeader>Shory by:</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6}>
+                              <Text>{val2.stok}</Text> DLETE
+                            </ModalBody>
 
-                          <ModalFooter>
-                            <Button
-                              height={"20px"}
-                              width={"60px"}
-                              fontSize={"12px"}
-                              onClick={() => {
-                                tolak({ value: val2 });
-                              }}
-                            >
-                              Tolak
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
-                    </>
-                  );
-                })}
-              </Flex>
-            </Box>
+                            <ModalFooter>
+                              <Button
+                                height={"20px"}
+                                width={"60px"}
+                                fontSize={"12px"}
+                                onClick={() => {
+                                  tolak({ value: val2 });
+                                }}
+                              >
+                                Tolak
+                              </Button>
+                            </ModalFooter>
+                          </ModalContent>
+                        </Modal>
+                      </>
+                    );
+                  })}
+                </Flex>
+              </Box>
+            </Flex>
           </Flex>
-        </Flex>
+        </>
       );
     });
   }
@@ -353,7 +493,7 @@ function ObatMasuk() {
                     <HStack>
                       <HStack>
                         <Text fontSize={"20px"} fontWeight={600}>
-                          Daftar Obat
+                          Daftar Obat Masuk
                         </Text>
                       </HStack>
                       <Spacer />
@@ -379,95 +519,38 @@ function ObatMasuk() {
                     py={"15px"}
                     borderTop={"1px"}
                     borderColor={"rgba(229, 231, 235, 1)"}
+                    display={{ ss: "none", sl: "block" }}
                   >
-                    <Flex>
-                      <Flex>
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"190px"}
-                          me={"10px"}
-                        >
-                          Nama Obat
-                        </Text>
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"160px"}
-                          me={"10px"}
-                        >
-                          Kelas Terapi
-                        </Text>{" "}
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"80px"}
-                          me={"10px"}
-                        >
-                          Satuan
-                        </Text>{" "}
-                      </Flex>
-                      <Flex>
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"80px"}
-                          me={"10px"}
-                        >
-                          No. Batch
-                        </Text>
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"100px"}
-                          me={"10px"}
-                        >
-                          EXP
-                        </Text>{" "}
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"100px"}
-                          me={"10px"}
-                        >
-                          harga Satuan
-                        </Text>
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"100px"}
-                          me={"10px"}
-                        >
-                          foto
-                        </Text>{" "}
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={600}
-                          width={"100px"}
-                          me={"10px"}
-                        >
-                          asal
-                        </Text>
-                      </Flex>
-                    </Flex>
-                    <Spacer />
-                    <Flex>
-                      <Text
-                        fontSize={"15px"}
-                        align={"right"}
-                        width={"100px"}
-                        me={"10px"}
-                        fontWeight={600}
-                      >
+                    <Flex fontSize={"15px"} fontWeight={600} me={"10px"}>
+                      <Text width={"190px"} me={"10px"}>
+                        Nama Obat
+                      </Text>
+                      <Text width={"120px"} me={"10px"}>
+                        Kelas Terapi
+                      </Text>{" "}
+                      <Text width={"80px"} me={"10px"}>
+                        Satuan
+                      </Text>{" "}
+                      <Text width={"80px"} me={"10px"}>
+                        No. Batch
+                      </Text>
+                      <Text width={"100px"} me={"10px"}>
+                        EXP
+                      </Text>{" "}
+                      <Text width={"100px"} me={"10px"}>
+                        harga Satuan
+                      </Text>
+                      <Text width={"100px"} me={"10px"}>
+                        foto
+                      </Text>{" "}
+                      <Text width={"100px"} me={"10px"}>
+                        asal
+                      </Text>
+                      <Text width={"100px"} me={"10px"}>
                         Stok
                       </Text>
-                      <Text
-                        fontSize={"15px"}
-                        align={"right"}
-                        width={"100px"}
-                        me={"10px"}
-                        fontWeight={600}
-                      >
+                      <Spacer />
+                      <Text align={"right"} width={"100px"} me={"10px"}>
                         Aksi
                       </Text>
                     </Flex>

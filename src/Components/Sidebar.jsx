@@ -38,6 +38,7 @@ import { BsTruck } from "react-icons/bs";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import auth_types from "../Redux/Reducers/Types/userTypes";
+import { BsFillBoxSeamFill } from "react-icons/bs";
 import { authFirebase } from "../Config/firebase";
 import {
   onAuthStateChanged,
@@ -58,6 +59,7 @@ function Sidebar() {
     { menu: "Daftar Obat", logo: <BsCapsule />, URL: "/gfk/daftar-obat" },
     { menu: "Puskesmas", logo: <BiHome />, URL: "/gfk/puskesmas" },
     { menu: "Amprahan", logo: <BsCart3 />, URL: "/gfk/amprahan" },
+    { menu: "Alokasi", logo: <BsFillBoxSeamFill />, URL: "/gfk/alokasi" },
     { menu: "Obat Masuk", logo: <BsTruck />, URL: "/gfk/obat-masuk" },
     {
       menu: "Stock Opname",
@@ -73,6 +75,7 @@ function Sidebar() {
     useSelector((state) => state.user);
   //console.log(UserRoles);
   console.log(useSelector((state) => state.user));
+
   const logout = async () => {
     await signOut(auth).catch((error) => alert(error));
     dispatch({

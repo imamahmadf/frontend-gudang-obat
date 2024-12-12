@@ -45,7 +45,7 @@ function StokOpname() {
     return profile.map((val) => {
       return (
         <option key={val.id} value={val.id}>
-          {val.nama}
+          {val.nama} {val.id}
         </option>
       );
     });
@@ -59,7 +59,7 @@ function StokOpname() {
         }/stok-opname/get/${Penanggungjawab}`
       )
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data, "DATA API STOK OPNAME");
         setDataStokOpname(res.data);
       })
       .catch((err) => {
@@ -105,6 +105,7 @@ function StokOpname() {
   useEffect(() => {
     fetchProfile();
     fetchDataStokOpname();
+    console.log(Penanggungjawab);
   }, [Penanggungjawab]);
 
   async function tutupSO() {
@@ -140,37 +141,70 @@ function StokOpname() {
 
   async function exportToExcel() {
     const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Stok Opname");
 
-    // Mengambil file dari folder public
-    const response = await fetch("/STOK_OPNAME.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
+    // Menambahkan header
+    worksheet.columns = [
+      { header: "Nama Obat", key: "namaObat", width: 30 },
+      { header: "No Batch", key: "noBatch", width: 20 },
+      { header: "Exp", key: "exp", width: 20 },
+      { header: "Stok", key: "stok", width: 15 },
+      { header: "Total Stok", key: "totalStok", width: 15 },
+    ];
 
-    // Membaca file dari array buffer
-    await workbook.xlsx.load(arrayBuffer);
-    const worksheet = workbook.getWorksheet(1);
-
-    let rowIndex = 2; // Misalkan baris pertama adalah header
-    dataStokOpname.forEach((item) => {
-      // Mengisi nama, noBatch, dan exp dalam satu baris
-      if (item.noBatches.length > 0) {
-        const firstBatch = item.noBatches[0];
-        worksheet.getCell(`A${rowIndex + 8}`).value = item.nama; // Mengisi nama
-        worksheet.getCell(`B${rowIndex + 8}`).value = firstBatch.noBatch; // Mengisi noBatch
-        worksheet.getCell(`C${rowIndex + 8}`).value = formatDate(
-          firstBatch.exp
-        ); // Mengisi exp
-        rowIndex++;
-      }
-
-      // Mengisi noBatch dan exp untuk batch lainnya
-      item.noBatches.slice(1).forEach((batch) => {
-        worksheet.getCell(`A${rowIndex + 8}`).value = ""; // Kosongkan nama untuk baris berikutnya
-        worksheet.getCell(`B${rowIndex + 8}`).value = batch.noBatch; // Mengisi noBatch
-        worksheet.getCell(`C${rowIndex + 8}`).value = formatDate(batch.exp); // Mengisi exp
-        rowIndex++;
-      });
+    // Menambahkan border untuk header
+    const headerRow = worksheet.getRow(1);
+    headerRow.eachCell((cell) => {
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+      cell.font = { bold: true }; // Membuat header menjadi tebal
     });
 
+    let currentRow = 2; // Mulai dari baris kedua
+    dataStokOpname.forEach((item) => {
+      if (item.noBatches.length > 0) {
+        const totalStok = item.totalStok; // Ambil total stok untuk nama obat
+        item.noBatches.forEach((batch, index) => {
+          const rowData = {
+            namaObat: index === 0 ? item.nama : "", // Hanya isi nama obat di baris pertama
+            noBatch: batch.noBatch,
+            exp: formatDate(batch.exp),
+            stok: "", // Mengisi stok untuk setiap batch
+            totalStok: "", // Hanya isi total stok di baris pertama
+          };
+          worksheet.addRow(rowData);
+        });
+
+        // Menggabungkan sel Nama Obat
+        const lastRow = worksheet.lastRow.number; // Ambil nomor baris terakhir
+        worksheet.mergeCells(currentRow, 1, lastRow, 1); // Menggabungkan sel dari currentRow ke lastRow di kolom 1 (Nama Obat)
+
+        // Menggabungkan sel Total Stok
+        worksheet.mergeCells(currentRow, 5, lastRow, 5); // Menggabungkan sel dari currentRow ke lastRow di kolom 5 (Total Stok)
+
+        currentRow = lastRow + 1; // Update currentRow untuk baris berikutnya
+      }
+    });
+
+    // Menambahkan border untuk semua sel
+    for (let rowIndex = 1; rowIndex <= worksheet.lastRow.number; rowIndex++) {
+      const row = worksheet.getRow(rowIndex);
+      for (let cellIndex = 1; cellIndex <= row.cellCount; cellIndex++) {
+        const cell = row.getCell(cellIndex);
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      }
+    }
+
+    // Menyimpan file
     workbook.xlsx.writeBuffer().then((buffer) => {
       const blob = new Blob([buffer], { type: "application/octet-stream" });
       const url = window.URL.createObjectURL(blob);
@@ -185,16 +219,13 @@ function StokOpname() {
   return (
     <>
       <Layout>
-        <Box
-          // backgroundImage={FotoStokOpname}
-          overflow="hiden"
-          objectFit="cover"
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          height={"100vh"}
-          w="100%"
-        >
-          <Container pt={"300px"} height={"1000px"} maxW={"1280px"}>
+        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+          <Container
+            maxW={"1280px"}
+            p={"30px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+          >
             <Button onClick={exportToExcel} colorScheme="teal" mb={4}>
               Ekspor ke Excel
             </Button>
@@ -215,7 +246,7 @@ function StokOpname() {
                 {renderProfile()}
               </Select>
             </Box>
-            <Text>INI StokOpname</Text>
+
             {/* Tabel untuk menampilkan dataStokOpname menggunakan Chakra UI */}
             <Box mt="20px">
               <Table variant="simple" width="100%">
@@ -224,20 +255,58 @@ function StokOpname() {
                     <Th>Nama Obat</Th>
                     <Th>No Batch</Th>
                     <Th>Exp</Th>
+                    <Th>Stok</Th>
+                    <Th>Total Stok</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {dataStokOpname.map((item) =>
-                    item.noBatches
-                      .filter((batch) => batch.status === 1)
-                      .map((batch) => (
-                        <Tr key={batch.noBatch}>
-                          <Td>{item.nama}</Td>
-                          <Td>{batch.noBatch}</Td>
-                          <Td>{new Date(batch.exp).toLocaleDateString()}</Td>
+                  {dataStokOpname.map((item) => {
+                    const batches = item.noBatches.filter(
+                      (batch) => batch.status === 1
+                    );
+                    return batches.length > 0 ? (
+                      <>
+                        <Tr key={item.nama}>
+                          <Td
+                            rowSpan={batches.length}
+                            borderWidth="1px"
+                            borderColor="gray.200"
+                          >
+                            {item.nama}
+                          </Td>
+                          <Td borderWidth="1px" borderColor="gray.200">
+                            {batches[0].noBatch}
+                          </Td>
+                          <Td borderWidth="1px" borderColor="gray.200">
+                            {new Date(batches[0].exp).toLocaleDateString()}
+                          </Td>
+                          <Td borderWidth="1px" borderColor="gray.200">
+                            {batches[0].stok}
+                          </Td>
+                          <Td
+                            rowSpan={batches.length}
+                            borderWidth="1px"
+                            borderColor="gray.200"
+                          >
+                            {item.totalStok}
+                          </Td>
                         </Tr>
-                      ))
-                  )}
+                        {batches.slice(1).map((batch) => (
+                          <Tr key={batch.noBatch}>
+                            <Td borderWidth="1px" borderColor="gray.200">
+                              {batch.noBatch}
+                            </Td>
+                            <Td borderWidth="1px" borderColor="gray.200">
+                              {new Date(batch.exp).toLocaleDateString()}
+                            </Td>
+                            <Td borderWidth="1px" borderColor="gray.200">
+                              {batch.stok}
+                            </Td>
+                          </Tr>
+                        ))}
+                      </>
+                    ) : null;
+                  })}
                 </Tbody>
               </Table>
             </Box>

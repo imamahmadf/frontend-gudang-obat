@@ -167,252 +167,211 @@ function EditObat(props) {
   return (
     <>
       <Layout>
-        <Box height={"800px"} pt={"80px"}>
-          <Text>{props.match.params.obatId}</Text>
-          <Text>TESSSSS</Text>
-          <Button onClick={onDeleteOpen}>reee</Button>
+        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+          <Container
+            mt={"30px"}
+            maxW={"1280px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+            p={"30px"}
+          >
+            <Box>
+              <Text>{props.match.params.obatId}</Text>
+              <Text>TESSSSS</Text>
+              <Button onClick={onDeleteOpen}>reee</Button>
 
-          <Box mt={4}>
-            <Text fontSize="lg" mb={2}>
-              Riwayat Obat
-            </Text>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>ID</Th>
-                  <Th>Riwayat</Th>
-                  <Th>Nama Profile</Th>
-                  <Th>Tanggal</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {riwayatData.map((item) => (
-                  <Tr key={item.id}>
-                    <Td>{item?.id}</Td>
-                    <Td>{item?.riwayat}</Td>
-                    <Td>{item?.profile?.nama}</Td>
-                    <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
+              <Box mt={4}>
+                <Text fontSize="lg" mb={2}>
+                  Riwayat Obat
+                </Text>
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th>Riwayat</Th>
+                      <Th>Nama Profile</Th>
+                      <Th>Tanggal</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {riwayatData.map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item?.riwayat}</Td>
+                        <Td>{item?.profile?.nama}</Td>
+                        <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            </Box>
+          </Container>
+          <Container
+            mt={"30px"}
+            maxW={"1280px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+            p={"30px"}
+          >
+            <Box mt={4}>
+              <Text textAlign={"center"} fontSize="lg">
+                Data Obat
+              </Text>
+              <Table variant="simple">
+                <Tbody>
+                  <Tr>
+                    <Th>Nama</Th>
+                    <Td>
+                      {editingColumn === "nama" ? (
+                        <Input
+                          name="nama"
+                          value={editedData.nama}
+                          onChange={handleInputChange}
+                        />
+                      ) : (
+                        editedData.nama
+                      )}
+                    </Td>
+                    <Td>
+                      {editingColumn === "nama" ? (
+                        <>
+                          <Button onClick={handleSaveClick}>Simpan</Button>
+                          <Button onClick={handleCancelClick}>Batal</Button>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => handleEditClick("nama")}
+                          isDisabled={!editedData.nama}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Td>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
+                  <Tr>
+                    <Th>Kategori</Th>
+                    <Td>
+                      {editingColumn === "kategori" ? (
+                        <Select
+                          defaultValue={editedData.kategori.id}
+                          onChange={(e) =>
+                            handleSelectChange("kategori", e.target.value)
+                          }
+                        >
+                          <option value="">Pilih Kategori</option>
+                          {dataSeeder.kategoriSeed &&
+                            dataSeeder.kategoriSeed.map((kategori) => (
+                              <option key={kategori.id} value={kategori.id}>
+                                {kategori.nama}
+                              </option>
+                            ))}
+                        </Select>
+                      ) : (
+                        editedData.kategori.nama || "Tidak ada kategori"
+                      )}
+                    </Td>
+                    <Td>
+                      {editingColumn === "kategori" ? (
+                        <>
+                          <Button onClick={handleSaveClick}>Simpan</Button>
+                          <Button onClick={handleCancelClick}>Batal</Button>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => handleEditClick("kategori")}
+                          isDisabled={!editedData.kategori.nama}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Satuan</Th>
+                    <Td>
+                      {editingColumn === "satuan" ? (
+                        <Select
+                          value={editedData.satuan.id}
+                          onChange={(e) =>
+                            handleSelectChange("satuan", e.target.value)
+                          }
+                        >
+                          <option value="">Pilih Satuan</option>
+                          {dataSeeder.satuanSeed &&
+                            dataSeeder.satuanSeed.map((satuan) => (
+                              <option key={satuan.id} value={satuan.id}>
+                                {satuan.nama}
+                              </option>
+                            ))}
+                        </Select>
+                      ) : (
+                        editedData.satuan.nama || "Tidak ada satuan"
+                      )}
+                    </Td>
+                    <Td>
+                      {editingColumn === "satuan" ? (
+                        <>
+                          <Button onClick={handleSaveClick}>Simpan</Button>
+                          <Button onClick={handleCancelClick}>Batal</Button>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => handleEditClick("satuan")}
+                          isDisabled={!editedData.satuan.nama}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
 
-          <Box mt={4}>
-            <Text fontSize="lg" mb={2}>
-              Data Obat
-            </Text>
-            <Table variant="simple">
-              <Tbody>
-                <Tr>
-                  <Th>ID</Th>
-                  <Td>
-                    {editingColumn === "id" ? (
-                      <Input
-                        name="id"
-                        value={editedData.id}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      editedData.id
-                    )}
-                  </Td>
-                  <Td>
-                    {editingColumn === "id" ? (
-                      <>
-                        <Button onClick={handleSaveClick}>Simpan</Button>
-                        <Button onClick={handleCancelClick}>Batal</Button>
-                      </>
-                    ) : (
-                      <Button
-                        onClick={() => handleEditClick("id")}
-                        isDisabled={!editedData.id}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Th>Nama</Th>
-                  <Td>
-                    {editingColumn === "nama" ? (
-                      <Input
-                        name="nama"
-                        value={editedData.nama}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      editedData.nama
-                    )}
-                  </Td>
-                  <Td>
-                    {editingColumn === "nama" ? (
-                      <>
-                        <Button onClick={handleSaveClick}>Simpan</Button>
-                        <Button onClick={handleCancelClick}>Batal</Button>
-                      </>
-                    ) : (
-                      <Button
-                        onClick={() => handleEditClick("nama")}
-                        isDisabled={!editedData.nama}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Th>Kategori</Th>
-                  <Td>
-                    {editingColumn === "kategori" ? (
-                      <Select
-                        defaultValue={editedData.kategori.id}
-                        onChange={(e) =>
-                          handleSelectChange("kategori", e.target.value)
-                        }
-                      >
-                        <option value="">Pilih Kategori</option>
-                        {dataSeeder.kategoriSeed &&
-                          dataSeeder.kategoriSeed.map((kategori) => (
-                            <option key={kategori.id} value={kategori.id}>
-                              {kategori.nama}
-                            </option>
-                          ))}
-                      </Select>
-                    ) : (
-                      editedData.kategori.nama || "Tidak ada kategori"
-                    )}
-                  </Td>
-                  <Td>
-                    {editingColumn === "kategori" ? (
-                      <>
-                        <Button onClick={handleSaveClick}>Simpan</Button>
-                        <Button onClick={handleCancelClick}>Batal</Button>
-                      </>
-                    ) : (
-                      <Button
-                        onClick={() => handleEditClick("kategori")}
-                        isDisabled={!editedData.kategori.nama}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Th>Satuan</Th>
-                  <Td>
-                    {editingColumn === "satuan" ? (
-                      <Select
-                        value={editedData.satuan.id}
-                        onChange={(e) =>
-                          handleSelectChange("satuan", e.target.value)
-                        }
-                      >
-                        <option value="">Pilih Satuan</option>
-                        {dataSeeder.satuanSeed &&
-                          dataSeeder.satuanSeed.map((satuan) => (
-                            <option key={satuan.id} value={satuan.id}>
-                              {satuan.nama}
-                            </option>
-                          ))}
-                      </Select>
-                    ) : (
-                      editedData.satuan.nama || "Tidak ada satuan"
-                    )}
-                  </Td>
-                  <Td>
-                    {editingColumn === "satuan" ? (
-                      <>
-                        <Button onClick={handleSaveClick}>Simpan</Button>
-                        <Button onClick={handleCancelClick}>Batal</Button>
-                      </>
-                    ) : (
-                      <Button
-                        onClick={() => handleEditClick("satuan")}
-                        isDisabled={!editedData.satuan.nama}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
+                  {/* ////////////////////// */}
+                  <Tr>
+                    <Th>Kelas Terapi</Th>
+                    <Td>
+                      {editingColumn === "kelasterapi" ? (
+                        <Select
+                          value={editedData.kelasterapi.id}
+                          onChange={(e) =>
+                            handleSelectChange("kelasterapi", e.target.value)
+                          }
+                        >
+                          <option value="">Pilih Kelas Terapi</option>
+                          {dataSeeder.kelasterapiSeed &&
+                            dataSeeder.kelasterapiSeed.map((kelasterapi) => (
+                              <option
+                                key={kelasterapi.id}
+                                value={kelasterapi.id}
+                              >
+                                {kelasterapi.nama}
+                              </option>
+                            ))}
+                        </Select>
+                      ) : (
+                        editedData.kelasterapi.nama || "Tidak ada kelas terapi"
+                      )}
+                    </Td>
+                    <Td>
+                      {editingColumn === "kelasterapi" ? (
+                        <>
+                          <Button onClick={handleSaveClick}>Simpan</Button>
+                          <Button onClick={handleCancelClick}>Batal</Button>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => handleEditClick("kelasterapi")}
+                          isDisabled={!editedData.kelasterapi.nama}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
 
-                {/* ////////////////////// */}
-                <Tr>
-                  <Th>Kelas Terapi</Th>
-                  <Td>
-                    {editingColumn === "kelasterapi" ? (
-                      <Select
-                        value={editedData.kelasterapi.id}
-                        onChange={(e) =>
-                          handleSelectChange("kelasterapi", e.target.value)
-                        }
-                      >
-                        <option value="">Pilih Kelas Terapi</option>
-                        {dataSeeder.kelasterapiSeed &&
-                          dataSeeder.kelasterapiSeed.map((kelasterapi) => (
-                            <option key={kelasterapi.id} value={kelasterapi.id}>
-                              {kelasterapi.nama}
-                            </option>
-                          ))}
-                      </Select>
-                    ) : (
-                      editedData.kelasterapi.nama || "Tidak ada kelas terapi"
-                    )}
-                  </Td>
-                  <Td>
-                    {editingColumn === "kelasterapi" ? (
-                      <>
-                        <Button onClick={handleSaveClick}>Simpan</Button>
-                        <Button onClick={handleCancelClick}>Batal</Button>
-                      </>
-                    ) : (
-                      <Button
-                        onClick={() => handleEditClick("kelasterapi")}
-                        isDisabled={!editedData.kelasterapi.nama}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
-
-                {/* /////////////////// */}
-
-                <Tr>
-                  <Th>Total Stok</Th>
-                  <Td>
-                    {editingColumn === "totalStok" ? (
-                      <Input
-                        name="totalStok"
-                        value={editedData.totalStok}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      editedData.totalStok
-                    )}
-                  </Td>
-                  <Td>
-                    {editingColumn === "totalStok" ? (
-                      <>
-                        <Button onClick={handleSaveClick}>Simpan</Button>
-                        <Button onClick={handleCancelClick}>Batal</Button>
-                      </>
-                    ) : (
-                      <Button
-                        onClick={() => handleEditClick("totalStok")}
-                        isDisabled={editedData.totalStok === 0}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </Box>
+                  {/* /////////////////// */}
+                </Tbody>
+              </Table>
+            </Box>
+          </Container>
         </Box>
         <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
           <ModalOverlay />

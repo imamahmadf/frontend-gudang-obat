@@ -1,12 +1,14 @@
 import React from "react";
 import { Box, Container, Text } from "@chakra-ui/react";
+
 function Footer() {
   return (
-    <Box>
-      <Container>
-        <Text>footer</Text>
-      </Container>
-    </Box>
+    <>
+      <Box h={"200px"} bgColor={"secondary"}>
+        <Container></Container>
+      </Box>
+      <Box h={"50px"} bgColor={"gelap"}></Box>
+    </>
   );
 }
 

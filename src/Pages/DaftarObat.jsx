@@ -39,6 +39,7 @@ import { useState, useEffect } from "react";
 import { BsFillFunnelFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 import TambahAmprahanItem from "../Components/TambahAmprahanItem";
+import TambahAlokasiItem from "../Components/TambahAlokasiItem";
 import Layout from "../Components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import addFoto from "./../assets/add_photo.png";
@@ -96,7 +97,7 @@ function DaftarObatAlkes() {
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
       )
       .then((res) => {
-        setStatus(res.data.result);
+        setStatus(res.data[0]);
         console.log(res.data[0], "STATUSSSS");
       })
       .catch((err) => {
@@ -259,13 +260,21 @@ function DaftarObatAlkes() {
                 {val.noBatches[0] ? (
                   <>
                     {" "}
-                    {status ? null : (
+                    {status?.StatusAmprahanId < 4 ? (
                       <TambahAmprahanItem
                         userId={1}
                         data={val.noBatches}
                         id={val.id}
                       />
-                    )}
+                    ) : status?.StatusAmprahanId === 4 ? (
+                      <Button
+                        onClick={() => {
+                          history.push(`/gfk/alokasi-item/${val.id}`);
+                        }}
+                      >
+                        alokasi
+                      </Button>
+                    ) : null}
                     <Menu>
                       <MenuButton
                         p={0}
@@ -284,7 +293,7 @@ function DaftarObatAlkes() {
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
-                            history.push(`/edit-obat/${val.id}`);
+                            history.push(`/gfk/edit-obat/${val.id}`);
                           }}
                         >
                           Edit Obat
@@ -296,6 +305,7 @@ function DaftarObatAlkes() {
               </Flex>
             </Flex>
           </Flex>
+          {/* //////MOBILE/////////// */}
           <Link to={"/gfk/detail-obat/" + val.id}>
             <Box
               display={{ ss: "block", sl: "none" }}
@@ -306,75 +316,20 @@ function DaftarObatAlkes() {
               borderColor={"rgba(229, 231, 235, 1)"}
             >
               {" "}
-              <Text fontSize={"16px"} fontWeight={600} me={"10px"} mb={"10px"}>
-                {val.nama}
-              </Text>
               <Flex>
-                {" "}
-                <Image
-                  borderRadius={"5px"}
-                  alt="foto obat"
-                  width="80px"
-                  height="100px"
-                  me="10px"
-                  overflow="hiden"
-                  objectFit="cover"
-                  src={
-                    val.noBatches[0]?.pic
-                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                        val?.noBatches[0]?.pic
-                      : addFoto
-                  }
-                />{" "}
-                <Box>
-                  {" "}
-                  {val.noBatches.map((val2, idx2) => {
-                    const newExp = formatDate(val2.exp);
-                    return (
-                      <Flex key={val2.noBatch} justifyContent={"flex-end"}>
-                        <Box>
-                          <Flex>
-                            <Text fontSize={"13px"} width={"70px"} me={"10px"}>
-                              {val2.noBatch}
-                            </Text>
-                            <Text
-                              fontSize={"13px"}
-                              width={"60px"}
-                              me={"10px"}
-                              backgroundColor={
-                                new Date(newExp) <=
-                                new Date(
-                                  new Date().setMonth(new Date().getMonth() + 3)
-                                )
-                                  ? "danger"
-                                  : ""
-                              }
-                            >
-                              {newExp}
-                            </Text>
-                          </Flex>
-                        </Box>
-                        <Spacer />
-
-                        <Flex justifyContent={"flex-end"}>
-                          <Text
-                            align={"right"}
-                            fontSize={"13px"}
-                            width={"60px"}
-                            ms={"10px"}
-                          >
-                            {val2.stok}
-                          </Text>
-                        </Flex>
-                      </Flex>
-                    );
-                  })}
-                </Box>{" "}
+                <Text
+                  fontSize={"16px"}
+                  fontWeight={600}
+                  me={"10px"}
+                  mb={"10px"}
+                  maxW={"240px"}
+                >
+                  {val.nama}
+                </Text>
                 <Spacer />
                 <Stack>
                   {val.noBatches[0] ? (
                     <>
-                      {" "}
                       {status ? null : (
                         <TambahAmprahanItem
                           userId={1}
@@ -410,6 +365,76 @@ function DaftarObatAlkes() {
                     </>
                   ) : null}
                 </Stack>
+              </Flex>
+              <Flex>
+                {" "}
+                <Image
+                  borderRadius={"5px"}
+                  alt="foto obat"
+                  width="70px"
+                  height="90px"
+                  me="10px"
+                  overflow="hiden"
+                  objectFit="cover"
+                  src={
+                    val.noBatches[0]?.pic
+                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                        val?.noBatches[0]?.pic
+                      : addFoto
+                  }
+                />{" "}
+                <Box>
+                  {" "}
+                  {val.noBatches.map((val2, idx2) => {
+                    const newExp = formatDate(val2.exp);
+                    return (
+                      <Flex
+                        key={val2.noBatch}
+                        justifyContent={"flex-end"}
+                        mb={"5px"}
+                      >
+                        <Box>
+                          <Flex>
+                            <Text fontSize={"13px"} width={"70px"} me={"10px"}>
+                              {val2.noBatch}
+                            </Text>
+                            <Box
+                              width={"80px"}
+                              borderRadius={"5px"}
+                              color={
+                                new Date(newExp) <=
+                                new Date(
+                                  new Date().setMonth(new Date().getMonth() + 3)
+                                )
+                                  ? "white"
+                                  : "black"
+                              }
+                              ps={"10px"}
+                              me={"10px"}
+                              backgroundColor={
+                                new Date(newExp) <=
+                                new Date(
+                                  new Date().setMonth(new Date().getMonth() + 3)
+                                )
+                                  ? "danger"
+                                  : ""
+                              }
+                            >
+                              <Text fontSize={"13px"}>{newExp}</Text>
+                            </Box>
+                          </Flex>
+                        </Box>
+                        <Spacer />
+
+                        <Flex justifyContent={"flex-end"}>
+                          <Text align={"right"} fontSize={"13px"} ms={"10px"}>
+                            {val2.stok}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    );
+                  })}
+                </Box>{" "}
               </Flex>
             </Box>
           </Link>
