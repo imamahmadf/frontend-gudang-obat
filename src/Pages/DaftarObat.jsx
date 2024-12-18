@@ -43,6 +43,7 @@ import TambahAlokasiItem from "../Components/TambahAlokasiItem";
 import Layout from "../Components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import addFoto from "./../assets/add_photo.png";
+import TambahObatRusak from "../Components/TambahObatRusak";
 
 function DaftarObatAlkes() {
   const history = useHistory();
@@ -60,8 +61,8 @@ function DaftarObatAlkes() {
   const changePage = ({ selected }) => {
     setPage(selected);
   };
-  const global = useSelector((state) => state.user);
-  console.log(global, "CEK REDUXX");
+  const { UserRoles } = useSelector((state) => state.user);
+
   const {
     isOpen: isFilterOpen,
     onOpen: onFilterOpen,
@@ -232,7 +233,14 @@ function DaftarObatAlkes() {
                         </Box>
                         <Spacer />
 
-                        <Flex justifyContent={"flex-end"}>
+                        <Flex
+                          justifyContent={"flex-end"}
+                          display={
+                            UserRoles.includes(2) || UserRoles.includes(8)
+                              ? "block"
+                              : "none"
+                          }
+                        >
                           <Text
                             align={"right"}
                             fontSize={"13px"}
@@ -246,7 +254,15 @@ function DaftarObatAlkes() {
                     );
                   })}
                 </Flex>
-                <Flex justifyContent={"end"} pt={"10px"}>
+                <Flex
+                  justifyContent={"end"}
+                  pt={"10px"}
+                  display={
+                    UserRoles.includes(2) || UserRoles.includes(8)
+                      ? "flex"
+                      : "none"
+                  }
+                >
                   <Text fontSize={"13px"} fontWeight={600}>
                     jumlah Stok:{" "}
                     {val.noBatches.reduce(
@@ -259,21 +275,33 @@ function DaftarObatAlkes() {
               <Flex marginStart={"60px"}>
                 {val.noBatches[0] ? (
                   <>
-                    {" "}
-                    {status?.StatusAmprahanId < 4 ? (
-                      <TambahAmprahanItem
-                        userId={1}
-                        data={val.noBatches}
-                        id={val.id}
-                      />
-                    ) : status?.StatusAmprahanId === 4 ? (
-                      <Button
-                        onClick={() => {
-                          history.push(`/gfk/alokasi-item/${val.id}`);
-                        }}
-                      >
-                        alokasi
-                      </Button>
+                    {UserRoles.includes(7) || UserRoles.includes(8) ? (
+                      <>
+                        {" "}
+                        {status?.StatusAmprahanId < 4 ? (
+                          <TambahAmprahanItem
+                            userId={1}
+                            data={val.noBatches}
+                            id={val.id}
+                          />
+                        ) : status?.StatusAmprahanId === 4 ? (
+                          <Button
+                            onClick={() => {
+                              history.push(`/gfk/alokasi-item/${val.id}`);
+                            }}
+                          >
+                            alokasi
+                          </Button>
+                        ) : status?.StatusAmprahanId === 7 ? (
+                          <>
+                            <TambahObatRusak
+                              userId={1}
+                              data={val.noBatches}
+                              id={val.id}
+                            />
+                          </>
+                        ) : null}
+                      </>
                     ) : null}
                     <Menu>
                       <MenuButton
@@ -603,6 +631,11 @@ function DaftarObatAlkes() {
                     width={"100px"}
                     me={"10px"}
                     fontWeight={600}
+                    display={
+                      UserRoles.includes(2) || UserRoles.includes(8)
+                        ? "block"
+                        : "none"
+                    }
                   >
                     Stok
                   </Text>

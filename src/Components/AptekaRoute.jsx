@@ -8,7 +8,7 @@ function AptekRoute(props) {
   const { UserRoles = [] } = useSelector((state) => state.user || {});
   const history = useHistory();
 
-  console.log(UserRoles, props.roleRoute, "CEK PENGAMANAN HALAMAN!!!!");
+  // console.log(UserRoles, props.roleRoute, "CEK PENGAMANAN HALAMAN!!!!");
 
   if (!UserRoles || UserRoles.length === 0) {
     onAuthStateChanged(authFirebase, (user) => {

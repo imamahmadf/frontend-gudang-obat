@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Text,
@@ -19,12 +19,22 @@ import {
   Container,
   Input,
   Select,
+  FormControl,
+  FormLabel,
+  Image,
+  Alert,
+  FormHelperText,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useDisclosure } from "@chakra-ui/react";
 import Layout from "../Components/Layout";
+import addFoto from "./../assets/add_photo.png";
+import { useDispatch, useSelector } from "react-redux";
 
 function EditObat(props) {
+  const inputFileRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileSizeMsg, setFileSizeMsg] = useState("");
   const [dataObat, setDataObat] = useState([]);
   const [riwayatData, setRiwayatData] = useState([]);
   const [dataSeeder, setDataSeeder] = useState({});
@@ -38,11 +48,13 @@ function EditObat(props) {
   });
   const [editingColumn, setEditingColumn] = useState(null);
   const [originalData, setOriginalData] = useState({});
+  const [dataNoBatch, setDataNoBatch] = useState([]);
+  const [selectedNoBatch, setSelectedNoBatch] = useState({});
 
   const {
-    isOpen: isEditOpen,
-    onOpen: onEditOpen,
-    onClose: onEditClose,
+    isOpen: isNoBatchOpen,
+    onOpen: onNoBatchOpen,
+    onClose: onNoBatchClose,
   } = useDisclosure();
   const {
     isOpen: isDeleteOpen,
@@ -50,6 +62,67 @@ function EditObat(props) {
     onClose: onDeleteClose,
   } = useDisclosure();
 
+  const { profileId } = useSelector((state) => state.user);
+
+  const handleFile = (event) => {
+    if (event.target.files[0].size / 1024 > 1024) {
+      setFileSizeMsg("File size is greater than maximum limit");
+    } else {
+      setSelectedFile(event.target.files[0]);
+      let preview = document.getElementById("imgpreview");
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      // formik.setFieldValue("pic", event.target.files[0]);
+    }
+  };
+  function handleNoBatch(e) {
+    onNoBatchOpen();
+    setSelectedNoBatch(JSON.parse(e.target.value));
+    console.log(selectedNoBatch, "HANDLE NOMOR BATCH");
+  }
+
+  async function patchNoBatch() {
+    const formData = new FormData();
+    formData.append("noBatchFE", selectedNoBatch.noBatch);
+    formData.append("id", selectedNoBatch.id);
+    formData.append("pic", selectedFile);
+    formData.append("exp", selectedNoBatch.exp);
+    formData.append("harga", selectedNoBatch.harga);
+    formData.append("kotak", selectedNoBatch.kotak);
+
+    await axios
+      .patch(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/edit`,
+        formData
+      )
+      .then((res) => {
+        onNoBatchClose();
+        setSelectedNoBatch({});
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  function renderNoBatch() {
+    return dataNoBatch.map((val) => {
+      return (
+        <option
+          key={val.nobatch}
+          value={JSON.stringify({
+            id: val.id,
+            noBatch: val.noBatch,
+            harga: val.harga,
+            exp: val.exp,
+            kotak: val.kotak,
+            pic: val.pic,
+          })}
+        >
+          {val.noBatch}
+        </option>
+      );
+    });
+  }
   async function deletBtnHandlerObat(val) {
     axios
       .post(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/delete`, {
@@ -87,6 +160,7 @@ function EditObat(props) {
       .then((res) => {
         console.log(res.data);
         setDataObat(res.data.result);
+        setDataNoBatch(res.data.result.noBatches);
         setRiwayatData(res.data.getRiwayat);
         setEditedData({
           id: res.data.result.id,
@@ -129,12 +203,15 @@ function EditObat(props) {
       .patch(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/patch/obat`, {
         id: editedData.id,
         nama: editedData.nama,
-        kategoriId: editedData.kategori.id || originalData.kategori.id,
-        satuanId: editedData.satuan.id || originalData.satuan.id,
-        kelasterapiId: editedData.kelasterapi.id || originalData.kelasterapi.id,
+        kategoriFE: editedData.kategori || originalData.kategori,
+        satuanFE: editedData.satuan || originalData.satuan.id,
+        kelasterapiFE: editedData.kelasterapi || originalData.kelasterapi.id,
+        kode: editingColumn,
+        profileId,
       })
       .then((res) => {
         console.log(res.data, "TTTTTTTTTTTTTTs");
+        setEditingColumn(null);
         fetchData();
       })
       .catch((err) => {
@@ -144,7 +221,6 @@ function EditObat(props) {
 
   const handleSaveClick = () => {
     patchObat();
-    setEditingColumn(null);
   };
 
   const handleCancelClick = () => {
@@ -372,6 +448,23 @@ function EditObat(props) {
               </Table>
             </Box>
           </Container>
+
+          <Container>
+            <FormControl>
+              <FormLabel>NoBatch</FormLabel>
+              <Select
+                mt="10px"
+                border="1px"
+                borderRadius={"8px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                onChange={(e) => {
+                  handleNoBatch(e);
+                }}
+              >
+                {renderNoBatch()}
+              </Select>
+            </FormControl>
+          </Container>
         </Box>
         <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
           <ModalOverlay />
@@ -390,6 +483,117 @@ function EditObat(props) {
                 }}
                 variant="ghost"
               >
+                Secondary Action
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isNoBatchOpen} onClose={onNoBatchClose}>
+          <ModalOverlay />
+          <ModalContent maxW="800px">
+            <ModalHeader>Ubah Data Nomor batch</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl>
+                <Input
+                  onChange={handleFile}
+                  ref={inputFileRef}
+                  accept="image/png, image/jpeg"
+                  display="none"
+                  type="file"
+
+                  // hidden="hidden"
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <Image
+                  src={
+                    selectedNoBatch?.pic
+                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                        (selectedNoBatch.pic || "")
+                      : addFoto
+                  }
+                  id="imgpreview"
+                  alt="Room image"
+                  width="100%"
+                  height={{ ss: "210px", sm: "210px", sl: "650px" }}
+                  me="10px"
+                  mt="20px"
+                  overflow="hiden"
+                  objectFit="cover"
+                />
+              </FormControl>{" "}
+              <FormControl mt="20px">
+                <FormHelperText>Max size: 1MB</FormHelperText>
+                <Button w="100%" onClick={() => inputFileRef.current.click()}>
+                  Add Photo
+                </Button>
+                {fileSizeMsg ? (
+                  <Alert status="error" color="red" text="center">
+                    {/* <i className="fa-solid fa-circle-exclamation"></i> */}
+                    <Text ms="10px">{fileSizeMsg}</Text>
+                  </Alert>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <FormLabel>No Batch</FormLabel>
+                <Input
+                  value={selectedNoBatch.noBatch}
+                  onChange={(e) =>
+                    setSelectedNoBatch({
+                      ...selectedNoBatch,
+                      noBatch: e.target.value,
+                    })
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>harga</FormLabel>
+                <Input
+                  value={selectedNoBatch.harga}
+                  onChange={(e) =>
+                    setSelectedNoBatch({
+                      ...selectedNoBatch,
+                      harga: e.target.value,
+                    })
+                  }
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Kotak</FormLabel>
+                <Input
+                  value={selectedNoBatch.kotak}
+                  onChange={(e) =>
+                    setSelectedNoBatch({
+                      ...selectedNoBatch,
+                      kotak: e.target.value,
+                    })
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>EXP</FormLabel>
+                <Input
+                  type="date"
+                  value={
+                    selectedNoBatch.exp ? selectedNoBatch.exp.split("T")[0] : ""
+                  }
+                  onChange={(e) =>
+                    setSelectedNoBatch({
+                      ...selectedNoBatch,
+                      exp: e.target.value,
+                    })
+                  }
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onNoBatchClose}>
+                Close
+              </Button>
+              <Button variant="ghost" onClick={patchNoBatch}>
                 Secondary Action
               </Button>
             </ModalFooter>

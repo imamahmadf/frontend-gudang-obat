@@ -38,6 +38,8 @@ import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
 import { BsChevronDoubleDown } from "react-icons/bs";
 import { useDisclosure } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+
 function DetailObat(props) {
   const [dataObat, setDataObat] = useState([]);
   const [dataAmprahan, setDataAmprahan] = useState([]);
@@ -60,6 +62,10 @@ function DetailObat(props) {
     onOpen: onDetailOpen,
     onClose: onDetailClose,
   } = useDisclosure();
+
+  const { UserRoles } = useSelector((state) => state.user);
+
+  console.log(UserRoles, "ROLEEEEEEE");
 
   const handleChange = (e, field) => {
     //console.log(field);
@@ -159,9 +165,12 @@ function DetailObat(props) {
               <Th fontSize={"14px"} color={"white"} py={"15px"}>
                 Keluar
               </Th>
-              <Th fontSize={"14px"} color={"white"} py={"15px"}>
-                Sisa Stok
-              </Th>
+              {UserRoles.includes(2) || UserRoles.includes(8) ? (
+                <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                  Sisa Stok
+                </Th>
+              ) : null}
+
               <Th fontSize={"14px"} color={"white"} py={"15px"}>
                 Jenis
               </Th>
@@ -184,20 +193,26 @@ function DetailObat(props) {
                     {val.amprahan.uptd.nama}
                   </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                    {val.amprahan.uptd.statusTujuanId == 2
+                    {val.amprahan.uptd.statusTujuanId === 2
                       ? val.permintaan
                       : "-"}
                   </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                    {val.amprahan.uptd.statusTujuanId == 1
+                    {val.amprahan.uptd.statusTujuanId === 1 ||
+                    val.amprahan.uptd.statusTujuanId === 4
                       ? val.permintaan
                       : "-"}
                   </Td>
-                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                    {val.sisa}
-                  </Td>
+                  {UserRoles.includes(2) || UserRoles.includes(8) ? (
+                    <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                      {val.sisa}
+                    </Td>
+                  ) : null}
+
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.amprahan.StatusAmprahan.nama}
+                    <br />
+                    {val.amprahan.StatusAmprahan.id === 7 ? val.catatan : null}
                   </Td>
                 </Tr>
               );
@@ -244,7 +259,11 @@ function DetailObat(props) {
           borderColor={"rgba(229, 231, 235, 1)"}
           maxW={"1280px"}
         >
-          <Box>
+          <Box
+          // display={
+          //   UserRoles.includes(1) || UserRoles.includes(5) ? "block" : "none"
+          // }
+          >
             <Text fontSize={"20px"} fontWeight={600}>
               Nama Obat: {dataObat?.nama}
             </Text>
@@ -289,12 +308,14 @@ function DetailObat(props) {
                   <Tr>
                     <Th fontSize={"14px"}>Nomor Batch</Th>
                     <Th fontSize={"14px"}>EXP</Th>
-                    <Th display={{ ss: "none", sl: "block" }} fontSize={"14px"}>
+                    <Th display={{ ss: "none", sl: "flex" }} fontSize={"14px"}>
                       Harga Satuan
                     </Th>
-                    <Th fontSize={"14px"} isNumeric>
-                      Stok
-                    </Th>
+                    {UserRoles.includes(2) || UserRoles.includes(8) ? (
+                      <Th fontSize={"14px"} isNumeric>
+                        Stok
+                      </Th>
+                    ) : null}
 
                     <Th fontSize={"14px"} isNumeric>
                       detail
@@ -313,7 +334,7 @@ function DetailObat(props) {
                           {newExp}
                         </Td>
                         <Td
-                          display={{ ss: "none", sl: "block" }}
+                          display={{ ss: "none", sl: "table-cell" }}
                           fontSize={"14px"}
                           maxWidth="130px"
                         >
@@ -322,9 +343,11 @@ function DetailObat(props) {
                             currency: "IDR",
                           }).format(val.harga)}
                         </Td>
-                        <Td fontSize={"14px"} isNumeric maxWidth="130px">
-                          {val.stok}
-                        </Td>
+                        {UserRoles.includes(2) || UserRoles.includes(8) ? (
+                          <Td fontSize={"14px"} isNumeric maxWidth="130px">
+                            {val.stok}
+                          </Td>
+                        ) : null}
 
                         <Td>
                           <Center
@@ -351,7 +374,13 @@ function DetailObat(props) {
                     );
                   })}
                 </Tbody>
-                <Tfoot>
+                <Tfoot
+                  display={
+                    UserRoles.includes(2) || UserRoles.includes(8)
+                      ? "block"
+                      : "none"
+                  }
+                >
                   <Tr>
                     <Th colSpan={2} fontSize={"14px"}>
                       Jumlah Stok
@@ -466,67 +495,83 @@ function DetailObat(props) {
             <ModalCloseButton />
             <ModalBody pb={6}>
               {" "}
-              <Flex>
-                <Image
-                  src={
-                    selectedBatch.pic
-                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                        selectedBatch.pic
-                      : addFoto
-                  }
-                  alt="Batch Image"
-                  width="300px"
-                  height="300px"
-                  objectFit="cover"
-                />
-                <Table variant="simple" size="sm">
-                  <Tbody>
-                    <Tr>
-                      <Td>Nomor Batch</Td>
-                      <Td>{selectedBatch.noBatch}</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Asal</Td>
-                      <Td>{selectedBatch.perusahaan.nama}</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Sumber Dana</Td>
-                      <Td>{selectedBatch.sumberDana?.sumber}</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Harga</Td>
-                      <Td>
-                        {new Intl.NumberFormat("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                        }).format(selectedBatch.harga)}
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td>EXP</Td>
-                      <Td>{formatDate(selectedBatch.exp)}</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Stok</Td>
-                      <Td>{selectedBatch.stok}</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Kotak</Td>
-                      <Td>
-                        {" "}
-                        {`${Math.floor(
-                          selectedBatch.stok / selectedBatch.kotak
-                        )} kotak` +
-                          (selectedBatch.stok % selectedBatch.kotak !== 0
-                            ? ` dan ${
-                                selectedBatch.stok % selectedBatch.kotak
-                              } ecer`
-                            : "")}
-                      </Td>
-                    </Tr>
-                  </Tbody>
-                </Table>
-              </Flex>
+              <SimpleGrid minChildWidth={"200px"}>
+                <Box>
+                  <Image
+                    src={
+                      selectedBatch.pic
+                        ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                          selectedBatch.pic
+                        : addFoto
+                    }
+                    alt="Batch Image"
+                    width="400px"
+                    height="300px"
+                    objectFit="cover"
+                  />
+                </Box>
+                <Box>
+                  <Table variant="simple" size="sm">
+                    <Tbody>
+                      <Tr>
+                        <Td>Nomor Batch</Td>
+                        <Td>{selectedBatch.noBatch}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Asal</Td>
+                        <Td>{selectedBatch.perusahaan.nama}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Sumber Dana</Td>
+                        <Td>{selectedBatch.sumberDana?.sumber}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Harga</Td>
+                        <Td>
+                          {new Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                          }).format(selectedBatch.harga)}
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td>EXP</Td>
+                        <Td>{formatDate(selectedBatch.exp)}</Td>
+                      </Tr>
+                      <Tr
+                        display={
+                          UserRoles.includes(2) || UserRoles.includes(8)
+                            ? "table-row"
+                            : "none"
+                        }
+                      >
+                        <Td>Stok</Td>
+                        <Td>{selectedBatch.stok}</Td>
+                      </Tr>
+                      <Tr
+                        display={
+                          UserRoles.includes(2) || UserRoles.includes(8)
+                            ? "table-row"
+                            : "none"
+                        }
+                      >
+                        <Td>Kotak</Td>
+                        <Td>
+                          {" "}
+                          {`${Math.floor(
+                            selectedBatch.stok / selectedBatch.kotak
+                          )} kotak` +
+                            (selectedBatch.stok % selectedBatch.kotak !== 0
+                              ? ` dan ${
+                                  selectedBatch.stok % selectedBatch.kotak
+                                } ecer`
+                              : "")}
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </Box>
+              </SimpleGrid>
             </ModalBody>
 
             <ModalFooter></ModalFooter>

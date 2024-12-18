@@ -24,12 +24,10 @@ import { Link, useHistory } from "react-router-dom";
 import Layout from "../Components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 function tambahObatBaru() {
-  const inputFileRef = useRef(null);
   const [kelasTerapiId, setKelasTerapiId] = useState([]);
   const [kategoriId, setKategoriId] = useState([]);
   const [satuanId, setSatuanId] = useState([]);
   const [profile, setProfile] = useState([]);
-  const [sumberDanaId, setSumberDanaId] = useState([]);
 
   const history = useHistory();
   // const [selectedFile, setSelectedFile] = useState(null);
@@ -56,7 +54,7 @@ function tambahObatBaru() {
       nama: "",
       kelasTerapiId: 0,
       kategoriId: 0,
-      sumberDanaId: 0,
+
       satuanId: 0,
       // pic: selectedFile,
       profileId: 0,
@@ -77,9 +75,7 @@ function tambahObatBaru() {
       satuanId: Yup.number()
         .min(1, "Pilih satuan")
         .required("satuanId wajib diisi"),
-      sumberDanaId: Yup.number()
-        .min(1, "Pilih satuan")
-        .required("sumberDana wajib diisi"),
+
       profileId: Yup.number()
         .min(1, "Pilih profile")
         .required("profile wajib diisi")
@@ -89,21 +85,14 @@ function tambahObatBaru() {
     validateOnBlur: true,
     onSubmit: async (values) => {
       console.log(values, "tes formik");
-      const {
-        nama,
-        kelasTerapiId,
-        kategoriId,
-        satuanId,
-        profileId,
-        sumberDanaId,
-      } = values;
+      const { nama, kelasTerapiId, kategoriId, satuanId, profileId } = values;
 
       // kirim data ke back-end
       await axios
         .post(
           `${
             import.meta.env.VITE_REACT_APP_API_BASE_URL
-          }/obat/post?nama=${nama}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&sumberDanaId=${sumberDanaId}&profileReduxId=${profileReduxId}`
+          }/obat/post?nama=${nama}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&profileReduxId=${profileReduxId}`
         )
         .then(async (res) => {
           //console.log(res.data);
@@ -124,7 +113,7 @@ function tambahObatBaru() {
         setKelasTerapiId(res.data.seederKelasTerapi);
         setKategoriId(res.data.seederKategori);
         setSatuanId(res.data.seederSatuan);
-        setSumberDanaId(res.data.seedSumberDana);
+
         setProfile(res.data.profileStaff);
       })
       .catch((err) => {
@@ -137,16 +126,6 @@ function tambahObatBaru() {
       return (
         <option key={val.id} value={val.id}>
           {val.nama}
-        </option>
-      );
-    });
-  }
-
-  function renderSumberDana() {
-    return sumberDanaId.map((val) => {
-      return (
-        <option key={val.id} value={val.id}>
-          {val.sumber}
         </option>
       );
     });
@@ -319,30 +298,6 @@ function tambahObatBaru() {
               {formik.touched.satuanId && formik.errors.satuanId ? (
                 <Alert status="error" color="red" text="center">
                   <Text ms="10px">{formik.errors.satuanId}</Text>
-                </Alert>
-              ) : null}
-            </FormControl>
-            <FormControl mt={"20px"}>
-              <FormLabel>Pilih Sumber Dana</FormLabel>
-              <Select
-                mt="5px"
-                placeholder="Sumber Dana"
-                border="1px"
-                borderRadius={"8px"}
-                borderColor={"rgba(229, 231, 235, 1)"}
-                onChange={(e) => {
-                  formik.setFieldValue(
-                    "sumberDanaId",
-                    parseInt(e.target.value)
-                  );
-                }}
-                onBlur={formik.handleBlur}
-              >
-                {renderSumberDana()}
-              </Select>
-              {formik.touched.sumberDanaId && formik.errors.sumberDanaId ? (
-                <Alert status="error" color="red" text="center">
-                  <Text ms="10px">{formik.errors.sumberDanaId}</Text>
                 </Alert>
               ) : null}
             </FormControl>

@@ -40,6 +40,7 @@ import axios from "axios";
 import auth_types from "../Redux/Reducers/Types/userTypes";
 import { BsFillBoxSeamFill } from "react-icons/bs";
 import { authFirebase } from "../Config/firebase";
+import { BsXOctagon } from "react-icons/bs";
 import {
   onAuthStateChanged,
   signOut,
@@ -68,13 +69,14 @@ function Sidebar() {
     },
     { menu: "Laporan", logo: <BsBarChartLine />, URL: "/gfk/laporan" },
     { menu: "Obat Kadaluwarsa", logo: <BsTrash3 />, URL: "/gfk/kadaluwarsa" },
+    { menu: "Obat Rusak", logo: <BsXOctagon />, URL: "/gfk/obat-rusak" },
     { menu: "Pengaturan", logo: <BsGear />, URL: "/gfk/pengaturan" },
   ];
 
   const { id, ProfilePic, ProfileName, firebaseProviderId, UserRoles } =
     useSelector((state) => state.user);
   //console.log(UserRoles);
-  console.log(useSelector((state) => state.user));
+  // console.log(useSelector((state) => state.user));
 
   const logout = async () => {
     await signOut(auth).catch((error) => alert(error));

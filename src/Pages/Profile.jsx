@@ -130,6 +130,7 @@ function Profile() {
     axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/profile/get/${id}`)
       .then((res) => {
+        console.log(res.data.result.profilePic, "gambar");
         setDataProfile(res.data.result);
         setOld_img(res.data.result.profilePic);
         formik.values.nama = res.data.result.nama;

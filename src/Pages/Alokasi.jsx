@@ -24,6 +24,7 @@ function Alokasi() {
   const [checkedIds, setCheckedIds] = useState([]);
   const [namaAlokasi, setNamaAlokasi] = useState("");
   const history = useHistory();
+  const [status, setStatus] = useState([]);
   async function fetchDataTujuan() {
     axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/uptd/puskesmas`)
@@ -36,7 +37,19 @@ function Alokasi() {
         console.error(err);
       });
   }
-
+  async function fetchStatus() {
+    await axios
+      .get(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
+      )
+      .then((res) => {
+        setStatus(res.data[0]);
+        console.log(res.data[0], "STATUSSSS");
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
   const handleCheckboxChange = (index) => {
     const updatedCheckedItems = [...checkedItems];
     updatedCheckedItems[index] = !updatedCheckedItems[index];
@@ -87,63 +100,80 @@ function Alokasi() {
 
   useEffect(() => {
     fetchDataTujuan();
+    fetchStatus();
   }, []);
 
   return (
     <>
       <Layout>
         <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
-          <Container
-            maxW={"1280px"}
-            bgColor={"white"}
-            borderRadius={"5px"}
-            p={"30px"}
-          >
-            <Button
-              onClick={() => {
-                history.push("/gfk/daftar-alokasi");
-              }}
+          {status ? (
+            <>
+              <Container
+                maxW={"1280px"}
+                bgColor={"white"}
+                borderRadius={"5px"}
+                p={"30px"}
+              >
+                <Text>Selesaikan Amprahan!!</Text>
+              </Container>
+            </>
+          ) : (
+            <Container
+              maxW={"1280px"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              p={"30px"}
             >
-              Daftar Alokasi
-            </Button>
-            <FormControl>
-              <FormLabel>Nama Alokasi</FormLabel>
-              <Input
-                onChange={inputHandler}
-                type="name"
-                placeholder="nama Alokasi"
-                borderRadius="8px"
-                borderColor="rgba(175, 175, 175, 1)"
-              ></Input>
-            </FormControl>
-            <Checkbox isChecked={allChecked} onChange={handleAllCheckboxChange}>
-              Centang Semua
-            </Checkbox>
-            <SimpleGrid minChildWidth="300px" columns={2} spacing={5}>
-              {tujuan.map((item, index) => (
-                <Box borderRadius={"5px"} p={"10px"} bgColor={"secondary"}>
+              <Button
+                onClick={() => {
+                  history.push("/gfk/daftar-alokasi");
+                }}
+              >
+                Daftar Alokasi
+              </Button>
+              <FormControl>
+                <FormLabel>Nama Alokasi</FormLabel>
+                <Input
+                  onChange={inputHandler}
+                  type="name"
+                  placeholder="nama Alokasi"
+                  borderRadius="8px"
+                  borderColor="rgba(175, 175, 175, 1)"
+                ></Input>
+              </FormControl>
+              <Checkbox
+                isChecked={allChecked}
+                onChange={handleAllCheckboxChange}
+              >
+                Centang Semua
+              </Checkbox>
+              <SimpleGrid minChildWidth="300px" columns={2} spacing={5}>
+                {tujuan.map((item, index) => (
+                  <Box borderRadius={"5px"} p={"10px"} bgColor={"secondary"}>
+                    {" "}
+                    <Checkbox
+                      colorScheme="green"
+                      key={item.id}
+                      isChecked={checkedItems[index]}
+                      onChange={() => handleCheckboxChange(index)}
+                    >
+                      {item.nama}
+                    </Checkbox>{" "}
+                  </Box>
+                ))}
+              </SimpleGrid>
+              <Text>Checked IDs: {checkedIds.join(", ")}</Text>
+              {namaAlokasi ? (
+                <>
                   {" "}
-                  <Checkbox
-                    colorScheme="green"
-                    key={item.id}
-                    isChecked={checkedItems[index]}
-                    onChange={() => handleCheckboxChange(index)}
-                  >
-                    {item.nama}
-                  </Checkbox>{" "}
-                </Box>
-              ))}
-            </SimpleGrid>
-            <Text>Checked IDs: {checkedIds.join(", ")}</Text>
-            {namaAlokasi ? (
-              <>
-                {" "}
-                <Button onClick={handleSubmit} colorScheme="teal" mt={4}>
-                  Submit
-                </Button>
-              </>
-            ) : null}
-          </Container>
+                  <Button onClick={handleSubmit} colorScheme="teal" mt={4}>
+                    Submit
+                  </Button>
+                </>
+              ) : null}
+            </Container>
+          )}
         </Box>
       </Layout>
     </>

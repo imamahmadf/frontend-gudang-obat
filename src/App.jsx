@@ -30,6 +30,8 @@ import DaftarAlokasi from "./Pages/DaftarAlokasi";
 import DetailAlokasi from "./Pages/DetailAlokasi";
 import PengaturanUser from "./Pages/PengaturanUser";
 import AptekaRoute from "./Components/AptekaRoute";
+import ObatRusak from "./Pages/ObatRusak";
+import PenanggungJawabObat from "./Pages/PenanggungJawabObat";
 import {
   getAuth,
   onAuthStateChanged,
@@ -145,7 +147,11 @@ function App() {
             exact
             roleRoute={[4, 8]}
           />
-          <AptekaRoute component={EditObat} path="/gfk/edit-obat/:obatId" />
+          <AptekaRoute
+            component={EditObat}
+            path="/gfk/edit-obat/:obatId"
+            roleRoute={[3, 8]}
+          />
           <AptekaRoute
             component={DetailObat}
             path="/gfk/detail-obat/:obatId"
@@ -174,7 +180,13 @@ function App() {
             component={Amprahan}
             path="/gfk/amprahan"
             exact
-            roleRoute={[7, 8]}
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
+            component={ObatRusak}
+            path="/gfk/obat-rusak"
+            exact
+            roleRoute={[1, 8]}
           />
           <AptekaRoute
             component={DetailAmprahan}
@@ -189,17 +201,24 @@ function App() {
             roleRoute={[1, 8]}
           />
           <AptekaRoute
+            component={PenanggungJawabObat}
+            path="/gfk/pengaturan/penanggung-jawab-obat"
+            exact
+            roleRoute={[1, 8]}
+          />
+          <AptekaRoute
             component={ObatMasuk}
             path="/gfk/obat-masuk"
             exact
             roleRoute={[5, 8]}
           />
-          <AptekaRoute
+          {/* <AptekaRoute
             component={Pengaturan}
             path="/gfk/pengaturan"
             roleRoute={[7, 8]}
             exact
-          />
+          /> */}
+          <Route component={Pengaturan} path="/gfk/pengaturan" exact />
           <AptekaRoute
             component={Profile}
             path="/gfk/profile"
