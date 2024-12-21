@@ -89,7 +89,6 @@ function TambahObatRusak(props) {
         }/amprahan/get/tujuan-amprahan`
       )
       .then((res) => {
-        setTujuanAmprahan(res.data);
         console.log(res.data, "TUJUAJN APRHANNN");
       })
       .catch((err) => {
@@ -142,7 +141,7 @@ function TambahObatRusak(props) {
         .post(
           `${
             import.meta.env.VITE_REACT_APP_API_BASE_URL
-          }/rusak/post/rusak-item?noBatchId=${noBatchId}&catatan=${ca}&userId=1&amprahanId=${
+          }/rusak/post/rusak-item?noBatchId=${noBatchId}&catatan=${catatan}&userId=1&amprahanId=${
             tujuan[0]?.id
           }&permintaan=${permintaan}&stokAwal=${stokAwal.stok}&obatId=${
             props.id

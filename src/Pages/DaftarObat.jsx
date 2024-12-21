@@ -57,7 +57,7 @@ function DaftarObatAlkes() {
   const [dataObat, setDataObat] = useState([]);
   const [aset, setAset] = useState([]);
   const [status, setStatus] = useState([]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [randomNumber, setRandomNumber] = useState(0);
   const changePage = ({ selected }) => {
     setPage(selected);
   };
@@ -282,6 +282,7 @@ function DaftarObatAlkes() {
                           <TambahAmprahanItem
                             userId={1}
                             data={val.noBatches}
+                            randomNumber={setRandomNumber}
                             id={val.id}
                           />
                         ) : status?.StatusAmprahanId === 4 ? (
@@ -475,7 +476,7 @@ function DaftarObatAlkes() {
     fetchDataObat();
     fetchStatus();
     console.log(status);
-  }, [keyword, page]);
+  }, [keyword, page, randomNumber]);
   return (
     <>
       <Layout>

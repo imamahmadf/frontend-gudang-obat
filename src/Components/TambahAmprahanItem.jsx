@@ -161,6 +161,8 @@ function TambahAmprahanItem(props) {
         )
         .then((res) => {
           // alert(res.data.message, "wah berhasil");
+
+          props.randomNumber(Math.random());
           onAmprahanClose();
         })
         .catch((err) => {

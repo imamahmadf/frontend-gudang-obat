@@ -143,7 +143,7 @@ function Sidebar() {
                         my="auto"
                         ms={"8px"}
                       >
-                        {ProfileName} aaaaa
+                        {ProfileName}
                       </MenuButton>
                     </Box>
                   ) : (
@@ -171,13 +171,13 @@ function Sidebar() {
                   </MenuList>
                 </Menu>
               </Flex>
-              <Avatar
+              {/* <Avatar
                 size="md"
                 objectFit={"cover"}
                 overflow="hidden"
                 my="auto"
                 src={import.meta.env.VITE_REACT_APP_API_BASE_URL + ProfilePic}
-              />
+              /> */}
             </Flex>
             {menuSidebar.map((val, idx) => {
               return (

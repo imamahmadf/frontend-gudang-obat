@@ -37,6 +37,28 @@ function ObatRusak() {
     onOpen: onRusakOpen,
     onClose: onRusakClose,
   } = useDisclosure();
+  function formatDate(dateString) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agu",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ];
+
+    const date = new Date(dateString);
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${month}, ${year}`;
+  }
   async function OpenObatRusak() {
     axios
       .post(
@@ -103,9 +125,12 @@ function ObatRusak() {
             borderRadius={"5px"}
             p={"30px"}
           >
-            <Button onClick={onRusakOpen}>tambah Obat Rusak</Button>
-            <Button onClick={closeObatRusak}>Tutup Obat Rusak</Button>
-            {JSON.stringify(status)}
+            {status ? null : (
+              <Button onClick={onRusakOpen}>tambah Obat Rusak</Button>
+            )}
+            {status?.StatusAmprahanId === 7 ? (
+              <Button onClick={closeObatRusak}>Tutup Obat Rusak</Button>
+            ) : null}
 
             <Table variant="simple" mt={4}>
               <Thead>
@@ -125,7 +150,7 @@ function ObatRusak() {
                     <Td>{item.noBatch.obat.nama}</Td>
                     <Td>{item.noBatch.harga}</Td>
                     <Td>{item.permintaan}</Td>
-                    <Td>{new Date(item.exp).toLocaleDateString()}</Td>
+                    <Td>{formatDate(item.noBatch.exp)}</Td>
                     <Td>{item.catatan}</Td>
                   </Tr>
                 ))}

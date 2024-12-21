@@ -25,8 +25,13 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  FormLabel,
+  HStack,
+  VStack,
   ModalFooter,
   SimpleGrid,
+  Heading,
+  Avatar,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
@@ -43,14 +48,16 @@ import { useDispatch, useSelector } from "react-redux";
 function DetailObat(props) {
   const [dataObat, setDataObat] = useState([]);
   const [dataAmprahan, setDataAmprahan] = useState([]);
+  const [totalAset, setTotalAset] = useState(0);
   const history = useHistory();
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(20);
   const [page, setPage] = useState(0);
   const [pages, setPages] = useState(0);
   const [rows, setRows] = useState(0);
   const [inputStartDate, setInputStartDate] = useState("");
   const [inputEndDate, setInputEndDate] = useState("");
   const [time, setTime] = useState("");
+  const [jenis, setJenis] = useState("");
   const [puskesmas, setPuskesmas] = useState([]);
   const [puskesmasId, setPuskesmasId] = useState(0);
   const [selectedBatch, setSelectedBatch] = useState(null);
@@ -84,6 +91,8 @@ function DetailObat(props) {
       // console.log(value);
     } else if (field === "time") {
       setTime(value);
+    } else if (field === "jenis") {
+      setJenis(value);
     }
   }
 
@@ -170,9 +179,11 @@ function DetailObat(props) {
                   Sisa Stok
                 </Th>
               ) : null}
-
               <Th fontSize={"14px"} color={"white"} py={"15px"}>
                 Jenis
+              </Th>
+              <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                Nilai Aset
               </Th>
             </Tr>
           </Thead>
@@ -208,11 +219,19 @@ function DetailObat(props) {
                       {val.sisa}
                     </Td>
                   ) : null}
-
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.amprahan.StatusAmprahan.nama}
                     <br />
                     {val.amprahan.StatusAmprahan.id === 7 ? val.catatan : null}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }).format(val.permintaan * val.noBatch.harga)}
+                    {}
                   </Td>
                 </Tr>
               );
@@ -228,7 +247,7 @@ function DetailObat(props) {
       .get(
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/detail/${
           props.match.params.obatId
-        }?page=${page}&limit=${limit}&startDate=${inputStartDate}&endDate=${inputEndDate}&puskesmasId=${puskesmasId}&time=${time}`
+        }?page=${page}&limit=${limit}&startDate=${inputStartDate}&endDate=${inputEndDate}&puskesmasId=${puskesmasId}&time=${time}&jenis=${jenis}`
       )
       .then((res) => {
         setDataObat(res.data.result);
@@ -236,7 +255,14 @@ function DetailObat(props) {
         setPage(res.data.page);
         setPages(res.data.totalPage);
         setRows(res.data.totalRows);
-        console.log(res.data);
+
+        // Menghitung total aset
+        const totalAset = res.data.result.noBatches.reduce((total, batch) => {
+          return total + batch.harga * batch.stok;
+        }, 0);
+
+        setTotalAset(totalAset); // Simpan total aset ke dalam state
+        console.log(res.data.amprahanData); // Menampilkan total aset di console
       })
       .catch((err) => {
         console.log(err);
@@ -246,11 +272,116 @@ function DetailObat(props) {
   useEffect(() => {
     fetchObat();
     fetchDataPuskesmas();
-  }, [page, inputStartDate, inputEndDate, time, puskesmasId]);
+  }, [page, inputStartDate, inputEndDate, time, puskesmasId, jenis]);
 
   return (
     <Layout>
-      <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+      <Box pt={"80px"} bgColor={"secondary"}>
+        <Container maxW={"1280px"} mb={"20px"} p={0}>
+          <Flex gap={"20px"}>
+            <Flex
+              w={"85%"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              flexDirection={"column"}
+              p={"15px"}
+              borderColor={"secondary"}
+            >
+              <Heading mb={"10px"}> Nama Obat: {dataObat?.nama}</Heading>
+              <Heading as="h6" size="md">
+                Tanggal Input: {formatTanggal(dataObat?.createdAt)}
+              </Heading>
+              <Spacer />
+              <Flex gap={"15px"}>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Kelas terapi:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataObat?.kelasterapi?.nama}
+                  </Text>
+                </Box>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Kategori:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataObat?.kategori?.nama}
+                  </Text>
+                </Box>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Total Stok:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataObat?.totalStok}
+                  </Text>
+                </Box>{" "}
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Satuan:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataObat?.satuan?.nama}
+                  </Text>
+                </Box>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Nilai Aset:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }).format(totalAset)}
+                  </Text>
+                </Box>
+              </Flex>
+            </Flex>
+            <VStack
+              w={"15%"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              p={"15px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+            >
+              <Text fontWeight={600} align={"center"}>
+                Penanggung Jawab
+              </Text>
+              <Avatar my={"5px"} w={"70%"} borderRadius={"5px"} h={"100px"} />
+              <Text align={"center"}>{dataObat?.profile?.nama}</Text>
+            </VStack>
+          </Flex>
+        </Container>
         <Container
           p={"15px"}
           bgColor={"white"}
@@ -259,30 +390,6 @@ function DetailObat(props) {
           borderColor={"rgba(229, 231, 235, 1)"}
           maxW={"1280px"}
         >
-          <Box
-          // display={
-          //   UserRoles.includes(1) || UserRoles.includes(5) ? "block" : "none"
-          // }
-          >
-            <Text fontSize={"20px"} fontWeight={600}>
-              Nama Obat: {dataObat?.nama}
-            </Text>
-            <Text fontSize={"20px"} fontWeight={600}>
-              Satuan: {dataObat?.satuan?.nama}
-            </Text>
-            <Text fontSize={"20px"} fontWeight={600}>
-              Kelas Terapi: {dataObat?.kelasterapi?.nama}
-            </Text>
-            <Text fontSize={"20px"} fontWeight={600}>
-              Kategori: {dataObat?.kategori?.nama}
-            </Text>
-            <Text fontSize={"20px"} fontWeight={600}>
-              Tanggal Input: {formatTanggal(dataObat?.createdAt)}
-            </Text>
-            <Text fontSize={"20px"} fontWeight={600}>
-              Kategori: {dataObat?.kategori?.nama}
-            </Text>
-          </Box>
           <SimpleGrid minChildWidth="420px">
             <Box>
               {" "}
@@ -341,6 +448,8 @@ function DetailObat(props) {
                           {new Intl.NumberFormat("id-ID", {
                             style: "currency",
                             currency: "IDR",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
                           }).format(val.harga)}
                         </Td>
                         {UserRoles.includes(2) || UserRoles.includes(8) ? (
@@ -406,9 +515,13 @@ function DetailObat(props) {
           maxW={"1280px"}
           mt={"20px"}
         >
+          {" "}
+          <FormLabel>Tanggal</FormLabel>
           <Flex>
+            {" "}
             <FormControl border={"1px"} borderColor="gray.400" me="5px">
-              <Text ms="18px">Start Date</Text>
+              {" "}
+              <Text ms="18px">Awal</Text>
               <Input
                 placeholder="Select Date and Time"
                 defaultValue={inputStartDate}
@@ -420,7 +533,7 @@ function DetailObat(props) {
             </FormControl>
             <FormControl border={"1px"} borderColor="gray.400">
               {/* buat stardate adnn date dalm flex agar bias sevelahan(dicoba), dijadikan query nanti nya */}
-              <Text ms="18px">End Date</Text>
+              <Text ms="18px">Akhir</Text>
               <Input
                 placeholder="Select Date and Time"
                 size="md"
@@ -431,24 +544,56 @@ function DetailObat(props) {
               />
             </FormControl>
           </Flex>
-          <FormControl>
-            <Select
-              mb="20px"
-              placeholder="short by Income"
-              borderRadius={0}
-              onClick={(e) => selectHandler(e, "puskesmasId")}
-            >
-              {renderPuskesmas()}
-            </Select>
-            <Select
-              placeholder="short by date"
-              borderRadius={0}
-              onClick={(e) => selectHandler(e, "time")}
-            >
-              <option value="DESC">Newest </option>
-              <option value="ASC">Latest</option>
-            </Select>
-          </FormControl>{" "}
+          <Flex mt={"15px"} gap={"10px"}>
+            {" "}
+            <FormControl>
+              <Select
+                placeholder="Berdasarkan Waktu"
+                borderRadius={0}
+                onClick={(e) => selectHandler(e, "time")}
+              >
+                <option value="DESC">Terbaru </option>
+                <option value="ASC">Terlama</option>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <Select
+                mb="20px"
+                placeholder="Berdasarkan Tujuan"
+                borderRadius={0}
+                onClick={(e) => selectHandler(e, "puskesmasId")}
+              >
+                {renderPuskesmas()}
+              </Select>
+            </FormControl>{" "}
+            <FormControl>
+              <Select
+                placeholder="Berdasarkan Jenis"
+                borderRadius={0}
+                onClick={(e) => selectHandler(e, "jenis")}
+              >
+                <option value="1">Amprahan </option>
+                <option value="2">Bon</option>
+                <option value="3">Program </option>
+                <option value="4">Alokasi</option>
+                <option value="5">Obat masuk </option>
+
+                <option value="6">Obat Exp </option>
+                <option value="7">Obat Rusak</option>
+                <option value="8">Stok Opname </option>
+              </Select>
+            </FormControl>
+          </Flex>
+        </Container>
+        <Container
+          p={"15px"}
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px"}
+          borderColor={"rgba(229, 231, 235, 1)"}
+          maxW={"1280px"}
+          mt={"20px"}
+        >
           {renderRiwayat()}
           <div
             style={{
@@ -531,6 +676,8 @@ function DetailObat(props) {
                           {new Intl.NumberFormat("id-ID", {
                             style: "currency",
                             currency: "IDR",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
                           }).format(selectedBatch.harga)}
                         </Td>
                       </Tr>
