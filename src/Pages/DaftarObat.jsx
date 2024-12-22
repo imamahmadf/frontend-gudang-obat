@@ -44,6 +44,7 @@ import Layout from "../Components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import addFoto from "./../assets/add_photo.png";
 import TambahObatRusak from "../Components/TambahObatRusak";
+import AmprahanAktif from "../Components/AmprahanAktif";
 
 function DaftarObatAlkes() {
   const history = useHistory();
@@ -58,10 +59,78 @@ function DaftarObatAlkes() {
   const [aset, setAset] = useState([]);
   const [status, setStatus] = useState([]);
   const [randomNumber, setRandomNumber] = useState(0);
+  const [kelasTerapiId, setKelasTerapiId] = useState(0);
+  const [kategoriId, setKategoriId] = useState(0);
+  const [satuanId, setSatuanId] = useState(0);
+  const [seed, setSeed] = useState([]);
   const changePage = ({ selected }) => {
     setPage(selected);
   };
   const { UserRoles } = useSelector((state) => state.user);
+
+  function handleChange(event, field) {
+    const { value } = event.target;
+    if (field === "kelasTerapiId") {
+      setKelasTerapiId(value);
+      // console.log(value);
+    } else if (field === "kategoriId") {
+      setKategoriId(value);
+    } else if (field === "satuanId") {
+      setSatuanId(value);
+    }
+  }
+
+  function renderKelasTerapi() {
+    return seed?.kelasterapiSeed?.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.nama}
+        </option>
+      );
+    });
+  }
+
+  function renderKategori() {
+    return seed?.kategoriSeed?.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.nama}
+        </option>
+      );
+    });
+  }
+
+  function renderSatuan() {
+    return satuanId.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.nama}
+        </option>
+      );
+    });
+  }
+  function renderSatuan() {
+    return seed?.satuanSeed?.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.nama}
+        </option>
+      );
+    });
+  }
+  async function fetchDataSeed() {
+    await axios
+      .get(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/pengaturan/get/seeders`
+      )
+      .then((res) => {
+        setSeed(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   const {
     isOpen: isFilterOpen,
@@ -111,7 +180,7 @@ function DaftarObatAlkes() {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/obat/get?search_query=${keyword}&alfabet=${alfabet}&time=${time}&page=${page}&limit=${limit}`
+        }/obat/get?search_query=${keyword}&alfabet=${alfabet}&time=${time}&page=${page}&limit=${limit}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}`
       )
       .then((res) => {
         setPage(res.data.page);
@@ -149,7 +218,6 @@ function DaftarObatAlkes() {
       return (
         <>
           <Flex
-            px={"30px"}
             py={"15px"}
             borderTop={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
@@ -157,7 +225,11 @@ function DaftarObatAlkes() {
             display={{ ss: "none", sl: "block" }}
           >
             <Flex>
-              <Flex>
+              <Flex
+                onClick={() => {
+                  history.push(`/gfk/detail-obat/${val.id}`);
+                }}
+              >
                 <Image
                   borderRadius={"5px"}
                   alt="foto obat"
@@ -176,8 +248,11 @@ function DaftarObatAlkes() {
                 <Text fontSize={"13px"} width={"150px"} me={"10px"}>
                   {val.nama}
                 </Text>
-                <Text fontSize={"13px"} width={"160px"} me={"10px"}>
+                <Text fontSize={"13px"} width={"120px"} me={"10px"}>
                   {val.kelasterapi.nama}
+                </Text>{" "}
+                <Text fontSize={"13px"} width={"100px"} me={"10px"}>
+                  {val.kategori.nama}
                 </Text>{" "}
                 <Text fontSize={"13px"} width={"80px"} me={"10px"}>
                   {val.satuan.nama}
@@ -227,6 +302,8 @@ function DaftarObatAlkes() {
                               {new Intl.NumberFormat("id-ID", {
                                 style: "currency",
                                 currency: "IDR",
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
                               }).format(val2.harga)}
                             </Text>{" "}
                           </Flex>
@@ -475,14 +552,23 @@ function DaftarObatAlkes() {
   useEffect(() => {
     fetchDataObat();
     fetchStatus();
+    fetchDataSeed();
     console.log(status);
-  }, [keyword, page, randomNumber]);
+  }, [keyword, page, randomNumber, satuanId, kelasTerapiId, kategoriId]);
   return (
     <>
       <Layout>
         <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
           <Container
-            bgColor={"white"}
+            bgColor={
+              status?.StatusAmprahanId <= 3
+                ? "primary"
+                : status?.StatusAmprahanId === 7
+                ? "danger"
+                : status?.StatusAmprahanId === 4
+                ? "biru"
+                : "white"
+            }
             borderRadius={"5px"}
             border={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
@@ -490,7 +576,7 @@ function DaftarObatAlkes() {
             marginBottom={"20px"}
             padding={"20px"}
           >
-            <Box backgroundColor={"danger"}>
+            <Box>
               <Text>
                 {new Intl.NumberFormat("id-ID", {
                   style: "currency",
@@ -501,15 +587,18 @@ function DaftarObatAlkes() {
             <Box>
               <Text></Text>
             </Box>
+            {status ? <AmprahanAktif data={status} /> : null}
           </Container>
+
           <Container
             bgColor={"white"}
             borderRadius={"5px"}
             border={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
             maxW={"1280px"}
+            mb={"15px"}
+            p={"20px"}
           >
-            {" "}
             <Box>
               <HStack flexDirection={{ ss: "row", sl: "row" }}>
                 <Text
@@ -562,10 +651,69 @@ function DaftarObatAlkes() {
                   </FormControl>
                 </HStack>
               </HStack>
+              <HStack>
+                <FormControl>
+                  <Select
+                    mt="5px"
+                    placeholder="Kelas Terapi"
+                    border="1px"
+                    borderRadius={"8px"}
+                    borderColor={"rgba(229, 231, 235, 1)"}
+                    onChange={(e) => handleChange(e, "kelasTerapiId")}
+                  >
+                    {renderKelasTerapi()}
+                  </Select>
+                </FormControl>{" "}
+                <FormControl>
+                  <Select
+                    mt="5px"
+                    placeholder="Kategori"
+                    border="1px"
+                    borderRadius={"8px"}
+                    borderColor={"rgba(229, 231, 235, 1)"}
+                    onChange={(e) => handleChange(e, "kategoriId")}
+                  >
+                    {renderKategori()}
+                  </Select>
+                </FormControl>
+                <FormControl>
+                  <Select
+                    mt="5px"
+                    placeholder="Satuan"
+                    border="1px"
+                    borderRadius={"8px"}
+                    borderColor={"rgba(229, 231, 235, 1)"}
+                    onChange={(e) => handleChange(e, "satuanId")}
+                  >
+                    {renderSatuan()}
+                  </Select>
+                </FormControl>
+                <Button
+                  onClick={() => {
+                    setKeyword("");
+                    setAlfabet("");
+                    setTime("");
+                    setPage(0);
+                    setKelasTerapiId(0);
+                    setKategoriId(0);
+                    setSatuanId(0);
+                  }}
+                >
+                  reset
+                </Button>
+              </HStack>
             </Box>
+          </Container>
+          <Container
+            bgColor={"white"}
+            borderRadius={"5px"}
+            border={"1px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+            maxW={"1280px"}
+          >
+            {" "}
             <Box display={{ ss: "none", sl: "block" }}>
               <Flex
-                px={"30px"}
                 py={"15px"}
                 borderTop={"1px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
@@ -583,10 +731,18 @@ function DaftarObatAlkes() {
                     <Text
                       fontSize={"15px"}
                       fontWeight={600}
-                      width={"160px"}
+                      width={"120px"}
                       me={"10px"}
                     >
                       Kelas Terapi
+                    </Text>{" "}
+                    <Text
+                      fontSize={"15px"}
+                      fontWeight={600}
+                      width={"100px"}
+                      me={"10px"}
+                    >
+                      Kategori
                     </Text>{" "}
                     <Text
                       fontSize={"15px"}

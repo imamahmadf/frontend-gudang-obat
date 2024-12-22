@@ -81,7 +81,7 @@ function TambahAmprahanItem(props) {
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setTujuan(res.data);
       })
       .catch((err) => {
@@ -98,7 +98,7 @@ function TambahAmprahanItem(props) {
       )
       .then((res) => {
         setTujuanAmprahan(res.data);
-        console.log(res.data, "TUJUAJN APRHANNN");
+        // console.log(res.data, "TUJUAJN APRHANNN");
       })
       .catch((err) => {
         console.error(err.message);
