@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import Layout from "../Components/Layout";
 import { Link, useHistory } from "react-router-dom";
+import AmprahanAktif from "../Components/AmprahanAktif";
 function Alokasi() {
   const [tujuan, setTujuan] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -106,16 +107,27 @@ function Alokasi() {
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box bgColor={"secondary"} py={"50px"} mt={"50px"} minHeight={"80vh"}>
           {status ? (
             <>
               <Container
-                maxW={"1280px"}
-                bgColor={"white"}
+                bgColor={
+                  status?.StatusAmprahanId <= 3
+                    ? "primary"
+                    : status?.StatusAmprahanId === 7
+                    ? "danger"
+                    : status?.StatusAmprahanId === 4
+                    ? "biru"
+                    : "white"
+                }
                 borderRadius={"5px"}
-                p={"30px"}
+                border={"1px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                maxW={"1280px"}
+                marginBottom={"20px"}
+                padding={"20px"}
               >
-                <Text>Selesaikan Amprahan!!</Text>
+                <AmprahanAktif data={status} />
               </Container>
             </>
           ) : (

@@ -21,17 +21,33 @@ import {
   Flex,
   Center,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import Layout from "../Components/Layout";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useDisclosure } from "@chakra-ui/react";
+import ReactPaginate from "react-paginate";
+import "../Style/pagination.css";
+import { BsCaretRightFill } from "react-icons/bs";
+import { BsCaretLeftFill } from "react-icons/bs";
+import { BsChevronDoubleDown } from "react-icons/bs";
+import addFoto from "./../assets/add_photo.png";
 function ObatRusak() {
+  const toast = useToast();
   const history = useHistory();
   const { profileId } = useSelector((state) => state.user);
   const [status, setStatus] = useState([]);
   const [dataObatRusak, setDataObatRusak] = useState([]);
+  const [limit, setLimit] = useState(20);
+  const [page, setPage] = useState(0);
+  const [pages, setPages] = useState(0);
+  const [rows, setRows] = useState(0);
+  const [time, setTime] = useState("");
 
+  const changePage = ({ selected }) => {
+    setPage(selected);
+  };
   const {
     isOpen: isRusakOpen,
     onOpen: onRusakOpen,
@@ -80,7 +96,16 @@ function ObatRusak() {
           import.meta.env.VITE_REACT_APP_API_BASE_URL
         }/rusak/post/close-rusak?id=${status.id}`
       )
-      .then((res) => {})
+      .then((res) => {
+        toast({
+          title: "Berhasil!",
+          description: "Obat Rusak Berhasil Ditutup",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        fetchObatRusak();
+      })
       .catch((err) => {
         console.error(err);
       });
@@ -101,10 +126,17 @@ function ObatRusak() {
 
   async function fetchObatRusak() {
     await axios
-      .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/rusak/get`)
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/rusak/get?page=${page}&limit=${limit}&time=${time}`
+      )
       .then((res) => {
-        console.log(res.data.result);
+        console.log(res.data);
         setDataObatRusak(res.data.result);
+        setPage(res.data.page);
+        setPages(res.data.totalPage);
+        setRows(res.data.totalRows);
       })
       .catch((err) => {
         console.error(err);
@@ -113,7 +145,7 @@ function ObatRusak() {
   useEffect(() => {
     fetchStatus();
     fetchObatRusak();
-  }, []);
+  }, [page, time]);
   return (
     <>
       <Layout>
@@ -131,12 +163,11 @@ function ObatRusak() {
             {status?.StatusAmprahanId === 7 ? (
               <Button onClick={closeObatRusak}>Tutup Obat Rusak</Button>
             ) : null}
-
             <Table variant="simple" mt={4}>
               <Thead>
                 <Tr>
-                  <Th>No Batch</Th>
                   <Th>Nama Obat</Th>
+                  <Th>No Batch</Th>
                   <Th>Harga</Th>
                   <Th>Stok</Th>
                   <Th>EXP</Th>
@@ -146,8 +177,27 @@ function ObatRusak() {
               <Tbody>
                 {dataObatRusak?.map((item) => (
                   <Tr key={item.id}>
+                    <Td>
+                      <Flex>
+                        <Image
+                          borderRadius={"5px"}
+                          alt="foto obat"
+                          width="30px"
+                          height="40px"
+                          me="10px"
+                          objectFit="cover"
+                          src={
+                            item.noBatch.pic
+                              ? `${
+                                  import.meta.env.VITE_REACT_APP_API_BASE_URL
+                                }${item.noBatch.pic}`
+                              : addFoto
+                          }
+                        />
+                        {item.noBatch.obat.nama}
+                      </Flex>
+                    </Td>
                     <Td>{item.noBatch.noBatch}</Td>
-                    <Td>{item.noBatch.obat.nama}</Td>
                     <Td>{item.noBatch.harga}</Td>
                     <Td>{item.permintaan}</Td>
                     <Td>{formatDate(item.noBatch.exp)}</Td>
@@ -155,7 +205,35 @@ function ObatRusak() {
                   </Tr>
                 ))}
               </Tbody>
-            </Table>
+            </Table>{" "}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                padding: 20,
+                boxSizing: "border-box",
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <ReactPaginate
+                previousLabel={<BsCaretLeftFill />}
+                nextLabel={<BsCaretRightFill />}
+                pageCount={pages}
+                onPageChange={changePage}
+                activeClassName={"item active "}
+                breakClassName={"item break-me "}
+                breakLabel={"..."}
+                containerClassName={"pagination"}
+                disabledClassName={"disabled-page"}
+                marginPagesDisplayed={2}
+                nextClassName={"item next "}
+                pageClassName={"item pagination-page "}
+                pageRangeDisplayed={2}
+                previousClassName={"item previous"}
+              />
+            </div>
           </Container>
         </Box>
         <Modal
@@ -165,22 +243,24 @@ function ObatRusak() {
         >
           <ModalOverlay />
           <ModalContent borderRadius={0}>
-            <ModalHeader>Shory by:</ModalHeader>
+            <ModalHeader>Tambah Obat Rusak</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
-              <Text></Text>
+              <Text>Apakah Anda Yakin ingin menambahkan Obat Rusak?</Text>
             </ModalBody>
 
             <ModalFooter>
               <Button
-                height={"20px"}
-                width={"60px"}
-                fontSize={"12px"}
+                bg={"danger"}
+                color={"white"}
+                _hover={{
+                  bg: "black",
+                }}
                 onClick={() => {
                   OpenObatRusak();
                 }}
               >
-                Terima
+                Tambah
               </Button>
             </ModalFooter>
           </ModalContent>

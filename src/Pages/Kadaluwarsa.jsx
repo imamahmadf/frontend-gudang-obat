@@ -31,7 +31,8 @@ import { BsChevronDoubleDown } from "react-icons/bs";
 import "../Style/pagination.css";
 import { useDisclosure } from "@chakra-ui/react";
 import { BsTrash3 } from "react-icons/bs";
-
+import addFoto from "./../assets/add_photo.png";
+import { useDispatch, useSelector } from "react-redux";
 function Kadaluwarsa() {
   const history = useHistory();
   const [page, setPage] = useState(0);
@@ -43,7 +44,7 @@ function Kadaluwarsa() {
   const [alfabet, setAlfabet] = useState("");
   const [time, setTime] = useState("");
   const [dataObat, setDataObat] = useState([]);
-
+  const { UserRoles, profileId } = useSelector((state) => state.user);
   const changePage = ({ selected }) => {
     setPage(selected);
   };
@@ -155,7 +156,11 @@ function Kadaluwarsa() {
                     <Th>Exp</Th>
                     <Th>No Batch</Th>
                     <Th>Stok</Th>
-                    <Th>Detail</Th>
+                    {UserRoles.includes(6) ||
+                    UserRoles.includes(8) ||
+                    UserRoles.includes(7) ? (
+                      <Th>Hapus</Th>
+                    ) : null}
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -168,28 +173,32 @@ function Kadaluwarsa() {
                           <Td>{batch.exp ? formatDate(batch.exp) : "N/A"}</Td>
                           <Td>{batch.noBatch || "N/A"}</Td>
                           <Td>{batch.stok || "N/A"}</Td>
-                          <Td>
-                            <Center
-                              onClick={() => {
-                                setSelectedBatch(obat);
-                                setSelectedBatchDetail(batch);
-                                onDetailOpen();
-                              }}
-                              borderRadius={"5px"}
-                              as="button"
-                              h="25px"
-                              w="25px"
-                              fontSize="12px"
-                              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                              color="white"
-                              _hover={{
-                                bg: "black",
-                              }}
-                              bg="green"
-                            >
-                              <BsChevronDoubleDown />
-                            </Center>
-                          </Td>
+                          {UserRoles.includes(6) ||
+                          UserRoles.includes(8) ||
+                          UserRoles.includes(7) ? (
+                            <Td>
+                              <Center
+                                onClick={() => {
+                                  setSelectedBatch(obat);
+                                  setSelectedBatchDetail(batch);
+                                  onDetailOpen();
+                                }}
+                                borderRadius={"5px"}
+                                as="button"
+                                h="25px"
+                                w="25px"
+                                fontSize="12px"
+                                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                                color="white"
+                                _hover={{
+                                  bg: "black",
+                                }}
+                                bg="danger"
+                              >
+                                <BsTrash3 />
+                              </Center>
+                            </Td>
+                          ) : null}
                         </Tr>
                       ))
                   )}
@@ -216,8 +225,10 @@ function Kadaluwarsa() {
                 <Flex>
                   <Image
                     src={
-                      import.meta.env.VITE_REACT_APP_API_BASE_URL +
                       selectedBatchDetail.pic
+                        ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                          selectedBatchDetail.pic
+                        : addFoto
                     }
                     alt="Batch Image"
                     width="300px"
@@ -236,7 +247,7 @@ function Kadaluwarsa() {
                       </Tr>
                       <Tr>
                         <Td>Exp</Td>
-                        <Td>{selectedBatchDetail.exp}</Td>
+                        <Td>{formatDate(selectedBatchDetail.exp)}</Td>
                       </Tr>
                       <Tr>
                         <Td>Asal</Td>

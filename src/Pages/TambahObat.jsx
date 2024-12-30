@@ -14,6 +14,8 @@ import {
   Image,
   FormHelperText,
 } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "@chakra-ui/react";
 import addFoto from "./../assets/add_photo.png";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -29,14 +31,17 @@ import { BsFillFunnelFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 
 function tambahObat() {
+  const toast = useToast();
   const inputFileRef = useRef(null);
   const [namaObat, setNamaObat] = useState([]);
-  const [selectedObat, setSelectedObat] = useState(0);
+  const [selectedObat, setSelectedObat] = useState(null);
   const [perusahaanId, setPerusahaanId] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileSizeMsg, setFileSizeMsg] = useState("");
   const [sumberDanaId, setSumberDanaId] = useState([]);
   const history = useHistory();
+
+  const { profileId, UserRoles } = useSelector((state) => state.user);
 
   const handleFile = (event) => {
     if (event.target.files[0].size / 1024 > 1024) {
@@ -81,7 +86,17 @@ function tambahObat() {
   }
   async function fetchNamaObat() {
     await axios
-      .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/get-nama`)
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/obat/get-nama?profileId=${
+          UserRoles.includes(4) ||
+          UserRoles.includes(7) ||
+          UserRoles.includes(8)
+            ? 0
+            : profileId
+        }`
+      )
       .then((res) => {
         console.log(res.data, "tessss");
         setNamaObat(res.data);
@@ -128,7 +143,7 @@ function tambahObat() {
       const { noBatch, exp, harga, stok, perusahaan, kotak, sumberDana } =
         values;
 
-      // kirim data ke back-end    const formData = new FormData();
+      // kirim data ke back-end
       const formData = new FormData();
       formData.append("noBatch2", noBatch);
       formData.append("exp", exp);
@@ -136,7 +151,7 @@ function tambahObat() {
       formData.append("harga", harga);
       formData.append("stok", stok);
       formData.append("perusahaan", perusahaan);
-      formData.append("obatId", selectedObat.value);
+      formData.append("obatId", selectedObat?.value);
       formData.append("kotak", kotak);
       formData.append("sumberDana", sumberDana);
       await axios
@@ -145,11 +160,24 @@ function tambahObat() {
           formData
         )
         .then((res) => {
-          // alert(res.data.message);
+          // Menampilkan toast setelah berhasil
+          toast({
+            title: "Berhasil!",
+            description: "Data Nomor Batch berhasil disimpan.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
 
-          setTimeout(() => {
-            history.push("/gfk/daftar-obat");
-          }, 2000);
+          // Reset form dan state setelah berhasil
+          formik.resetForm();
+
+          setSelectedFile(null);
+          setFileSizeMsg("");
+          setPerusahaanId([]);
+          setSumberDanaId([]);
+
+          // Arahkan pengguna ke halaman lain (misalnya daftar obat)
         })
         .catch((err) => {
           console.error(err);

@@ -56,7 +56,7 @@ function Login() {
     const user = credential.user;
 
     await axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/user/get-by-id`, {
+      .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-by-id`, {
         params: { id: user.uid },
       })
       .then((res) => {
@@ -105,7 +105,7 @@ function Login() {
 
       // utk get data ke back-end dan di simpan di redux
       const response = axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/user/get-by-id`,
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-by-id`,
         {
           params: { id: user.uid },
         }

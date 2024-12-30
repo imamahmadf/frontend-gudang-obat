@@ -106,7 +106,11 @@ function tambahObatBaru() {
 
   async function fetchNamaObat() {
     await axios
-      .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/get-nama`)
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/obat/get-nama?profileId=${0}`
+      )
       .then((res) => {
         console.log(res.data, "tessss");
 

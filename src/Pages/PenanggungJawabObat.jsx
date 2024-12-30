@@ -38,6 +38,8 @@ function PenanggungJawabObat() {
   const [checkedItems, setCheckedItems] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [dataKategori, setDatakategori] = useState([]);
+  const [kategoriId, setKategoriId] = useState(0);
   const {
     isOpen: isPenanggungJawabOpen,
     onOpen: onPenanggungJawabOpen,
@@ -61,11 +63,12 @@ function PenanggungJawabObat() {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/obat/get/penanggung-jawab?profileId=${penanggungJawabProfile}`
+        }/obat/get/penanggung-jawab?profileId=${penanggungJawabProfile}&kategoriId=${kategoriId}`
       )
       .then((res) => {
         console.log(res.data.result, penanggungJawabProfile);
         setDataPenanggungJawab(res.data.result);
+        setDatakategori(res.data.dataKategori);
         setAllChecked(false);
         setSelectedIds([]);
       })
@@ -76,7 +79,11 @@ function PenanggungJawabObat() {
 
   async function fetchProfile() {
     await axios
-      .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-profile`)
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/user/get-profile/penanggung-jawab`
+      )
       .then((res) => {
         console.log(res.data.result);
         setProfile(res.data.result);
@@ -88,6 +95,15 @@ function PenanggungJawabObat() {
 
   function renderProfile() {
     return profile.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.nama}
+        </option>
+      );
+    });
+  }
+  function renderKategori() {
+    return dataKategori?.map((val) => {
       return (
         <option key={val.id} value={val.id}>
           {val.nama}
@@ -132,7 +148,7 @@ function PenanggungJawabObat() {
   useEffect(() => {
     fetchDataPenanggungJawabObat();
     fetchProfile();
-  }, [penanggungJawabProfile]);
+  }, [penanggungJawabProfile, kategoriId]);
 
   return (
     <Layout>
@@ -156,6 +172,20 @@ function PenanggungJawabObat() {
           >
             {renderProfile()}
           </Select>
+
+          <Select
+            placeholder="Kategori"
+            border="1px"
+            borderRadius={"8px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+            onChange={(e) => {
+              const value = e.target.value ? parseInt(e.target.value) : 0;
+              setKategoriId(value);
+            }}
+          >
+            {renderKategori()}
+          </Select>
+
           <Checkbox isChecked={allChecked} onChange={handleAllCheckboxChange}>
             Centang Semua
           </Checkbox>

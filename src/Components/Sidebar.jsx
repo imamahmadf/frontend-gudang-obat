@@ -50,6 +50,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { BsTrash3 } from "react-icons/bs";
 function Sidebar() {
+  const { id, ProfilePic, ProfileName, firebaseProviderId, UserRoles } =
+    useSelector((state) => state.user);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const btnRef = React.useRef();
@@ -60,23 +62,85 @@ function Sidebar() {
     { menu: "Daftar Obat", logo: <BsCapsule />, URL: "/gfk/daftar-obat" },
     { menu: "Puskesmas", logo: <BiHome />, URL: "/gfk/puskesmas" },
     { menu: "Amprahan", logo: <BsCart3 />, URL: "/gfk/amprahan" },
-    { menu: "Alokasi", logo: <BsFillBoxSeamFill />, URL: "/gfk/alokasi" },
-    { menu: "Obat Masuk", logo: <BsTruck />, URL: "/gfk/obat-masuk" },
-    {
-      menu: "Stock Opname",
-      logo: <BsClipboard2Check />,
-      URL: "/gfk/stok-opname",
-    },
-    { menu: "Laporan", logo: <BsBarChartLine />, URL: "/gfk/laporan" },
-    { menu: "Obat Kadaluwarsa", logo: <BsTrash3 />, URL: "/gfk/kadaluwarsa" },
-    { menu: "Obat Rusak", logo: <BsXOctagon />, URL: "/gfk/obat-rusak" },
-    { menu: "Pengaturan", logo: <BsGear />, URL: "/gfk/pengaturan" },
+
+    ...(UserRoles.includes(2) || UserRoles.includes(7) || UserRoles.includes(8)
+      ? [
+          {
+            menu: "Alokasi",
+            logo: <BsFillBoxSeamFill />,
+            URL: "/gfk/alokasi",
+          },
+        ]
+      : []),
+
+    ...(UserRoles.includes(5) || UserRoles.includes(7) || UserRoles.includes(8)
+      ? [
+          {
+            menu: "Obat Masuk",
+            logo: <BsTruck />,
+            URL: "/gfk/obat-masuk",
+          },
+        ]
+      : []),
+
+    ...(UserRoles.includes(7) || UserRoles.includes(8)
+      ? [
+          {
+            menu: "Stock Opname",
+            logo: <BsClipboard2Check />,
+            URL: "/gfk/stok-opname",
+          },
+        ]
+      : []),
+
+    ...(UserRoles.includes(2) || UserRoles.includes(7) || UserRoles.includes(8)
+      ? [
+          {
+            menu: "Laporan",
+            logo: <BsBarChartLine />,
+            URL: "/gfk/laporan",
+          },
+        ]
+      : []),
+    ...(UserRoles.includes(1) ||
+    UserRoles.includes(2) ||
+    UserRoles.includes(6) ||
+    UserRoles.includes(7) ||
+    UserRoles.includes(8)
+      ? [
+          {
+            menu: "Kadaluwarsa",
+            logo: <BsTrash3 />,
+            URL: "/gfk/kadaluwarsa",
+          },
+        ]
+      : []),
+    ...(UserRoles.includes(2) ||
+    UserRoles.includes(6) ||
+    UserRoles.includes(7) ||
+    UserRoles.includes(8)
+      ? [
+          {
+            menu: "Obat Rusak",
+            logo: <BsXOctagon />,
+            URL: "/gfk/obat-rusak",
+          },
+        ]
+      : []),
+
+    ...(UserRoles.includes(7) || UserRoles.includes(8)
+      ? [
+          {
+            menu: "Pengaturan",
+            logo: <BsGear />,
+            URL: "/gfk/pengaturan",
+          },
+        ]
+      : []),
   ];
 
-  const { id, ProfilePic, ProfileName, firebaseProviderId, UserRoles } =
-    useSelector((state) => state.user);
   //console.log(UserRoles);
-  // console.log(useSelector((state) => state.user));
+  console.log(useSelector((state) => state.user));
 
   const logout = async () => {
     await signOut(auth).catch((error) => alert(error));

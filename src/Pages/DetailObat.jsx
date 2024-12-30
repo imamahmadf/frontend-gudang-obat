@@ -174,7 +174,9 @@ function DetailObat(props) {
               <Th fontSize={"14px"} color={"white"} py={"15px"}>
                 Keluar
               </Th>
-              {UserRoles.includes(2) || UserRoles.includes(8) ? (
+              {UserRoles.includes(2) ||
+              UserRoles.includes(7) ||
+              UserRoles.includes(8) ? (
                 <Th fontSize={"14px"} color={"white"} py={"15px"}>
                   Sisa Stok
                 </Th>
@@ -182,9 +184,13 @@ function DetailObat(props) {
               <Th fontSize={"14px"} color={"white"} py={"15px"}>
                 Jenis
               </Th>
-              <Th fontSize={"14px"} color={"white"} py={"15px"}>
-                Nilai Aset
-              </Th>
+              {UserRoles.includes(2) ||
+              UserRoles.includes(7) ||
+              UserRoles.includes(8) ? (
+                <Th fontSize={"14px"} color={"white"} py={"15px"}>
+                  Nilai Aset
+                </Th>
+              ) : null}
             </Tr>
           </Thead>
           <Tbody>
@@ -214,7 +220,9 @@ function DetailObat(props) {
                       ? val.permintaan
                       : "-"}
                   </Td>
-                  {UserRoles.includes(2) || UserRoles.includes(8) ? (
+                  {UserRoles.includes(2) ||
+                  UserRoles.includes(7) ||
+                  UserRoles.includes(8) ? (
                     <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                       {val.sisa}
                     </Td>
@@ -224,15 +232,19 @@ function DetailObat(props) {
                     <br />
                     {val.amprahan.StatusAmprahan.id === 7 ? val.catatan : null}
                   </Td>
-                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                    {new Intl.NumberFormat("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(val.permintaan * val.noBatch.harga)}
-                    {}
-                  </Td>
+                  {UserRoles.includes(2) ||
+                  UserRoles.includes(7) ||
+                  UserRoles.includes(8) ? (
+                    <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }).format(val.permintaan * val.noBatch.harga)}
+                      {}
+                    </Td>
+                  ) : null}
                 </Tr>
               );
             })}
@@ -257,12 +269,15 @@ function DetailObat(props) {
         setRows(res.data.totalRows);
 
         // Menghitung total aset
-        const totalAset = res.data.result.noBatches.reduce((total, batch) => {
-          return total + batch.harga * batch.stok;
-        }, 0);
+        const totalAset = res.data?.result?.noBatches?.reduce(
+          (total, batch) => {
+            return total + batch.harga * batch.stok;
+          },
+          0
+        );
 
         setTotalAset(totalAset); // Simpan total aset ke dalam state
-        console.log(res.data.amprahanData); // Menampilkan total aset di console
+        console.log(res.data); // Menampilkan total aset di console
       })
       .catch((err) => {
         console.log(err);
@@ -288,7 +303,7 @@ function DetailObat(props) {
               p={"15px"}
               borderColor={"secondary"}
             >
-              <Heading mb={"10px"}> Nama Obat: {dataObat?.nama}</Heading>
+              <Heading mb={"10px"}> {dataObat?.nama}</Heading>
               <Heading as="h6" size="md">
                 Tanggal Input: {formatTanggal(dataObat?.createdAt)}
               </Heading>
@@ -320,19 +335,24 @@ function DetailObat(props) {
                     {dataObat?.kategori?.nama}
                   </Text>
                 </Box>
-                <Box
-                  borderRadius={"5px"}
-                  border={"1px"}
-                  p={"15px"}
-                  borderColor={"secondary"}
-                >
-                  <Text fontSize={"16px"} fontWeight={400}>
-                    Total Stok:
-                  </Text>
-                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
-                    {dataObat?.totalStok}
-                  </Text>
-                </Box>{" "}
+                {UserRoles.includes(2) ||
+                UserRoles.includes(7) ||
+                UserRoles.includes(8) ? (
+                  <Box
+                    borderRadius={"5px"}
+                    border={"1px"}
+                    p={"15px"}
+                    borderColor={"secondary"}
+                  >
+                    <Text fontSize={"16px"} fontWeight={400}>
+                      Total Stok:
+                    </Text>
+                    <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                      {dataObat?.totalStok}
+                    </Text>
+                  </Box>
+                ) : null}
+
                 <Box
                   borderRadius={"5px"}
                   border={"1px"}
@@ -346,24 +366,28 @@ function DetailObat(props) {
                     {dataObat?.satuan?.nama}
                   </Text>
                 </Box>
-                <Box
-                  borderRadius={"5px"}
-                  border={"1px"}
-                  p={"15px"}
-                  borderColor={"secondary"}
-                >
-                  <Text fontSize={"16px"} fontWeight={400}>
-                    Nilai Aset:
-                  </Text>
-                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
-                    {new Intl.NumberFormat("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(totalAset)}
-                  </Text>
-                </Box>
+                {UserRoles.includes(2) ||
+                UserRoles.includes(7) ||
+                UserRoles.includes(8) ? (
+                  <Box
+                    borderRadius={"5px"}
+                    border={"1px"}
+                    p={"15px"}
+                    borderColor={"secondary"}
+                  >
+                    <Text fontSize={"16px"} fontWeight={400}>
+                      Nilai Aset:
+                    </Text>
+                    <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }).format(totalAset)}
+                    </Text>
+                  </Box>
+                ) : null}
               </Flex>
             </Flex>
             <VStack
@@ -382,6 +406,7 @@ function DetailObat(props) {
             </VStack>
           </Flex>
         </Container>
+        {/* {databat?noBatches?.[0]} */}
         <Container
           p={"15px"}
           bgColor={"white"}
@@ -393,21 +418,23 @@ function DetailObat(props) {
           <SimpleGrid minChildWidth="420px">
             <Box>
               {" "}
-              <Image
-                borderRadius={"5px"}
-                alt="property image"
-                width={{ ss: "100%", sl: "600px" }}
-                height={{ ss: "300px", sl: "600px" }}
-                me="10px"
-                overflow="hiden"
-                objectFit="cover"
-                src={
-                  dataObat?.noBatches?.[0].pic
-                    ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                      (dataObat?.noBatches?.[0]?.pic || "")
-                    : addFoto
-                }
-              />
+              {dataObat?.noBatches?.[0] ? (
+                <Image
+                  borderRadius={"5px"}
+                  alt="property image"
+                  width={{ ss: "100%", sl: "600px" }}
+                  height={{ ss: "300px", sl: "600px" }}
+                  me="10px"
+                  overflow="hiden"
+                  objectFit="cover"
+                  src={
+                    dataObat?.noBatches?.[0].pic
+                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                        (dataObat?.noBatches?.[0]?.pic || "")
+                      : addFoto
+                  }
+                />
+              ) : null}
             </Box>
             <Box ms={{ ss: "0px", sl: "20px" }} style={{ overflowX: "auto" }}>
               <Table variant="simple" size="sm" mt={2}>
@@ -415,16 +442,25 @@ function DetailObat(props) {
                   <Tr>
                     <Th fontSize={"14px"}>Nomor Batch</Th>
                     <Th fontSize={"14px"}>EXP</Th>
-                    <Th display={{ ss: "none", sl: "flex" }} fontSize={"14px"}>
-                      Harga Satuan
-                    </Th>
-                    {UserRoles.includes(2) || UserRoles.includes(8) ? (
-                      <Th fontSize={"14px"} isNumeric>
-                        Stok
-                      </Th>
+
+                    {UserRoles.includes(2) ||
+                    UserRoles.includes(7) ||
+                    UserRoles.includes(8) ? (
+                      <>
+                        {" "}
+                        <Th
+                          display={{ ss: "none", sl: "flex" }}
+                          fontSize={"14px"}
+                        >
+                          Harga Satuan
+                        </Th>
+                        <Th fontSize={"14px"} isNumeric>
+                          Stok
+                        </Th>
+                      </>
                     ) : null}
 
-                    <Th fontSize={"14px"} isNumeric>
+                    <Th fontSize={"14px"} textAlign="left">
                       detail
                     </Th>
                   </Tr>
@@ -440,25 +476,31 @@ function DetailObat(props) {
                         <Td fontSize={"14px"} maxWidth="130px">
                           {newExp}
                         </Td>
-                        <Td
-                          display={{ ss: "none", sl: "table-cell" }}
-                          fontSize={"14px"}
-                          maxWidth="130px"
-                        >
-                          {new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }).format(val.harga)}
-                        </Td>
-                        {UserRoles.includes(2) || UserRoles.includes(8) ? (
-                          <Td fontSize={"14px"} isNumeric maxWidth="130px">
-                            {val.stok}
-                          </Td>
+
+                        {UserRoles.includes(2) ||
+                        UserRoles.includes(7) ||
+                        UserRoles.includes(8) ? (
+                          <>
+                            {" "}
+                            <Td
+                              display={{ ss: "none", sl: "table-cell" }}
+                              fontSize={"14px"}
+                              maxWidth="130px"
+                            >
+                              {new Intl.NumberFormat("id-ID", {
+                                style: "currency",
+                                currency: "IDR",
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                              }).format(val.harga)}
+                            </Td>
+                            <Td fontSize={"14px"} isNumeric maxWidth="130px">
+                              {val.stok}
+                            </Td>
+                          </>
                         ) : null}
 
-                        <Td>
+                        <Td textAlign="left">
                           <Center
                             onClick={() => {
                               setSelectedBatch(val);
@@ -506,124 +548,144 @@ function DetailObat(props) {
             </Box>
           </SimpleGrid>
         </Container>
-        <Container
-          p={"15px"}
-          bgColor={"white"}
-          borderRadius={"5px"}
-          border={"1px"}
-          borderColor={"rgba(229, 231, 235, 1)"}
-          maxW={"1280px"}
-          mt={"20px"}
-        >
-          {" "}
-          <FormLabel>Tanggal</FormLabel>
-          <Flex>
-            {" "}
-            <FormControl border={"1px"} borderColor="gray.400" me="5px">
-              {" "}
-              <Text ms="18px">Awal</Text>
-              <Input
-                placeholder="Select Date and Time"
-                defaultValue={inputStartDate}
-                size="md"
-                type="date"
-                border={"none"}
-                onChange={(e) => handleChange(e, "startDate")}
-              />
-            </FormControl>
-            <FormControl border={"1px"} borderColor="gray.400">
-              {/* buat stardate adnn date dalm flex agar bias sevelahan(dicoba), dijadikan query nanti nya */}
-              <Text ms="18px">Akhir</Text>
-              <Input
-                placeholder="Select Date and Time"
-                size="md"
-                defaultValue={inputStartDate}
-                type="date"
-                border={"none"}
-                onChange={(e) => handleChange(e, "endDate")}
-              />
-            </FormControl>
-          </Flex>
-          <Flex mt={"15px"} gap={"10px"}>
-            {" "}
-            <FormControl>
-              <Select
-                placeholder="Berdasarkan Waktu"
-                borderRadius={0}
-                onClick={(e) => selectHandler(e, "time")}
-              >
-                <option value="DESC">Terbaru </option>
-                <option value="ASC">Terlama</option>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <Select
-                mb="20px"
-                placeholder="Berdasarkan Tujuan"
-                borderRadius={0}
-                onClick={(e) => selectHandler(e, "puskesmasId")}
-              >
-                {renderPuskesmas()}
-              </Select>
-            </FormControl>{" "}
-            <FormControl>
-              <Select
-                placeholder="Berdasarkan Jenis"
-                borderRadius={0}
-                onClick={(e) => selectHandler(e, "jenis")}
-              >
-                <option value="1">Amprahan </option>
-                <option value="2">Bon</option>
-                <option value="3">Program </option>
-                <option value="4">Alokasi</option>
-                <option value="5">Obat masuk </option>
 
-                <option value="6">Obat Exp </option>
-                <option value="7">Obat Rusak</option>
-                <option value="8">Stok Opname </option>
-              </Select>
-            </FormControl>
-          </Flex>
-        </Container>
-        <Container
-          p={"15px"}
-          bgColor={"white"}
-          borderRadius={"5px"}
-          border={"1px"}
-          borderColor={"rgba(229, 231, 235, 1)"}
-          maxW={"1280px"}
-          mt={"20px"}
-        >
-          {renderRiwayat()}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              padding: 20,
-              boxSizing: "border-box",
-              width: "100%",
-              height: "100%",
-            }}
+        {dataObat?.noBatches?.[0] ? (
+          <>
+            <Container
+              p={"15px"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              maxW={"1280px"}
+              mt={"20px"}
+            >
+              {" "}
+              <FormLabel>Tanggal</FormLabel>
+              <Flex>
+                {" "}
+                <FormControl border={"1px"} borderColor="gray.400" me="5px">
+                  {" "}
+                  <Text ms="18px">Awal</Text>
+                  <Input
+                    placeholder="Select Date and Time"
+                    defaultValue={inputStartDate}
+                    size="md"
+                    type="date"
+                    border={"none"}
+                    onChange={(e) => handleChange(e, "startDate")}
+                  />
+                </FormControl>
+                <FormControl border={"1px"} borderColor="gray.400">
+                  {/* buat stardate adnn date dalm flex agar bias sevelahan(dicoba), dijadikan query nanti nya */}
+                  <Text ms="18px">Akhir</Text>
+                  <Input
+                    placeholder="Select Date and Time"
+                    size="md"
+                    defaultValue={inputStartDate}
+                    type="date"
+                    border={"none"}
+                    onChange={(e) => handleChange(e, "endDate")}
+                  />
+                </FormControl>
+              </Flex>
+              <Flex mt={"15px"} gap={"10px"}>
+                {" "}
+                <FormControl>
+                  <Select
+                    placeholder="Berdasarkan Waktu"
+                    borderRadius={0}
+                    onClick={(e) => selectHandler(e, "time")}
+                  >
+                    <option value="DESC">Terbaru </option>
+                    <option value="ASC">Terlama</option>
+                  </Select>
+                </FormControl>
+                <FormControl>
+                  <Select
+                    mb="20px"
+                    placeholder="Berdasarkan Tujuan"
+                    borderRadius={0}
+                    onClick={(e) => selectHandler(e, "puskesmasId")}
+                  >
+                    {renderPuskesmas()}
+                  </Select>
+                </FormControl>{" "}
+                <FormControl>
+                  <Select
+                    placeholder="Berdasarkan Jenis"
+                    borderRadius={0}
+                    onClick={(e) => selectHandler(e, "jenis")}
+                  >
+                    <option value="1">Amprahan </option>
+                    <option value="2">Bon</option>
+                    <option value="3">Program </option>
+                    <option value="4">Alokasi</option>
+                    <option value="5">Obat masuk </option>
+
+                    <option value="6">Obat Exp </option>
+                    <option value="7">Obat Rusak</option>
+                    <option value="8">Stok Opname </option>
+                  </Select>
+                </FormControl>
+              </Flex>
+            </Container>
+            <Container
+              p={"15px"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              maxW={"1280px"}
+              mt={"20px"}
+            >
+              {renderRiwayat()}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  padding: 20,
+                  boxSizing: "border-box",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <ReactPaginate
+                  previousLabel={<BsCaretLeftFill />}
+                  nextLabel={<BsCaretRightFill />}
+                  pageCount={pages}
+                  onPageChange={changePage}
+                  activeClassName={"item active "}
+                  breakClassName={"item break-me "}
+                  breakLabel={"..."}
+                  containerClassName={"pagination"}
+                  disabledClassName={"disabled-page"}
+                  marginPagesDisplayed={2}
+                  nextClassName={"item next "}
+                  pageClassName={"item pagination-page "}
+                  pageRangeDisplayed={2}
+                  previousClassName={"item previous"}
+                />
+              </div>
+            </Container>
+          </>
+        ) : (
+          <Container
+            p={"15px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+            border={"1px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+            maxW={"1280px"}
+            h={"60vh"}
+            mt={"20px"}
           >
-            <ReactPaginate
-              previousLabel={<BsCaretLeftFill />}
-              nextLabel={<BsCaretRightFill />}
-              pageCount={pages}
-              onPageChange={changePage}
-              activeClassName={"item active "}
-              breakClassName={"item break-me "}
-              breakLabel={"..."}
-              containerClassName={"pagination"}
-              disabledClassName={"disabled-page"}
-              marginPagesDisplayed={2}
-              nextClassName={"item next "}
-              pageClassName={"item pagination-page "}
-              pageRangeDisplayed={2}
-              previousClassName={"item previous"}
-            />
-          </div>
-        </Container>
+            <Center h={"100%"}>
+              <Text>Data Riwayat Obat kosong</Text>
+            </Center>
+          </Container>
+        )}
       </Box>
       {selectedBatch && (
         <Modal
@@ -639,61 +701,69 @@ function DetailObat(props) {
             <ModalHeader>Detail Nomor Batch</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
-              {" "}
               <SimpleGrid minChildWidth={"200px"}>
                 <Box>
-                  <Image
-                    src={
-                      selectedBatch.pic
-                        ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                          selectedBatch.pic
-                        : addFoto
-                    }
-                    alt="Batch Image"
-                    width="400px"
-                    height="300px"
-                    objectFit="cover"
-                  />
+                  {selectedBatch?.pic ? (
+                    <Image
+                      src={
+                        selectedBatch?.pic
+                          ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                            selectedBatch.pic
+                          : addFoto
+                      }
+                      alt="Batch Image"
+                      width="400px"
+                      height="300px"
+                      objectFit="cover"
+                    />
+                  ) : null}
                 </Box>
                 <Box>
                   <Table variant="simple" size="sm">
                     <Tbody>
                       <Tr>
                         <Td>Nomor Batch</Td>
-                        <Td>{selectedBatch.noBatch}</Td>
+                        <Td>{selectedBatch?.noBatch}</Td>
                       </Tr>
                       <Tr>
                         <Td>Asal</Td>
-                        <Td>{selectedBatch.perusahaan.nama}</Td>
+                        <Td>{selectedBatch?.perusahaan?.nama}</Td>
                       </Tr>
                       <Tr>
                         <Td>Sumber Dana</Td>
-                        <Td>{selectedBatch.sumberDana?.sumber}</Td>
+                        <Td>{selectedBatch?.sumberDana?.sumber}</Td>
                       </Tr>
-                      <Tr>
-                        <Td>Harga</Td>
-                        <Td>
-                          {new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }).format(selectedBatch.harga)}
-                        </Td>
-                      </Tr>
+                      {UserRoles.includes(2) ||
+                      UserRoles.includes(7) ||
+                      UserRoles.includes(8) ? (
+                        <Tr>
+                          <Td>Harga</Td>
+                          <Td>
+                            {new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(selectedBatch?.harga)}
+                          </Td>
+                        </Tr>
+                      ) : null}
+
                       <Tr>
                         <Td>EXP</Td>
-                        <Td>{formatDate(selectedBatch.exp)}</Td>
+                        <Td>{formatDate(selectedBatch?.exp)}</Td>
                       </Tr>
                       <Tr
                         display={
-                          UserRoles.includes(2) || UserRoles.includes(8)
+                          UserRoles.includes(2) ||
+                          UserRoles.includes(7) ||
+                          UserRoles.includes(8)
                             ? "table-row"
                             : "none"
                         }
                       >
                         <Td>Stok</Td>
-                        <Td>{selectedBatch.stok}</Td>
+                        <Td>{selectedBatch?.stok}</Td>
                       </Tr>
                       <Tr
                         display={
@@ -704,13 +774,12 @@ function DetailObat(props) {
                       >
                         <Td>Kotak</Td>
                         <Td>
-                          {" "}
                           {`${Math.floor(
-                            selectedBatch.stok / selectedBatch.kotak
+                            selectedBatch?.stok / selectedBatch?.kotak
                           )} kotak` +
-                            (selectedBatch.stok % selectedBatch.kotak !== 0
+                            (selectedBatch?.stok % selectedBatch?.kotak !== 0
                               ? ` dan ${
-                                  selectedBatch.stok % selectedBatch.kotak
+                                  selectedBatch?.stok % selectedBatch?.kotak
                                 } ecer`
                               : "")}
                         </Td>
@@ -720,7 +789,6 @@ function DetailObat(props) {
                 </Box>
               </SimpleGrid>
             </ModalBody>
-
             <ModalFooter></ModalFooter>
           </ModalContent>
         </Modal>

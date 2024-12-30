@@ -27,6 +27,7 @@ import {
   Menu,
   Stack,
 } from "@chakra-ui/react";
+import { BsFillBoxSeamFill } from "react-icons/bs";
 import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
 import Sidebar from "../Components/Sidebar";
@@ -49,7 +50,7 @@ import AmprahanAktif from "../Components/AmprahanAktif";
 function DaftarObatAlkes() {
   const history = useHistory();
   const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(15);
   const [pages, setPages] = useState(0);
   const [rows, setRows] = useState(0);
   const [keyword, setKeyword] = useState("");
@@ -66,7 +67,7 @@ function DaftarObatAlkes() {
   const changePage = ({ selected }) => {
     setPage(selected);
   };
-  const { UserRoles } = useSelector((state) => state.user);
+  const { UserRoles, profileId } = useSelector((state) => state.user);
 
   function handleChange(event, field) {
     const { value } = event.target;
@@ -280,7 +281,10 @@ function DaftarObatAlkes() {
                               color={
                                 new Date(newExp) <=
                                 new Date(
-                                  new Date().setMonth(new Date().getMonth() + 3)
+                                  new Date().setMonth(
+                                    new Date().getMonth() + 1,
+                                    0
+                                  )
                                 )
                                   ? "white"
                                   : "black"
@@ -290,15 +294,37 @@ function DaftarObatAlkes() {
                               backgroundColor={
                                 new Date(newExp) <=
                                 new Date(
-                                  new Date().setMonth(new Date().getMonth() + 3)
+                                  new Date().setMonth(
+                                    new Date().getMonth() + 1,
+                                    0
+                                  )
                                 )
                                   ? "danger"
+                                  : new Date(newExp) <=
+                                    new Date(
+                                      new Date().setMonth(
+                                        new Date().getMonth() + 6,
+                                        0
+                                      )
+                                    )
+                                  ? "orange"
                                   : ""
                               }
                             >
                               <Text fontSize={"13px"}>{newExp}</Text>
                             </Box>
-                            <Text fontSize={"13px"} width={"100px"} me={"10px"}>
+                            <Text
+                              fontSize={"13px"}
+                              width={"100px"}
+                              me={"10px"}
+                              display={
+                                UserRoles.includes(2) ||
+                                UserRoles.includes(8) ||
+                                UserRoles.includes(7)
+                                  ? "block"
+                                  : "none"
+                              }
+                            >
                               {new Intl.NumberFormat("id-ID", {
                                 style: "currency",
                                 currency: "IDR",
@@ -313,7 +339,9 @@ function DaftarObatAlkes() {
                         <Flex
                           justifyContent={"flex-end"}
                           display={
-                            UserRoles.includes(2) || UserRoles.includes(8)
+                            UserRoles.includes(2) ||
+                            UserRoles.includes(8) ||
+                            UserRoles.includes(7)
                               ? "block"
                               : "none"
                           }
@@ -335,7 +363,9 @@ function DaftarObatAlkes() {
                   justifyContent={"end"}
                   pt={"10px"}
                   display={
-                    UserRoles.includes(2) || UserRoles.includes(8)
+                    UserRoles.includes(2) ||
+                    UserRoles.includes(8) ||
+                    UserRoles.includes(7)
                       ? "flex"
                       : "none"
                   }
@@ -350,53 +380,68 @@ function DaftarObatAlkes() {
                 </Flex>
               </Box>
               <Flex marginStart={"60px"}>
-                {val.noBatches[0] ? (
-                  <>
-                    {UserRoles.includes(7) || UserRoles.includes(8) ? (
-                      <>
-                        {" "}
-                        {status?.StatusAmprahanId < 4 ? (
-                          <TambahAmprahanItem
-                            userId={1}
-                            data={val.noBatches}
-                            randomNumber={setRandomNumber}
-                            id={val.id}
-                          />
-                        ) : status?.StatusAmprahanId === 4 ? (
-                          <Button
+                <>
+                  {UserRoles.includes(7) || UserRoles.includes(8) ? (
+                    <>
+                      {" "}
+                      {status?.StatusAmprahanId < 4 ? (
+                        <TambahAmprahanItem
+                          userId={1}
+                          data={val.noBatches}
+                          randomNumber={setRandomNumber}
+                          id={val.id}
+                        />
+                      ) : status?.StatusAmprahanId === 4 ? (
+                        <Tooltip label="alokasi" aria-label="A tooltip">
+                          <Center
                             onClick={() => {
                               history.push(`/gfk/alokasi-item/${val.id}`);
                             }}
+                            borderRadius={"5px"}
+                            as="button"
+                            h="25px"
+                            w="25px"
+                            fontSize="12px"
+                            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                            color="white"
+                            _hover={{
+                              bg: "black",
+                            }}
+                            bg="biru"
+                            // onClick={onOpen}
                           >
-                            alokasi
-                          </Button>
-                        ) : status?.StatusAmprahanId === 7 ? (
-                          <>
-                            <TambahObatRusak
-                              userId={1}
-                              data={val.noBatches}
-                              id={val.id}
-                            />
-                          </>
-                        ) : null}
-                      </>
-                    ) : null}
-                    <Menu>
-                      <MenuButton
-                        p={0}
-                        h="25px"
-                        w="25px"
-                        fontSize="12px"
-                        as={Button}
-                      ></MenuButton>
-                      <MenuList>
-                        <MenuItem
-                          onClick={() => {
-                            history.push(`/gfk/detail-obat/${val.id}`);
-                          }}
-                        >
-                          Detail Obat
-                        </MenuItem>
+                            <BsFillBoxSeamFill />
+                          </Center>
+                        </Tooltip>
+                      ) : status?.StatusAmprahanId === 7 ? (
+                        <>
+                          <TambahObatRusak
+                            userId={1}
+                            data={val.noBatches}
+                            id={val.id}
+                            randomNumber={setRandomNumber}
+                          />
+                        </>
+                      ) : null}
+                    </>
+                  ) : null}
+                  <Menu>
+                    <MenuButton
+                      p={0}
+                      h="25px"
+                      w="25px"
+                      fontSize="12px"
+                      as={Button}
+                    ></MenuButton>
+                    <MenuList>
+                      <MenuItem
+                        onClick={() => {
+                          history.push(`/gfk/detail-obat/${val.id}`);
+                        }}
+                      >
+                        Detail Obat
+                      </MenuItem>
+                      {val.profileId === profileId ? (
                         <MenuItem
                           onClick={() => {
                             history.push(`/gfk/edit-obat/${val.id}`);
@@ -404,10 +449,10 @@ function DaftarObatAlkes() {
                         >
                           Edit Obat
                         </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </>
-                ) : null}
+                      ) : null}
+                    </MenuList>
+                  </Menu>
+                </>
               </Flex>
             </Flex>
           </Flex>
@@ -510,7 +555,10 @@ function DaftarObatAlkes() {
                               color={
                                 new Date(newExp) <=
                                 new Date(
-                                  new Date().setMonth(new Date().getMonth() + 3)
+                                  new Date().setMonth(
+                                    new Date().getMonth() + 1,
+                                    0
+                                  )
                                 )
                                   ? "white"
                                   : "black"
@@ -520,9 +568,20 @@ function DaftarObatAlkes() {
                               backgroundColor={
                                 new Date(newExp) <=
                                 new Date(
-                                  new Date().setMonth(new Date().getMonth() + 3)
+                                  new Date().setMonth(
+                                    new Date().getMonth() + 1,
+                                    0
+                                  )
                                 )
                                   ? "danger"
+                                  : new Date(newExp) <=
+                                    new Date(
+                                      new Date().setMonth(
+                                        new Date().getMonth() + 6,
+                                        0
+                                      )
+                                    )
+                                  ? "orange"
                                   : ""
                               }
                             >
@@ -587,7 +646,9 @@ function DaftarObatAlkes() {
             <Box>
               <Text></Text>
             </Box>
-            {status ? <AmprahanAktif data={status} /> : null}
+            {status ? (
+              <AmprahanAktif randomNumber={setRandomNumber} data={status} />
+            ) : null}
           </Container>
 
           <Container
@@ -635,18 +696,23 @@ function DaftarObatAlkes() {
                           color: "white",
                         }}
                       />
-                      <Button
-                        leftIcon={<BsPlusCircle />}
-                        color="rgba(175, 175, 175, 1)"
-                        aria-label="toggle filters"
-                        variant="solid"
-                        backgroundColor="white"
-                        border="1px"
-                        borderRadius={"8px"}
-                        onClick={() => {
-                          history.push("/gfk/tambah-obat");
-                        }}
-                      ></Button>
+                      {UserRoles.includes(3) ||
+                      UserRoles.includes(4) ||
+                      UserRoles.includes(7) ||
+                      UserRoles.includes(8) ? (
+                        <Button
+                          leftIcon={<BsPlusCircle />}
+                          color="rgba(175, 175, 175, 1)"
+                          aria-label="toggle filters"
+                          variant="solid"
+                          backgroundColor="white"
+                          border="1px"
+                          borderRadius={"8px"}
+                          onClick={() => {
+                            history.push("/gfk/tambah-obat");
+                          }}
+                        ></Button>
+                      ) : null}
                     </HStack>
                   </FormControl>
                 </HStack>
@@ -704,141 +770,167 @@ function DaftarObatAlkes() {
               </HStack>
             </Box>
           </Container>
-          <Container
-            bgColor={"white"}
-            borderRadius={"5px"}
-            border={"1px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-            maxW={"1280px"}
-          >
-            {" "}
-            <Box display={{ ss: "none", sl: "block" }}>
-              <Flex
-                py={"15px"}
-                borderTop={"1px"}
-                borderColor={"rgba(229, 231, 235, 1)"}
-              >
-                <Flex>
-                  <Flex>
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"190px"}
-                      me={"10px"}
-                    >
-                      Nama Obat
-                    </Text>
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"120px"}
-                      me={"10px"}
-                    >
-                      Kelas Terapi
-                    </Text>{" "}
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"100px"}
-                      me={"10px"}
-                    >
-                      Kategori
-                    </Text>{" "}
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"80px"}
-                      me={"10px"}
-                    >
-                      Satuan
-                    </Text>{" "}
-                  </Flex>
-                  <Flex>
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"80px"}
-                      me={"10px"}
-                    >
-                      No. Batch
-                    </Text>
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"80px"}
-                      me={"10px"}
-                    >
-                      EXP
-                    </Text>{" "}
-                    <Text
-                      fontSize={"15px"}
-                      fontWeight={600}
-                      width={"100px"}
-                      me={"10px"}
-                    >
-                      harga Satuan
-                    </Text>
-                  </Flex>
-                </Flex>
-                <Spacer />
-                <Flex>
-                  <Text
-                    fontSize={"15px"}
-                    align={"right"}
-                    width={"100px"}
-                    me={"10px"}
-                    fontWeight={600}
-                    display={
-                      UserRoles.includes(2) || UserRoles.includes(8)
-                        ? "block"
-                        : "none"
-                    }
-                  >
-                    Stok
-                  </Text>
-                  <Text
-                    fontSize={"15px"}
-                    align={"right"}
-                    width={"100px"}
-                    me={"10px"}
-                    fontWeight={600}
-                  >
-                    Aksi
-                  </Text>
-                </Flex>
-              </Flex>{" "}
-              {renderObat()}
-            </Box>
-            <Box display={{ ss: "block", sl: "none" }}>{renderObat()}</Box>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                padding: 20,
-                boxSizing: "border-box",
-                width: "100%",
-                height: "100%",
-              }}
+          {rows ? (
+            <Container
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              maxW={"1280px"}
             >
-              <ReactPaginate
-                previousLabel={<BsCaretLeftFill />}
-                nextLabel={<BsCaretRightFill />}
-                pageCount={pages}
-                onPageChange={changePage}
-                activeClassName={"item active "}
-                breakClassName={"item break-me "}
-                breakLabel={"..."}
-                containerClassName={"pagination"}
-                disabledClassName={"disabled-page"}
-                marginPagesDisplayed={2}
-                nextClassName={"item next "}
-                pageClassName={"item pagination-page "}
-                pageRangeDisplayed={2}
-                previousClassName={"item previous"}
-              />
-            </div>
-          </Container>
+              {" "}
+              <Box display={{ ss: "none", sl: "block" }}>
+                <Flex
+                  py={"15px"}
+                  borderTop={"1px"}
+                  borderColor={"rgba(229, 231, 235, 1)"}
+                >
+                  <Flex>
+                    <Flex>
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"190px"}
+                        me={"10px"}
+                      >
+                        Nama Obat
+                      </Text>
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"120px"}
+                        me={"10px"}
+                      >
+                        Kelas Terapi
+                      </Text>{" "}
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"100px"}
+                        me={"10px"}
+                      >
+                        Kategori
+                      </Text>{" "}
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"80px"}
+                        me={"10px"}
+                      >
+                        Satuan
+                      </Text>{" "}
+                    </Flex>
+                    <Flex>
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"80px"}
+                        me={"10px"}
+                      >
+                        No. Batch
+                      </Text>
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"80px"}
+                        me={"10px"}
+                      >
+                        EXP
+                      </Text>{" "}
+                      <Text
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"100px"}
+                        me={"10px"}
+                        display={
+                          UserRoles.includes(2) ||
+                          UserRoles.includes(8) ||
+                          UserRoles.includes(7)
+                            ? "block"
+                            : "none"
+                        }
+                      >
+                        harga Satuan
+                      </Text>
+                    </Flex>
+                  </Flex>
+                  <Spacer />
+                  <Flex>
+                    <Text
+                      fontSize={"15px"}
+                      align={"right"}
+                      width={"100px"}
+                      me={"10px"}
+                      fontWeight={600}
+                      display={
+                        UserRoles.includes(2) ||
+                        UserRoles.includes(8) ||
+                        UserRoles.includes(7)
+                          ? "block"
+                          : "none"
+                      }
+                    >
+                      Stok
+                    </Text>
+                    <Text
+                      fontSize={"15px"}
+                      align={"right"}
+                      width={"100px"}
+                      me={"10px"}
+                      fontWeight={600}
+                    >
+                      Aksi
+                    </Text>
+                  </Flex>
+                </Flex>{" "}
+                {renderObat()}
+              </Box>
+              <Box display={{ ss: "block", sl: "none" }}>{renderObat()}</Box>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  padding: 20,
+                  boxSizing: "border-box",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <ReactPaginate
+                  previousLabel={<BsCaretLeftFill />}
+                  nextLabel={<BsCaretRightFill />}
+                  pageCount={pages}
+                  onPageChange={changePage}
+                  activeClassName={"item active "}
+                  breakClassName={"item break-me "}
+                  breakLabel={"..."}
+                  containerClassName={"pagination"}
+                  disabledClassName={"disabled-page"}
+                  marginPagesDisplayed={2}
+                  nextClassName={"item next "}
+                  pageClassName={"item pagination-page "}
+                  pageRangeDisplayed={2}
+                  previousClassName={"item previous"}
+                />
+              </div>
+            </Container>
+          ) : (
+            <Container
+              p={"15px"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              maxW={"1280px"}
+              h={"60vh"}
+              mt={"20px"}
+            >
+              <Center h={"100%"}>
+                <Text>Data Obat tidak Ditemukan</Text>
+              </Center>
+            </Container>
+          )}
         </Box>
         <Modal
           closeOnOverlayClick={false}

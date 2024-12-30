@@ -3,24 +3,28 @@ import Loading from "./Loading";
 import { useSelector } from "react-redux";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { authFirebase } from "../Config/firebase";
+import { useEffect } from "react";
 
 function AptekRoute(props) {
   const { UserRoles = [] } = useSelector((state) => state.user || {});
   const history = useHistory();
 
-  // console.log(UserRoles, props.roleRoute, "CEK PENGAMANAN HALAMAN!!!!");
-
-  if (!UserRoles || UserRoles.length === 0) {
-    onAuthStateChanged(authFirebase, (user) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(authFirebase, (user) => {
       if (!user) {
         history.push("/");
       }
     });
+
+    return () => unsubscribe();
+  }, [history]);
+
+  if (!UserRoles || UserRoles.length === 0) {
     return <Loading />;
   } else if (UserRoles.some((role) => props.roleRoute.includes(role))) {
     return <Route {...props} />;
   } else {
-    return history.push("/");
+    history.push("/");
   }
 }
 

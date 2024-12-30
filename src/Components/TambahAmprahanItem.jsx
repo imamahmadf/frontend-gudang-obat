@@ -229,7 +229,23 @@ function TambahAmprahanItem(props) {
                 </Thead>
                 <Tbody>
                   <Tr>
-                    <Td>{formatDate(selectedBatch.exp)}</Td>
+                    <Td
+                      backgroundColor={
+                        new Date(formatDate(selectedBatch.exp)) <=
+                        new Date(
+                          new Date().setMonth(new Date().getMonth() + 1, 0)
+                        )
+                          ? "danger"
+                          : new Date(formatDate(selectedBatch.exp)) <=
+                            new Date(
+                              new Date().setMonth(new Date().getMonth() + 6, 0)
+                            )
+                          ? "orange"
+                          : ""
+                      }
+                    >
+                      {formatDate(selectedBatch.exp)}
+                    </Td>
                     <Td>{selectedBatch.stok}</Td>
                     <Td>{selectedBatch.kotak}</Td>
                   </Tr>

@@ -190,7 +190,6 @@ function EditObat(props) {
     fetchDataSeedrs();
     //console.log(bank);
   }, []);
-  console.log(dataObat.pic);
 
   const handleEditClick = (column) => {
     setOriginalData({ ...editedData });
@@ -244,43 +243,6 @@ function EditObat(props) {
     <>
       <Layout>
         <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
-          <Container
-            mt={"30px"}
-            maxW={"1280px"}
-            bgColor={"white"}
-            borderRadius={"5px"}
-            p={"30px"}
-          >
-            <Box>
-              <Text>{props.match.params.obatId}</Text>
-              <Text>TESSSSS</Text>
-              <Button onClick={onDeleteOpen}>reee</Button>
-
-              <Box mt={4}>
-                <Text fontSize="lg" mb={2}>
-                  Riwayat Obat
-                </Text>
-                <Table variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>Riwayat</Th>
-                      <Th>Nama Profile</Th>
-                      <Th>Tanggal</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {riwayatData.map((item) => (
-                      <Tr key={item.id}>
-                        <Td>{item?.riwayat}</Td>
-                        <Td>{item?.profile?.nama}</Td>
-                        <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </Box>
-            </Box>
-          </Container>
           <Container
             mt={"30px"}
             maxW={"1280px"}
@@ -448,13 +410,19 @@ function EditObat(props) {
               </Table>
             </Box>
           </Container>
-
-          <Container>
+          <Container
+            mt={"30px"}
+            maxW={"1280px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+            p={"30px"}
+          >
             <FormControl>
               <FormLabel>NoBatch</FormLabel>
               <Select
                 mt="10px"
                 border="1px"
+                placeholder="Pilih Nomor batch"
                 borderRadius={"8px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
                 onChange={(e) => {
@@ -464,6 +432,43 @@ function EditObat(props) {
                 {renderNoBatch()}
               </Select>
             </FormControl>
+          </Container>{" "}
+          <Container
+            mt={"30px"}
+            maxW={"1280px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+            p={"30px"}
+          >
+            <Box>
+              <Text>{props.match.params.obatId}</Text>
+              <Text>TESSSSS</Text>
+              <Button onClick={onDeleteOpen}>reee</Button>
+
+              <Box mt={4}>
+                <Text fontSize="lg" mb={2}>
+                  Riwayat Obat
+                </Text>
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th>Riwayat</Th>
+                      <Th>Nama Profile</Th>
+                      <Th>Tanggal</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {riwayatData.map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item?.riwayat}</Td>
+                        <Td>{item?.profile?.nama}</Td>
+                        <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            </Box>
           </Container>
         </Box>
         <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
@@ -511,7 +516,7 @@ function EditObat(props) {
                   src={
                     selectedNoBatch?.pic
                       ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                        (selectedNoBatch.pic || "")
+                        selectedNoBatch.pic
                       : addFoto
                   }
                   id="imgpreview"

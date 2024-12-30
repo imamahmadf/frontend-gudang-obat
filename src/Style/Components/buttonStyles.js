@@ -1,11 +1,11 @@
 export const buttonStyles = {
   variants: {
     primary: (props) => ({
-      bg: "linear-gradient(to bottom left, #00008B, #87CEFA)",
-      color: "black",
-      borderRadius: "10px",
-      width: "320px",
-      height: "55px",
+      bg: "primary",
+      color: "white",
+      borderRadius: "5px",
+
+      height: "40px",
       fontSize: "16px",
       fontWeight: "600",
       _hover: {
@@ -15,10 +15,9 @@ export const buttonStyles = {
     }),
     secondary: (props) => ({
       bg: "secondary",
-      color: "black",
-      borderRadius: "15px",
-      width: "320px",
-      height: "55px",
+      color: "primary",
+      borderRadius: "5px",
+      height: "40px",
       fontSize: "16px",
       fontWeight: "600",
       border: "1px",

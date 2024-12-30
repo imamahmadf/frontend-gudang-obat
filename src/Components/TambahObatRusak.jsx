@@ -150,6 +150,7 @@ function TambahObatRusak(props) {
         .then((res) => {
           // alert(res.data.message, "wah berhasil");
           onObatRusakClose();
+          props.randomNumber(Math.random());
         })
         .catch((err) => {
           console.error(err);
@@ -193,7 +194,7 @@ function TambahObatRusak(props) {
       >
         <ModalOverlay />
         <ModalContent borderRadius={0}>
-          <ModalHeader>Tujuan:{tujuan[0]?.uptd?.nama}</ModalHeader>
+          <ModalHeader>{tujuan[0]?.uptd?.nama}</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody pb={6} name="time">
@@ -267,7 +268,7 @@ function TambahObatRusak(props) {
             <FormControl>
               <FormLabel>Catatan</FormLabel>
               <Textarea
-                placeholder="Here is a sample placeholder"
+                placeholder="Alasan Obat menjadi rusak"
                 borderRadius="8px"
                 onChange={(e) =>
                   formik.setFieldValue("catatan", e.target.value)

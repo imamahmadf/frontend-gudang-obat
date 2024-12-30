@@ -22,8 +22,10 @@ import {
   Tr,
   Th,
   Td,
+  HStack,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
+import { BsFileEarmarkXFill } from "react-icons/bs";
 import FotoHome from "../assets/GFK.jpeg";
 import axios from "axios";
 import Layout from "../Components/Layout";
@@ -140,14 +142,30 @@ function StokOpname() {
   }
 
   async function exportToExcel() {
+    const dataExport = dataStokOpname
+      .map((item) => {
+        const filteredBatches = item.noBatches.filter(
+          (batch) => batch.status === 1
+        );
+        return {
+          nama: item.nama,
+          satuan: item.satuan.nama,
+          noBatches: filteredBatches,
+          totalStok: item.totalStok,
+        };
+      })
+      .filter((item) => item.noBatches.length > 0);
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Stok Opname");
 
     // Menambahkan header
     worksheet.columns = [
       { header: "Nama Obat", key: "namaObat", width: 30 },
-      { header: "No Batch", key: "noBatch", width: 20 },
-      { header: "Exp", key: "exp", width: 20 },
+      { header: "Satuan", key: "satuan", width: 15 },
+      { header: "kemasan", key: "kemasan", width: 15 },
+      { header: "No Batch", key: "noBatch", width: 15 },
+      { header: "Exp", key: "exp", width: 15 },
       { header: "Stok", key: "stok", width: 15 },
       { header: "Total Stok", key: "totalStok", width: 15 },
     ];
@@ -165,18 +183,44 @@ function StokOpname() {
     });
 
     let currentRow = 2; // Mulai dari baris kedua
-    dataStokOpname.forEach((item) => {
+    dataExport.forEach((item, itemIndex) => {
       if (item.noBatches.length > 0) {
         const totalStok = item.totalStok; // Ambil total stok untuk nama obat
         item.noBatches.forEach((batch, index) => {
           const rowData = {
             namaObat: index === 0 ? item.nama : "", // Hanya isi nama obat di baris pertama
+            satuan: item.satuan.nama,
+            kemasan: batch.kotak,
             noBatch: batch.noBatch,
             exp: formatDate(batch.exp),
-            stok: "", // Mengisi stok untuk setiap batch
+            stok: batch.amprahanItems[0] ? "" : batch.stok, // Kondisi untuk stok
             totalStok: "", // Hanya isi total stok di baris pertama
           };
-          worksheet.addRow(rowData);
+          const newRow = worksheet.addRow(rowData);
+          newRow.height = 38; // Mengatur tinggi baris menjadi 38
+
+          // Mengatur warna sel untuk stok
+          const cellStok = worksheet.getCell(newRow.number, 6); // Ambil sel untuk stok
+          cellStok.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: batch.amprahanItems[0] ? "FFFF00" : "FFFFFF" }, // Warna orange jika true, putih jika false
+          };
+
+          // Mengatur warna sel untuk total stok berdasarkan itemIndex
+          const cellTotalStok = worksheet.getCell(newRow.number, 7); // Ambil sel untuk total stok
+          cellTotalStok.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: itemIndex % 2 === 0 ? "FFFFFF" : "FABF8F" }, // Selang-seling warna berdasarkan itemIndex
+          };
+
+          // Mengatur alignment dan font untuk semua sel di baris ini
+          Object.keys(rowData).forEach((key, colIndex) => {
+            const cell = newRow.getCell(colIndex + 1); // Ambil sel berdasarkan indeks kolom
+            cell.alignment = { horizontal: "left", vertical: "middle" }; // Rata kiri dan tengah vertikal
+            cell.font = { size: 14 }; // Mengatur ukuran font menjadi 14
+          });
         });
 
         // Menggabungkan sel Nama Obat
@@ -184,7 +228,7 @@ function StokOpname() {
         worksheet.mergeCells(currentRow, 1, lastRow, 1); // Menggabungkan sel dari currentRow ke lastRow di kolom 1 (Nama Obat)
 
         // Menggabungkan sel Total Stok
-        worksheet.mergeCells(currentRow, 5, lastRow, 5); // Menggabungkan sel dari currentRow ke lastRow di kolom 5 (Total Stok)
+        worksheet.mergeCells(currentRow, 7, lastRow, 7); // Menggabungkan sel dari currentRow ke lastRow di kolom 5 (Total Stok)
 
         currentRow = lastRow + 1; // Update currentRow untuk baris berikutnya
       }
@@ -226,11 +270,22 @@ function StokOpname() {
             bgColor={"white"}
             borderRadius={"5px"}
           >
-            <Button onClick={exportToExcel} colorScheme="teal" mb={4}>
-              Ekspor ke Excel
-            </Button>
+            <HStack>
+              <Button
+                // bgColor={"white"}
+                // color={"primary"}
+                fontSize={"25px"}
+                variant={"secondary"}
+                onClick={exportToExcel}
+                colorScheme="teal"
+              >
+                <BsFileEarmarkXFill />
+              </Button>
 
-            <Button onClick={onTutupSOOpen}>TUTUP SO</Button>
+              <Button variant={"primary"} onClick={onTutupSOOpen}>
+                Tambahkan SO
+              </Button>
+            </HStack>
             <Box minWidth={"600px"}>
               <FormLabel>Penanggungjawab</FormLabel>
               <Select
@@ -253,6 +308,8 @@ function StokOpname() {
                 <Thead>
                   <Tr>
                     <Th>Nama Obat</Th>
+                    <Th>Satuan</Th>
+                    <Th>Kemasan</Th>
                     <Th>No Batch</Th>
                     <Th>Exp</Th>
                     <Th>Stok</Th>
@@ -274,13 +331,29 @@ function StokOpname() {
                           >
                             {item.nama}
                           </Td>
+                          <Td
+                            rowSpan={batches.length}
+                            borderWidth="1px"
+                            borderColor="gray.200"
+                          >
+                            {item.satuan.nama}
+                          </Td>
+                          <Td borderWidth="1px" borderColor="gray.200">
+                            {batches[0].kotak} / kemasan
+                          </Td>
                           <Td borderWidth="1px" borderColor="gray.200">
                             {batches[0].noBatch}
                           </Td>
                           <Td borderWidth="1px" borderColor="gray.200">
-                            {new Date(batches[0].exp).toLocaleDateString()}
+                            {formatDate(batches[0].exp)}
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
+                          <Td
+                            borderWidth="1px"
+                            borderColor="gray.200"
+                            bgColor={
+                              batches[0].amprahanItems[0] ? "orange" : null
+                            }
+                          >
                             {batches[0].stok}
                           </Td>
                           <Td
@@ -294,12 +367,19 @@ function StokOpname() {
                         {batches.slice(1).map((batch) => (
                           <Tr key={batch.noBatch}>
                             <Td borderWidth="1px" borderColor="gray.200">
+                              {batch.kotak} / kemasan
+                            </Td>
+                            <Td borderWidth="1px" borderColor="gray.200">
                               {batch.noBatch}
                             </Td>
                             <Td borderWidth="1px" borderColor="gray.200">
-                              {new Date(batch.exp).toLocaleDateString()}
+                              {formatDate(batch.exp)}
                             </Td>
-                            <Td borderWidth="1px" borderColor="gray.200">
+                            <Td
+                              borderWidth="1px"
+                              borderColor="gray.200"
+                              bgColor={batch.amprahanItems[0] ? "orange" : null}
+                            >
                               {batch.stok}
                             </Td>
                           </Tr>

@@ -35,6 +35,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import { BsFillFunnelFill } from "react-icons/bs";
 import { BsCheckLg } from "react-icons/bs";
+import AmprahanAktif from "../Components/AmprahanAktif";
 
 function ObatMasuk() {
   const [keyword, setKeyword] = useState("");
@@ -62,7 +63,7 @@ function ObatMasuk() {
       .then((res) => {
         setDataObat(res.data.result);
         setStatus(res.data.resultStatus);
-
+        console.log(res.data);
         onFilterClose();
         console.log(res.data);
       })
@@ -407,17 +408,34 @@ function ObatMasuk() {
                         >
                           <ModalOverlay />
                           <ModalContent borderRadius={0}>
-                            <ModalHeader>Shory by:</ModalHeader>
+                            <ModalHeader>Terima barang Masuk</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody pb={6}>
-                              <Text>{val2.stok}</Text>
+                              <Table>
+                                <Tbody>
+                                  <Tr>
+                                    <Td>Nama</Td>
+                                    <Td>: {val.nama}</Td>
+                                  </Tr>
+                                  <Tr>
+                                    <Td>No. Batch</Td>
+                                    <Td>: {val2.noBatch}</Td>
+                                  </Tr>
+                                  <Tr>
+                                    <Td>Stok</Td>
+                                    <Td>: {val2.stok}</Td>
+                                  </Tr>
+                                </Tbody>
+                              </Table>
                             </ModalBody>
 
                             <ModalFooter>
                               <Button
-                                height={"20px"}
-                                width={"60px"}
-                                fontSize={"12px"}
+                                bg={"primary"}
+                                color={"white"}
+                                _hover={{
+                                  bg: "black",
+                                }}
                                 onClick={() => {
                                   terima({ val2, val });
                                 }}
@@ -434,17 +452,34 @@ function ObatMasuk() {
                         >
                           <ModalOverlay />
                           <ModalContent borderRadius={0}>
-                            <ModalHeader>Shory by:</ModalHeader>
+                            <ModalHeader>Tolak Barang Masuk</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody pb={6}>
-                              <Text>{val2.stok}</Text> DLETE
+                              <Table>
+                                <Tbody>
+                                  <Tr>
+                                    <Td>Nama</Td>
+                                    <Td>: {val.nama}</Td>
+                                  </Tr>
+                                  <Tr>
+                                    <Td>No. Batch</Td>
+                                    <Td>: {val2.noBatch}</Td>
+                                  </Tr>
+                                  <Tr>
+                                    <Td>Stok</Td>
+                                    <Td>: {val2.stok}</Td>
+                                  </Tr>
+                                </Tbody>
+                              </Table>
                             </ModalBody>
 
                             <ModalFooter>
                               <Button
-                                height={"20px"}
-                                width={"60px"}
-                                fontSize={"12px"}
+                                bg={"danger"}
+                                color={"white"}
+                                _hover={{
+                                  bg: "black",
+                                }}
                                 onClick={() => {
                                   tolak({ value: val2 });
                                 }}
@@ -562,7 +597,25 @@ function ObatMasuk() {
           )
         ) : (
           <>
-            <Box marginTop={"250px"}>selesaikan amprahan</Box>
+            <Container
+              bgColor={
+                status?.StatusAmprahanId <= 3
+                  ? "primary"
+                  : status?.StatusAmprahanId === 7
+                  ? "danger"
+                  : status?.StatusAmprahanId === 4
+                  ? "biru"
+                  : "white"
+              }
+              borderRadius={"5px"}
+              border={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              maxW={"1280px"}
+              marginBottom={"20px"}
+              padding={"20px"}
+            >
+              <AmprahanAktif data={status} />
+            </Container>
           </>
         )}
       </Layout>

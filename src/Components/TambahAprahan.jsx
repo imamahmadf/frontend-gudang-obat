@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormHelperText,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { BsPlusCircle } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 import { BsFillFunnelFill } from "react-icons/bs";
@@ -28,6 +29,7 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 
 function TambahAprahan() {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [puskesmas, setPuskesmas] = useState([]);
   const history = useHistory();
@@ -44,10 +46,6 @@ function TambahAprahan() {
     {
       id: 3,
       namaStatus: "Pengadaan",
-    },
-    {
-      id: 4,
-      namaStatus: "obat rusak",
     },
   ];
   function renderPuskesmas() {
@@ -105,7 +103,14 @@ function TambahAprahan() {
           }/amprahan/post?puskesmasId=${puskesmasId}&statusId=${statusId}`
         )
         .then((res) => {
-          alert(res.data.message);
+          toast({
+            title: "Berhasil!",
+            description: "Pengeluaran Obat Berhasil Dibuat",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+
           setTimeout(() => {
             history.push("/gfk/daftar-obat");
           }, 2000);
@@ -135,10 +140,9 @@ function TambahAprahan() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Pengeluaran Obat</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            aaaaaa
             <FormControl>
               <FormLabel>Pilih Status</FormLabel>
               <Select
@@ -160,11 +164,11 @@ function TambahAprahan() {
                 </Alert>
               ) : null}
             </FormControl>
-            <FormControl>
-              <FormLabel>Pilih Puskesmas</FormLabel>
+            <FormControl mt={"30px"}>
+              <FormLabel>Pilih Tujuan</FormLabel>
               <Select
                 mt="10px"
-                placeholder="Puskesmas"
+                placeholder="Tujuan"
                 border="1px"
                 borderRadius={"8px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
@@ -184,11 +188,11 @@ function TambahAprahan() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost" onClick={formik.handleSubmit}>
-              Secondary Action
+            {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Batal
+            </Button> */}
+            <Button px={"30px"} variant="primary" onClick={formik.handleSubmit}>
+              Buat
             </Button>
           </ModalFooter>
         </ModalContent>
