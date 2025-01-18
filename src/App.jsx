@@ -35,6 +35,7 @@ import PenanggungJawabObat from "./Pages/PenanggungJawabObat";
 import ObatUser from "./Pages/ObatUser";
 import Laporan from "./Pages/Laporan";
 import ErrorBoundary from "./Components/ErrorBoundary";
+import AdminObat from "./Pages/AdminObat";
 import {
   getAuth,
   onAuthStateChanged,
@@ -209,6 +210,12 @@ function App() {
               path="/gfk/pengaturan/penanggung-jawab-obat"
               exact
               roleRoute={[7, 8]}
+            />{" "}
+            <AptekaRoute
+              component={AdminObat}
+              path="/gfk/admin-obat/:obatId"
+              exact
+              roleRoute={[8]}
             />
             <AptekaRoute
               component={ObatMasuk}

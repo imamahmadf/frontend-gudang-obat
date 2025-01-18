@@ -292,7 +292,75 @@ function DetailObat(props) {
   return (
     <Layout>
       <Box pt={"80px"} bgColor={"secondary"}>
-        <Container maxW={"1280px"} mb={"20px"} p={0}>
+        {" "}
+        {/* /////////MOBILE////////////// */}
+        <Container
+          display={{ ss: "block", sl: "none" }}
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px"}
+          p={"15px"}
+          borderColor={"secondary"}
+          mb={"20px"}
+        >
+          <Text fontSize={"24px"} fontWeight={700}>
+            {" "}
+            {dataObat?.nama}
+          </Text>
+          <SimpleGrid columns={2}>
+            <Text fontSize={"12px"}>
+              Sumber Dana: {dataObat?.sumberDana?.sumber}
+            </Text>{" "}
+            <Text fontSize={"12px"}>
+              Kelas Terapi: {dataObat?.kelasterapi?.nama}
+            </Text>{" "}
+            <Text fontSize={"12px"}>Kategori: {dataObat?.kategori?.nama}</Text>{" "}
+            <Text fontSize={"12px"}>Satuan: {dataObat?.satuan?.nama}</Text>{" "}
+            {UserRoles.includes(2) ||
+            UserRoles.includes(7) ||
+            UserRoles.includes(8) ? (
+              <Text fontSize={"12px"}>Total Stok: {dataObat?.totalStok}</Text>
+            ) : null}{" "}
+            {UserRoles.includes(2) ||
+            UserRoles.includes(7) ||
+            UserRoles.includes(8) ? (
+              <Text fontSize={"12px"}>
+                Nilai Aset:{" "}
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(totalAset)}
+              </Text>
+            ) : null}
+          </SimpleGrid>
+        </Container>
+        <HStack
+          display={{ ss: "flex", sl: "none" }}
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px"}
+          p={"15px"}
+          borderColor={"rgba(229, 231, 235, 1)"}
+          mb={"20px"}
+        >
+          <Avatar my={"5px"} borderRadius={"5px"} h={"50px"} />
+          <Box>
+            {" "}
+            <Text fontSize={"12px"}>Penanggung Jawab:</Text>
+            <Text fontSize={"20px"} fontWeight={700}>
+              {dataObat?.profile?.nama}
+            </Text>
+          </Box>
+        </HStack>
+        {/* /////////MOBILE////////////// */}
+        <Container
+          maxW={"1280px"}
+          mb={"20px"}
+          p={0}
+          display={{ ss: "none", sl: "block" }}
+        >
           <Flex gap={"20px"}>
             <Flex
               w={"85%"}
@@ -309,6 +377,20 @@ function DetailObat(props) {
               </Heading>
               <Spacer />
               <Flex gap={"15px"}>
+                {" "}
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Sumber Dana:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataObat?.sumberDana?.sumber}
+                  </Text>
+                </Box>
                 <Box
                   borderRadius={"5px"}
                   border={"1px"}
@@ -334,6 +416,19 @@ function DetailObat(props) {
                   <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
                     {dataObat?.kategori?.nama}
                   </Text>
+                </Box>{" "}
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"secondary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Satuan:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataObat?.satuan?.nama}
+                  </Text>
                 </Box>
                 {UserRoles.includes(2) ||
                 UserRoles.includes(7) ||
@@ -352,20 +447,6 @@ function DetailObat(props) {
                     </Text>
                   </Box>
                 ) : null}
-
-                <Box
-                  borderRadius={"5px"}
-                  border={"1px"}
-                  p={"15px"}
-                  borderColor={"secondary"}
-                >
-                  <Text fontSize={"16px"} fontWeight={400}>
-                    Satuan:
-                  </Text>
-                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
-                    {dataObat?.satuan?.nama}
-                  </Text>
-                </Box>
                 {UserRoles.includes(2) ||
                 UserRoles.includes(7) ||
                 UserRoles.includes(8) ? (
@@ -415,7 +496,7 @@ function DetailObat(props) {
           borderColor={"rgba(229, 231, 235, 1)"}
           maxW={"1280px"}
         >
-          <SimpleGrid minChildWidth="420px">
+          <SimpleGrid minChildWidth="180px">
             <Box>
               {" "}
               {dataObat?.noBatches?.[0] ? (
@@ -440,16 +521,17 @@ function DetailObat(props) {
               <Table variant="simple" size="sm" mt={2}>
                 <Thead>
                   <Tr>
-                    <Th fontSize={"14px"}>Nomor Batch</Th>
+                    <Th fontSize={"14px"} p={0}>
+                      Nomor Batch
+                    </Th>
                     <Th fontSize={"14px"}>EXP</Th>
 
                     {UserRoles.includes(2) ||
                     UserRoles.includes(7) ||
                     UserRoles.includes(8) ? (
                       <>
-                        {" "}
                         <Th
-                          display={{ ss: "none", sl: "flex" }}
+                          display={{ base: "none", md: "table-cell" }}
                           fontSize={"14px"}
                         >
                           Harga Satuan
@@ -470,22 +552,18 @@ function DetailObat(props) {
                     const newExp = formatDate(val.exp);
                     return (
                       <Tr key={val.noBatch}>
-                        <Td fontSize={"14px"} maxWidth="100px">
+                        <Td p={0} fontSize={"14px"}>
                           {val.noBatch}
                         </Td>
-                        <Td fontSize={"14px"} maxWidth="130px">
-                          {newExp}
-                        </Td>
+                        <Td fontSize={"14px"}>{newExp}</Td>
 
                         {UserRoles.includes(2) ||
                         UserRoles.includes(7) ||
                         UserRoles.includes(8) ? (
                           <>
-                            {" "}
                             <Td
-                              display={{ ss: "none", sl: "table-cell" }}
+                              display={{ base: "none", md: "table-cell" }}
                               fontSize={"14px"}
-                              maxWidth="130px"
                             >
                               {new Intl.NumberFormat("id-ID", {
                                 style: "currency",
@@ -494,7 +572,7 @@ function DetailObat(props) {
                                 maximumFractionDigits: 0,
                               }).format(val.harga)}
                             </Td>
-                            <Td fontSize={"14px"} isNumeric maxWidth="130px">
+                            <Td fontSize={"14px"} isNumeric>
                               {val.stok}
                             </Td>
                           </>
@@ -548,7 +626,6 @@ function DetailObat(props) {
             </Box>
           </SimpleGrid>
         </Container>
-
         {dataObat?.noBatches?.[0] ? (
           <>
             <Container
@@ -589,8 +666,7 @@ function DetailObat(props) {
                   />
                 </FormControl>
               </Flex>
-              <Flex mt={"15px"} gap={"10px"}>
-                {" "}
+              <SimpleGrid columns={3} gap={5} mt={"15px"} minChildWidth="300px">
                 <FormControl>
                   <Select
                     placeholder="Berdasarkan Waktu"
@@ -603,7 +679,6 @@ function DetailObat(props) {
                 </FormControl>
                 <FormControl>
                   <Select
-                    mb="20px"
                     placeholder="Berdasarkan Tujuan"
                     borderRadius={0}
                     onClick={(e) => selectHandler(e, "puskesmasId")}
@@ -628,7 +703,7 @@ function DetailObat(props) {
                     <option value="8">Stok Opname </option>
                   </Select>
                 </FormControl>
-              </Flex>
+              </SimpleGrid>
             </Container>
             <Container
               p={"15px"}
@@ -729,10 +804,7 @@ function DetailObat(props) {
                         <Td>Asal</Td>
                         <Td>{selectedBatch?.perusahaan?.nama}</Td>
                       </Tr>
-                      <Tr>
-                        <Td>Sumber Dana</Td>
-                        <Td>{selectedBatch?.sumberDana?.sumber}</Td>
-                      </Tr>
+
                       {UserRoles.includes(2) ||
                       UserRoles.includes(7) ||
                       UserRoles.includes(8) ? (

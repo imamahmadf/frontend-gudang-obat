@@ -38,9 +38,18 @@ import { useDisclosure } from "@chakra-ui/react";
 import Layout from "../Components/Layout";
 
 function Laporan() {
-  const [inputStartDate, setInputStartDate] = useState("");
-  const [inputEndDate, setInputEndDate] = useState("");
-  const [kategoriId, setkategoriId] = useState(0);
+  const today = new Date();
+  const [inputStartDate, setInputStartDate] = useState(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+      .toISOString()
+      .split("T")[0]
+  );
+  const [inputEndDate, setInputEndDate] = useState(
+    new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      .toISOString()
+      .split("T")[0]
+  );
+  const [kategoriId, setkategoriId] = useState(1);
   const [kategoriData, setkategoriData] = useState([]);
   const [dataLaporan, setDataLaporan] = useState([]);
   const handleChange = (e, field) => {
@@ -84,41 +93,316 @@ function Laporan() {
         <Table variant="simple" size="sm" mt={2}>
           <Thead bgColor={"primary"}>
             <Tr>
-              <Th fontSize={"14px"} color={"white"} py={"20px"}>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+                py={"20px"}
+              >
                 No.
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Nama Obat
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
-                Sataun
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Satuan
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
-                Sisa
+              <Th
+                colSpan={4}
+                borderWidth="1px"
+                borderColor="white"
+                textAlign="center"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                <Text> Sisa pada</Text>
+                <Text> {inputStartDate}</Text>
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                colSpan={4}
+                borderWidth="1px"
+                borderColor="white"
+                textAlign="center"
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Penerimaan
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                colSpan={4}
+                borderWidth="1px"
+                borderColor="white"
+                textAlign="center"
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Pengeluaran
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                colSpan={4}
+                borderWidth="1px"
+                borderColor="white"
+                textAlign="center"
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Expired Date
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
-                Sisa
+              <Th
+                colSpan={4}
+                borderWidth="1px"
+                borderColor="white"
+                textAlign="center"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                <Text> Sisa pada</Text>
+                <Text> {inputEndDate}</Text>
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                colSpan={4}
+                borderWidth="1px"
+                borderColor="white"
+                textAlign="center"
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Pemakaian
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Nilai Aset Penerimaan
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Nilai Aset Pemakaian
               </Th>
-              <Th fontSize={"14px"} color={"white"}>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+              >
                 Nilai Aset
+              </Th>
+            </Tr>
+            <Tr>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                APBD
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Prog
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Buffer
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Total
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                APBD
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Prog
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Buffer
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Total
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                APBD
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Prog
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Buffer
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Total
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                APBD
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Prog
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Buffer
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Total
+              </Th>{" "}
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                APBD
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Prog
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Buffer
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Total
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                APBD
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Prog
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Buffer
+              </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Total
               </Th>
             </Tr>
           </Thead>
@@ -135,27 +419,108 @@ function Laporan() {
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.satuan.nama}
                   </Td>
+                  {/* ///////// */}
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 1
+                      ? val.totalStok +
+                        val.pemakaian +
+                        val.obatExp -
+                        val.penerimaan
+                      : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 3
+                      ? val.totalStok +
+                        val.pemakaian +
+                        val.obatExp -
+                        val.penerimaan
+                      : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 2
+                      ? val.totalStok +
+                        val.pemakaian +
+                        val.obatExp -
+                        val.penerimaan
+                      : "-"}
+                  </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.totalStok +
                       val.pemakaian +
                       val.obatExp -
                       val.penerimaan}
                   </Td>
+                  {/* ////////// */}
+
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 1 ? val.penerimaan : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 3 ? val.penerimaan : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 2 ? val.penerimaan : "-"}
+                  </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.penerimaan}
+                  </Td>
+                  {/* ///////////// */}
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 1 ? val.obatExp + val.pemakaian : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 3 ? val.obatExp + val.pemakaian : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 2 ? val.obatExp + val.pemakaian : "-"}
                   </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.obatExp + val.pemakaian}
                   </Td>
+                  {/* //////////// */}
+
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 1 ? val.obatExp : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 3 ? val.obatExp : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 2 ? val.obatExp : "-"}
+                  </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.obatExp}
+                  </Td>
+                  {/* /////////// */}
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 1 ? val.totalStok : "-"}
+                  </Td>
+
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 3 ? val.totalStok : "-"}
+                  </Td>
+
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 2 ? val.totalStok : "-"}
                   </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.totalStok}
                   </Td>
+                  {/* //////// */}
+
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 1 ? val.pemakaian : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 3 ? val.pemakaian : "-"}
+                  </Td>
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val.sumberDana.id == 2 ? val.pemakaian : "-"}
+                  </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {val.pemakaian}
                   </Td>
+                  {/* //////// */}
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {new Intl.NumberFormat("id-ID", {
                       style: "currency",

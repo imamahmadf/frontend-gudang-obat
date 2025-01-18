@@ -41,6 +41,7 @@ function ObatMasuk() {
   const [keyword, setKeyword] = useState("");
   const [dataObat, setDataObat] = useState([]);
   const [status, setStatus] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
 
   const {
     isOpen: isDeleteOpen,
@@ -81,13 +82,17 @@ function ObatMasuk() {
   }
 
   function tolak(e) {
-    console.log(e.value, "DDDDDDDDDDDDDDDDDDDS");
+    console.log(e, "DDDDDDDDDDDDDDDDDDDS");
     axios
       .post(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/tolak`, {
-        id: e.value.id,
+        id: e.noBatchId,
+        old_img: e.old_img,
       })
       .then((res) => {
         console.log(res.data);
+        setSelectedBatch(null);
+        onDeleteClose();
+        fetchDataObat();
       })
       .catch((err) => {
         console.log(err);
@@ -95,19 +100,20 @@ function ObatMasuk() {
   }
 
   function terima(e) {
-    console.log(e.val, "DATAAAAAA");
+    console.log(e, "DATAAAAAA");
     axios
       .post(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/terima`, {
-        noBatch: e.val2.noBatch,
-        noBatchId: e.val2.id,
-        exp: e.val2.exp,
-        stok: e.val2.stok,
-        obatId: e.val.id,
-        totalStok: e.val.totalStok + e.val2.stok,
-        perusahaanId: e.val2.perusahaanId,
+        noBatch: e.noBatch,
+        noBatchId: e.noBatchId,
+        exp: e.exp,
+        stok: e.stok,
+        obatId: e.obatId,
+        totalStok: e.totalStok + e.stok,
+        perusahaanId: e.perusahaanId,
       })
       .then((res) => {
         console.log(res.data);
+        setSelectedBatch(null);
         onFilterClose();
         fetchDataObat();
       })
@@ -366,7 +372,20 @@ function ObatMasuk() {
 
                           <Flex justifyContent="flex-end">
                             <Center
-                              onClick={onFilterOpen}
+                              // onClick={onFilterOpen}
+                              onClick={() => {
+                                setSelectedBatch({
+                                  nama: val.nama,
+                                  noBatch: val2.noBatch,
+                                  noBatchId: val2.id,
+                                  exp: val2.exp,
+                                  stok: val2.stok,
+                                  obatId: val.id,
+                                  totalStok: val.totalStok,
+                                  perusahaanId: val2.perusahaanId,
+                                });
+                                onFilterOpen();
+                              }}
                               borderRadius={"5px"}
                               as="button"
                               h="30px"
@@ -383,7 +402,20 @@ function ObatMasuk() {
                               <BsCheckLg />
                             </Center>
                             <Center
-                              onClick={onDeleteOpen}
+                              onClick={() => {
+                                setSelectedBatch({
+                                  nama: val.nama,
+                                  noBatch: val2.noBatch,
+                                  noBatchId: val2.id,
+                                  exp: val2.exp,
+                                  stok: val2.stok,
+                                  obatId: val.id,
+                                  totalStok: val.totalStok,
+                                  perusahaanId: val2.perusahaanId,
+                                  old_img: val2.pic,
+                                });
+                                onDeleteOpen();
+                              }}
                               borderRadius={"5px"}
                               as="button"
                               h="30px"
@@ -401,94 +433,6 @@ function ObatMasuk() {
                             </Center>
                           </Flex>
                         </Flex>{" "}
-                        <Modal
-                          closeOnOverlayClick={false}
-                          isOpen={isFilterOpen}
-                          onClose={onFilterClose}
-                        >
-                          <ModalOverlay />
-                          <ModalContent borderRadius={0}>
-                            <ModalHeader>Terima barang Masuk</ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody pb={6}>
-                              <Table>
-                                <Tbody>
-                                  <Tr>
-                                    <Td>Nama</Td>
-                                    <Td>: {val.nama}</Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Td>No. Batch</Td>
-                                    <Td>: {val2.noBatch}</Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Td>Stok</Td>
-                                    <Td>: {val2.stok}</Td>
-                                  </Tr>
-                                </Tbody>
-                              </Table>
-                            </ModalBody>
-
-                            <ModalFooter>
-                              <Button
-                                bg={"primary"}
-                                color={"white"}
-                                _hover={{
-                                  bg: "black",
-                                }}
-                                onClick={() => {
-                                  terima({ val2, val });
-                                }}
-                              >
-                                Terima
-                              </Button>
-                            </ModalFooter>
-                          </ModalContent>
-                        </Modal>
-                        <Modal
-                          closeOnOverlayClick={false}
-                          isOpen={isDeleteOpen}
-                          onClose={onDeleteClose}
-                        >
-                          <ModalOverlay />
-                          <ModalContent borderRadius={0}>
-                            <ModalHeader>Tolak Barang Masuk</ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody pb={6}>
-                              <Table>
-                                <Tbody>
-                                  <Tr>
-                                    <Td>Nama</Td>
-                                    <Td>: {val.nama}</Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Td>No. Batch</Td>
-                                    <Td>: {val2.noBatch}</Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Td>Stok</Td>
-                                    <Td>: {val2.stok}</Td>
-                                  </Tr>
-                                </Tbody>
-                              </Table>
-                            </ModalBody>
-
-                            <ModalFooter>
-                              <Button
-                                bg={"danger"}
-                                color={"white"}
-                                _hover={{
-                                  bg: "black",
-                                }}
-                                onClick={() => {
-                                  tolak({ value: val2 });
-                                }}
-                              >
-                                Tolak
-                              </Button>
-                            </ModalFooter>
-                          </ModalContent>
-                        </Modal>
                       </>
                     );
                   })}
@@ -616,6 +560,107 @@ function ObatMasuk() {
             >
               <AmprahanAktif data={status} />
             </Container>
+          </>
+        )}
+
+        {selectedBatch && (
+          <>
+            <Modal
+              closeOnOverlayClick={false}
+              isOpen={isFilterOpen}
+              // onClose={onFilterClose}
+              onClose={() => {
+                setSelectedBatch(null);
+                onFilterClose();
+              }}
+            >
+              <ModalOverlay />
+              <ModalContent borderRadius={0}>
+                <ModalHeader>Terima barang Masuk</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  <Table>
+                    <Tbody>
+                      <Tr>
+                        <Td>Nama</Td>
+                        <Td>: {selectedBatch.nama}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>No. Batch</Td>
+                        <Td>: {selectedBatch.noBatch}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Stok</Td>
+                        <Td>: {selectedBatch.stok}</Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button
+                    bg={"primary"}
+                    color={"white"}
+                    _hover={{
+                      bg: "black",
+                    }}
+                    onClick={() => {
+                      terima(selectedBatch);
+                    }}
+                  >
+                    Terima
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            <Modal
+              closeOnOverlayClick={false}
+              isOpen={isDeleteOpen}
+              // onClose={onDeleteClose}
+              onClose={() => {
+                setSelectedBatch(null);
+                onDeleteClose();
+              }}
+            >
+              <ModalOverlay />
+              <ModalContent borderRadius={0}>
+                <ModalHeader>Tolak Barang Masuk</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  <Table>
+                    <Tbody>
+                      <Tr>
+                        <Td>Nama</Td>
+                        <Td>: {selectedBatch.nama}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>No. Batch</Td>
+                        <Td>: {selectedBatch.noBatch}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Stok</Td>
+                        <Td>: {selectedBatch.stok}</Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button
+                    bg={"danger"}
+                    color={"white"}
+                    _hover={{
+                      bg: "black",
+                    }}
+                    onClick={() => {
+                      tolak(selectedBatch);
+                    }}
+                  >
+                    Tolak
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </>
         )}
       </Layout>

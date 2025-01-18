@@ -43,12 +43,22 @@ import "../Style/pagination.css";
 import ReactPaginate from "react-paginate";
 
 function Puskesmas() {
+  const today = new Date();
   const [puskesmas, setPuskesmas] = useState([]);
   const [puskesmasId, setPuskesmasId] = useState(0);
   const [profile, setProfile] = useState([]);
   const [penanggungJawabProfile, setPenanggungjawabProfile] = useState(0);
-  const [inputStartDate, setInputStartDate] = useState("");
-  const [inputEndDate, setInputEndDate] = useState("");
+
+  const [inputStartDate, setInputStartDate] = useState(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+      .toISOString()
+      .split("T")[0]
+  );
+  const [inputEndDate, setInputEndDate] = useState(
+    new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      .toISOString()
+      .split("T")[0]
+  );
 
   const [limit, setLimit] = useState(20);
   const [page, setPage] = useState(0);

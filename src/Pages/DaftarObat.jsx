@@ -26,6 +26,8 @@ import {
   MenuItem,
   Menu,
   Stack,
+  SimpleGrid,
+  Divider,
 } from "@chakra-ui/react";
 import { BsFillBoxSeamFill } from "react-icons/bs";
 import { BsCaretRightFill } from "react-icons/bs";
@@ -246,16 +248,44 @@ function DaftarObatAlkes() {
                       : addFoto
                   }
                 />
-                <Text fontSize={"13px"} width={"150px"} me={"10px"}>
+                <Text
+                  // border={{ base: "1px", md: "1px" }}
+                  fontSize={"13px"}
+                  width={"150px"}
+                  me={"10px"}
+                >
                   {val.nama}
                 </Text>
-                <Text fontSize={"13px"} width={"120px"} me={"10px"}>
+                <Text
+                  // border={{ base: "1px", md: "1px" }}
+                  fontSize={"13px"}
+                  width={"120px"}
+                  me={"10px"}
+                >
+                  {val.sumberDana?.sumber}
+                </Text>{" "}
+                <Text
+                  // border={{ base: "1px", md: "1px" }}
+                  fontSize={"13px"}
+                  width={"120px"}
+                  me={"10px"}
+                >
                   {val.kelasterapi.nama}
                 </Text>{" "}
-                <Text fontSize={"13px"} width={"100px"} me={"10px"}>
+                <Text
+                  // border={{ base: "1px", md: "1px" }}
+                  fontSize={"13px"}
+                  width={"100px"}
+                  me={"10px"}
+                >
                   {val.kategori.nama}
                 </Text>{" "}
-                <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                <Text
+                  // border={{ base: "1px", md: "1px" }}
+                  fontSize={"13px"}
+                  width={"80px"}
+                  me={"10px"}
+                >
                   {val.satuan.nama}
                 </Text>{" "}
               </Flex>{" "}
@@ -264,7 +294,7 @@ function DaftarObatAlkes() {
                   key={val.nama}
                   flexDirection={"column"}
                   justifyContent={"flex-end"}
-                  minW={"600px"}
+                  minW={"464px"}
                 >
                   {val.noBatches.map((val2, idx2) => {
                     const newExp = formatDate(val2.exp);
@@ -272,11 +302,16 @@ function DaftarObatAlkes() {
                       <Flex key={val2.noBatch} justifyContent={"flex-end"}>
                         <Box>
                           <Flex mb={"5px"}>
-                            <Text fontSize={"13px"} width={"80px"} me={"10px"}>
+                            <Text
+                              // border={{ base: "1px", md: "1px" }}
+                              fontSize={"13px"}
+                              width={"80px"}
+                              me={"10px"}
+                            >
                               {val2.noBatch}
                             </Text>
                             <Box
-                              width={"80px"}
+                              // border={{ base: "1px", md: "1px" }}
                               borderRadius={"5px"}
                               color={
                                 new Date(newExp) <=
@@ -311,9 +346,16 @@ function DaftarObatAlkes() {
                                   : ""
                               }
                             >
-                              <Text fontSize={"13px"}>{newExp}</Text>
+                              <Text
+                                width={"80px"}
+                                // border={{ base: "1px", md: "1px" }}
+                                fontSize={"13px"}
+                              >
+                                {newExp}
+                              </Text>
                             </Box>
                             <Text
+                              // border={{ base: "1px", md: "1px" }}
                               fontSize={"13px"}
                               width={"100px"}
                               me={"10px"}
@@ -337,6 +379,7 @@ function DaftarObatAlkes() {
                         <Spacer />
 
                         <Flex
+                          // border={{ base: "1px", md: "1px" }}
                           justifyContent={"flex-end"}
                           display={
                             UserRoles.includes(2) ||
@@ -371,7 +414,7 @@ function DaftarObatAlkes() {
                   }
                 >
                   <Text fontSize={"13px"} fontWeight={600}>
-                    jumlah Stok:{" "}
+                    jumlah Stok:
                     {val.noBatches.reduce(
                       (total, batch) => total + batch.stok,
                       0
@@ -379,7 +422,10 @@ function DaftarObatAlkes() {
                   </Text>
                 </Flex>
               </Box>
-              <Flex marginStart={"60px"}>
+              <Flex
+                // border={{ base: "1px", md: "1px" }}
+                marginStart={"60px"}
+              >
                 <>
                   {UserRoles.includes(7) || UserRoles.includes(8) ? (
                     <>
@@ -456,69 +502,93 @@ function DaftarObatAlkes() {
               </Flex>
             </Flex>
           </Flex>
-          {/* //////MOBILE/////////// */}
-          <Link to={"/gfk/detail-obat/" + val.id}>
-            <Box
-              display={{ ss: "block", sl: "none" }}
-              p={"10px"}
-              my={"20px"}
-              borderRadius={"5px"}
-              border={"1px"}
-              borderColor={"rgba(229, 231, 235, 1)"}
-            >
-              {" "}
-              <Flex>
+          {/* ///////////////////////MOBILE//////////////////// */}
+
+          <Box
+            display={{ ss: "block", sl: "none" }}
+            p={"10px"}
+            my={"20px"}
+            borderRadius={"5px"}
+            border={"1px"}
+            borderColor={"rgba(229, 231, 235, 1)"}
+          >
+            {" "}
+            <Flex>
+              <Link to={"/gfk/detail-obat/" + val.id}>
                 <Text
                   fontSize={"16px"}
                   fontWeight={600}
                   me={"10px"}
-                  mb={"10px"}
                   maxW={"240px"}
                 >
                   {val.nama}
                 </Text>
-                <Spacer />
-                <Stack>
-                  {val.noBatches[0] ? (
-                    <>
-                      {status ? null : (
-                        <TambahAmprahanItem
+              </Link>
+              <Spacer />
+              <Stack>
+                {UserRoles.includes(7) || UserRoles.includes(8) ? (
+                  <>
+                    {" "}
+                    {status?.StatusAmprahanId < 4 ? (
+                      <TambahAmprahanItem
+                        userId={1}
+                        data={val.noBatches}
+                        randomNumber={setRandomNumber}
+                        id={val.id}
+                      />
+                    ) : status?.StatusAmprahanId === 4 ? (
+                      <Tooltip label="alokasi" aria-label="A tooltip">
+                        <Center
+                          onClick={() => {
+                            history.push(`/gfk/alokasi-item/${val.id}`);
+                          }}
+                          borderRadius={"5px"}
+                          as="button"
+                          h="25px"
+                          w="25px"
+                          fontSize="12px"
+                          transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                          color="white"
+                          _hover={{
+                            bg: "black",
+                          }}
+                          bg="biru"
+                          // onClick={onOpen}
+                        >
+                          <BsFillBoxSeamFill />
+                        </Center>
+                      </Tooltip>
+                    ) : status?.StatusAmprahanId === 7 ? (
+                      <>
+                        <TambahObatRusak
                           userId={1}
                           data={val.noBatches}
                           id={val.id}
+                          randomNumber={setRandomNumber}
                         />
-                      )}
-                      <Menu>
-                        <MenuButton
-                          p={0}
-                          h="25px"
-                          w="10px"
-                          fontSize="12px"
-                          as={Button}
-                        ></MenuButton>
-                        <MenuList>
-                          <MenuItem
-                            onClick={() => {
-                              history.push(`/gfk/detail-obat/${val.id}`);
-                            }}
-                          >
-                            Detail Obat
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => {
-                              history.push(`/edit-obat/${val.id}`);
-                            }}
-                          >
-                            Edit Obat
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </>
-                  ) : null}
-                </Stack>
-              </Flex>
-              <Flex>
-                {" "}
+                      </>
+                    ) : null}
+                  </>
+                ) : null}
+              </Stack>
+            </Flex>
+            <Flex mt={"5px"} gap={2} h={"15px"}>
+              <Text fontSize={"11px"} maxWidth={"20%"}>
+                {val.sumberDana?.sumber}
+              </Text>{" "}
+              <Divider orientation="vertical" />
+              <Text fontSize={"11px"} maxWidth={"60%"}>
+                {val.kategori.nama}
+              </Text>{" "}
+              <Divider orientation="vertical" />
+              <Text textAlign={"right"} fontSize={"11px"} maxWidth={"20%"}>
+                {val.satuan.nama}
+              </Text>
+            </Flex>
+            <Divider mt={"5px"} mb={"15px"} />
+            {/* ///////batas///// */}
+            <Flex m={0}>
+              <Box>
                 <Image
                   borderRadius={"5px"}
                   alt="foto obat"
@@ -534,75 +604,82 @@ function DaftarObatAlkes() {
                       : addFoto
                   }
                 />{" "}
-                <Box>
-                  {" "}
-                  {val.noBatches.map((val2, idx2) => {
-                    const newExp = formatDate(val2.exp);
-                    return (
-                      <Flex
-                        key={val2.noBatch}
-                        justifyContent={"flex-end"}
-                        mb={"5px"}
-                      >
-                        <Box>
-                          <Flex>
-                            <Text fontSize={"13px"} width={"70px"} me={"10px"}>
-                              {val2.noBatch}
-                            </Text>
-                            <Box
-                              width={"80px"}
-                              borderRadius={"5px"}
-                              color={
-                                new Date(newExp) <=
-                                new Date(
-                                  new Date().setMonth(
-                                    new Date().getMonth() + 1,
-                                    0
-                                  )
-                                )
-                                  ? "white"
-                                  : "black"
-                              }
-                              ps={"10px"}
-                              me={"10px"}
-                              backgroundColor={
-                                new Date(newExp) <=
-                                new Date(
-                                  new Date().setMonth(
-                                    new Date().getMonth() + 1,
-                                    0
-                                  )
-                                )
-                                  ? "danger"
-                                  : new Date(newExp) <=
-                                    new Date(
-                                      new Date().setMonth(
-                                        new Date().getMonth() + 6,
-                                        0
-                                      )
-                                    )
-                                  ? "orange"
-                                  : ""
-                              }
-                            >
-                              <Text fontSize={"13px"}>{newExp}</Text>
-                            </Box>
-                          </Flex>
-                        </Box>
-                        <Spacer />
-
-                        <Flex justifyContent={"flex-end"}>
-                          <Text align={"right"} fontSize={"13px"} ms={"10px"}>
-                            {val2.stok}
+              </Box>
+              <Box w={"100%"}>
+                {val.noBatches.map((val2, idx2) => {
+                  const newExp = formatDate(val2.exp);
+                  return (
+                    <Flex
+                      key={val2.noBatch}
+                      justifyContent={"flex-end"}
+                      mb={"5px"}
+                      ms={"10px"}
+                    >
+                      <Box>
+                        <Flex>
+                          <Text fontSize={"13px"} width={"100px"} me={"10px"}>
+                            {val2.noBatch}
                           </Text>
+                          <Box
+                            width={"80px"}
+                            borderRadius={"5px"}
+                            color={
+                              new Date(newExp) <=
+                              new Date(
+                                new Date().setMonth(
+                                  new Date().getMonth() + 1,
+                                  0
+                                )
+                              )
+                                ? "white"
+                                : "black"
+                            }
+                            ps={"10px"}
+                            me={"10px"}
+                            backgroundColor={
+                              new Date(newExp) <=
+                              new Date(
+                                new Date().setMonth(
+                                  new Date().getMonth() + 1,
+                                  0
+                                )
+                              )
+                                ? "danger"
+                                : new Date(newExp) <=
+                                  new Date(
+                                    new Date().setMonth(
+                                      new Date().getMonth() + 6,
+                                      0
+                                    )
+                                  )
+                                ? "orange"
+                                : ""
+                            }
+                          >
+                            <Text fontSize={"13px"}>{newExp}</Text>
+                          </Box>
                         </Flex>
+                      </Box>
+                      <Spacer />
+
+                      <Flex>
+                        <Text align={"right"} fontSize={"13px"} ms={"10px"}>
+                          {val2.stok}
+                        </Text>
                       </Flex>
-                    );
-                  })}
-                </Box>{" "}
-              </Flex>
-            </Box>
-          </Link>
+                    </Flex>
+                  );
+                })}
+              </Box>
+            </Flex>{" "}
+            <Divider mb={"5px"} mt={"15px"} />
+            <Text fontSize={"12px"} fontWeight={600}>
+              Jumlah Stok:
+              {val.noBatches.reduce((total, batch) => total + batch.stok, 0)}
+            </Text>
+          </Box>
+
+          {/* //////////////////////////////////MOBILE////////////////////////////// */}
         </>
       );
     });
@@ -634,6 +711,7 @@ function DaftarObatAlkes() {
             maxW={"1280px"}
             marginBottom={"20px"}
             padding={"20px"}
+            style={{ overflowX: "auto" }}
           >
             <Box>
               <Text>
@@ -788,6 +866,7 @@ function DaftarObatAlkes() {
                   <Flex>
                     <Flex>
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
                         width={"190px"}
@@ -796,6 +875,16 @@ function DaftarObatAlkes() {
                         Nama Obat
                       </Text>
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
+                        fontSize={"15px"}
+                        fontWeight={600}
+                        width={"120px"}
+                        me={"10px"}
+                      >
+                        Sumber
+                      </Text>{" "}
+                      <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
                         width={"120px"}
@@ -804,6 +893,7 @@ function DaftarObatAlkes() {
                         Kelas Terapi
                       </Text>{" "}
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
                         width={"100px"}
@@ -812,6 +902,7 @@ function DaftarObatAlkes() {
                         Kategori
                       </Text>{" "}
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
                         width={"80px"}
@@ -822,6 +913,7 @@ function DaftarObatAlkes() {
                     </Flex>
                     <Flex>
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
                         width={"80px"}
@@ -830,14 +922,16 @@ function DaftarObatAlkes() {
                         No. Batch
                       </Text>
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
-                        width={"80px"}
+                        width={"95px"}
                         me={"10px"}
                       >
                         EXP
                       </Text>{" "}
                       <Text
+                        // border={{ base: "1px", md: "1px" }}
                         fontSize={"15px"}
                         fontWeight={600}
                         width={"100px"}
@@ -857,6 +951,7 @@ function DaftarObatAlkes() {
                   <Spacer />
                   <Flex>
                     <Text
+                      // border={{ base: "1px", md: "1px" }}
                       fontSize={"15px"}
                       align={"right"}
                       width={"100px"}
@@ -873,6 +968,7 @@ function DaftarObatAlkes() {
                       Stok
                     </Text>
                     <Text
+                      // border={{ base: "1px", md: "1px" }}
                       fontSize={"15px"}
                       align={"right"}
                       width={"100px"}

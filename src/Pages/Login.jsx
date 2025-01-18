@@ -35,6 +35,7 @@ import {
 } from "firebase/auth";
 import Layout from "../Components/Layout";
 import imageLogin from "../assets/login.png";
+import { onAuthStateChanged } from "firebase/auth";
 function Login() {
   const global = useSelector((state) => state.user);
   const history = useHistory();
@@ -45,7 +46,7 @@ function Login() {
   const handleClick = () => {
     setShowPassword(!showPassword);
   };
-
+  console.log(global);
   if (global.id) {
     history.push("/");
   }
@@ -129,6 +130,15 @@ function Login() {
 
   const flexDirection = useBreakpointValue({ base: "column", md: "row" });
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(authFirebase, (user) => {
+      if (user) {
+        history.push("/");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [history]);
   return (
     <>
       <Box

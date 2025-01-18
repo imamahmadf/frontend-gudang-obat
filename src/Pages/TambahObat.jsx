@@ -170,12 +170,9 @@ function tambahObat() {
           });
 
           // Reset form dan state setelah berhasil
-          formik.resetForm();
+          setSelectedObat(null);
 
-          setSelectedFile(null);
-          setFileSizeMsg("");
-          setPerusahaanId([]);
-          setSumberDanaId([]);
+          fetchNamaObat();
 
           // Arahkan pengguna ke halaman lain (misalnya daftar obat)
         })
@@ -207,7 +204,10 @@ function tambahObat() {
               <FormLabel>Pilih Nama Obat</FormLabel>
               <Select2
                 options={namaObat.result?.map((val) => {
-                  return { value: val.id, label: val.nama };
+                  return {
+                    value: val.id,
+                    label: `${val.nama} - ${val.kategori.nama}`,
+                  };
                 })}
                 onChange={(choice) => {
                   setSelectedObat(choice);

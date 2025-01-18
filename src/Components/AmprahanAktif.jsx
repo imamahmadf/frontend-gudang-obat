@@ -50,28 +50,19 @@ function AmprahanAktif(props) {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [inputValue, setInputValue] = useState(null);
   const history = useHistory();
-  function formatDate(dateString) {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Des",
-    ];
 
-    const date = new Date(dateString);
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
+  function formatTanggal(dateString) {
+    var objekTanggal = new Date(dateString);
 
-    return `${month}, ${year}`;
+    // Mengambil nilai hari, bulan, dan tahun
+    var hari = objekTanggal.getUTCDate();
+    var bulan = objekTanggal.toLocaleString("default", { month: "short" });
+    var tahun = objekTanggal.getUTCFullYear();
+
+    // Menggabungkan hasilnya
+    return `${hari} ${bulan} ${tahun}`;
   }
+
   const { UserRoles, profileId } = useSelector((state) => state.user);
   function hapusPermintaan(val) {
     console.log(val, "DELETE PERMINTAAN");
@@ -148,7 +139,7 @@ function AmprahanAktif(props) {
             bgColor={"white"}
             borderRadius={"5px"}
             p={"10px"}
-            w={"33%"}
+            w={{ ss: "100%", sl: "33%" }}
           >
             {" "}
             <Center
@@ -161,12 +152,13 @@ function AmprahanAktif(props) {
                   ? "biru"
                   : null
               }
-              p={"15px"}
+              p={{ ss: "10px", sl: "15px" }}
               color={"white"}
               fontSize={"30px"}
               borderRadius={"5px"}
               me={"10px"}
-              h={"60px"}
+              h={{ ss: "40px", sl: "60px" }}
+              w={{ ss: "40px", sl: "60px" }}
             >
               {props?.data?.StatusAmprahanId <= 3 ? (
                 <BsCart3 />
@@ -184,7 +176,7 @@ function AmprahanAktif(props) {
               ) : (
                 <Text> tujuan: {props?.data?.uptd?.nama}</Text>
               )}
-              <Text>Tanggal: {props?.data?.tanggal}</Text>
+              <Text>Tanggal: {formatTanggal(props?.data?.tanggal)}</Text>
             </Box>
           </Flex>
 
@@ -196,7 +188,7 @@ function AmprahanAktif(props) {
               border={"1px"}
               borderColor={"rgba(229, 231, 235, 1)"}
               p={"10px"}
-              w={"33%"}
+              w={{ ss: "100%", sl: "33%" }}
             >
               <Image
                 borderRadius={"5px"}

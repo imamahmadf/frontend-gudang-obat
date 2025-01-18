@@ -47,7 +47,7 @@ function StokOpname() {
     return profile.map((val) => {
       return (
         <option key={val.id} value={val.id}>
-          {val.nama} {val.id}
+          {val.nama}
         </option>
       );
     });
@@ -286,7 +286,7 @@ function StokOpname() {
                 Tambahkan SO
               </Button>
             </HStack>
-            <Box minWidth={"600px"}>
+            <Box>
               <FormLabel>Penanggungjawab</FormLabel>
               <Select
                 mt="10px"
@@ -303,7 +303,7 @@ function StokOpname() {
             </Box>
 
             {/* Tabel untuk menampilkan dataStokOpname menggunakan Chakra UI */}
-            <Box mt="20px">
+            <Box mt="20px" style={{ overflowX: "auto" }}>
               <Table variant="simple" width="100%">
                 <Thead>
                   <Tr>

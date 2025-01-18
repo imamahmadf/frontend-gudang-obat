@@ -50,8 +50,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { BsTrash3 } from "react-icons/bs";
 function Sidebar() {
-  const { id, ProfilePic, ProfileName, firebaseProviderId, UserRoles } =
-    useSelector((state) => state.user);
+  const {
+    id,
+    ProfilePic,
+    ProfileName,
+    firebaseProviderId,
+    UserRoles,
+    profileId,
+  } = useSelector((state) => state.user);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const btnRef = React.useRef();
@@ -63,7 +69,9 @@ function Sidebar() {
     { menu: "Puskesmas", logo: <BiHome />, URL: "/gfk/puskesmas" },
     { menu: "Amprahan", logo: <BsCart3 />, URL: "/gfk/amprahan" },
 
-    ...(UserRoles.includes(2) || UserRoles.includes(7) || UserRoles.includes(8)
+    ...(UserRoles?.includes(2) ||
+    UserRoles?.includes(7) ||
+    UserRoles?.includes(8)
       ? [
           {
             menu: "Alokasi",
@@ -73,7 +81,9 @@ function Sidebar() {
         ]
       : []),
 
-    ...(UserRoles.includes(5) || UserRoles.includes(7) || UserRoles.includes(8)
+    ...(UserRoles?.includes(5) ||
+    UserRoles?.includes(7) ||
+    UserRoles?.includes(8)
       ? [
           {
             menu: "Obat Masuk",
@@ -83,7 +93,7 @@ function Sidebar() {
         ]
       : []),
 
-    ...(UserRoles.includes(7) || UserRoles.includes(8)
+    ...(UserRoles?.includes(7) || UserRoles?.includes(8)
       ? [
           {
             menu: "Stock Opname",
@@ -93,7 +103,9 @@ function Sidebar() {
         ]
       : []),
 
-    ...(UserRoles.includes(2) || UserRoles.includes(7) || UserRoles.includes(8)
+    ...(UserRoles?.includes(2) ||
+    UserRoles?.includes(7) ||
+    UserRoles?.includes(8)
       ? [
           {
             menu: "Laporan",
@@ -102,11 +114,11 @@ function Sidebar() {
           },
         ]
       : []),
-    ...(UserRoles.includes(1) ||
-    UserRoles.includes(2) ||
-    UserRoles.includes(6) ||
-    UserRoles.includes(7) ||
-    UserRoles.includes(8)
+    ...(UserRoles?.includes(1) ||
+    UserRoles?.includes(2) ||
+    UserRoles?.includes(6) ||
+    UserRoles?.includes(7) ||
+    UserRoles?.includes(8)
       ? [
           {
             menu: "Kadaluwarsa",
@@ -115,10 +127,10 @@ function Sidebar() {
           },
         ]
       : []),
-    ...(UserRoles.includes(2) ||
-    UserRoles.includes(6) ||
-    UserRoles.includes(7) ||
-    UserRoles.includes(8)
+    ...(UserRoles?.includes(2) ||
+    UserRoles?.includes(6) ||
+    UserRoles?.includes(7) ||
+    UserRoles?.includes(8)
       ? [
           {
             menu: "Obat Rusak",
@@ -128,7 +140,7 @@ function Sidebar() {
         ]
       : []),
 
-    ...(UserRoles.includes(7) || UserRoles.includes(8)
+    ...(UserRoles?.includes(7) || UserRoles?.includes(8)
       ? [
           {
             menu: "Pengaturan",
@@ -228,9 +240,15 @@ function Sidebar() {
                       Profile
                     </MenuItem>
                     <MenuDivider />
-
-                    <MenuDivider />
-                    <MenuItem onClick={logout}>Logout</MenuItem>
+                    <MenuDivider />{" "}
+                    <MenuItem
+                      onClick={() =>
+                        history.push("/gfk/obat-user/" + profileId)
+                      }
+                    >
+                      Obat Saya
+                    </MenuItem>{" "}
+                    <MenuDivider /> <MenuItem onClick={logout}>Logout</MenuItem>
                     <MenuDivider />
                   </MenuList>
                 </Menu>

@@ -38,6 +38,7 @@ function Kadaluwarsa() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(5);
   const [pages, setPages] = useState(0);
+  const [rows, setRows] = useState(0);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [selectedBatchDetail, setSelectedBatchDetail] = useState(null);
   const [keyword, setKeyword] = useState("");
@@ -58,11 +59,13 @@ function Kadaluwarsa() {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/obat/get/kadaluwarsa?search_query=${keyword}&alfabet=${alfabet}&time=${time}&page=${page}&limit=${limit}`
+        }/kadaluwarsa/get/kadaluwarsa?search_query=${keyword}&alfabet=${alfabet}&time=${time}&page=${page}&limit=${limit}`
       )
       .then((res) => {
-        setDataObat(res.data.result);
-
+        setDataObat(res.data.result.rows);
+        setPage(res.data.page);
+        setPages(res.data.totalPage);
+        setRows(res.data.totalRows);
         console.log(res.data);
       })
       .catch((err) => {
@@ -137,10 +140,10 @@ function Kadaluwarsa() {
           objectFit="cover"
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
-          height={"100vh"}
+          minHeight={"100vh"}
           w="100%"
         >
-          <Container pt={"100px"} height={"1000px"} maxW={"1280px"}>
+          <Container pt={"100px"} maxW={"1280px"}>
             <Button
               onClick={() => {
                 history.push(`/gfk/daftar-kadaluwarsa`);
@@ -205,6 +208,34 @@ function Kadaluwarsa() {
                 </Tbody>
               </Table>
             </Box>
+            {/* <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                padding: 20,
+                boxSizing: "border-box",
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <ReactPaginate
+                previousLabel={<BsCaretLeftFill />}
+                nextLabel={<BsCaretRightFill />}
+                pageCount={pages}
+                onPageChange={changePage}
+                activeClassName={"item active "}
+                breakClassName={"item break-me "}
+                breakLabel={"..."}
+                containerClassName={"pagination"}
+                disabledClassName={"disabled-page"}
+                marginPagesDisplayed={2}
+                nextClassName={"item next "}
+                pageClassName={"item pagination-page "}
+                pageRangeDisplayed={2}
+                previousClassName={"item previous"}
+              />
+            </div> */}
           </Container>
         </Box>{" "}
         {selectedBatch && selectedBatchDetail && (
