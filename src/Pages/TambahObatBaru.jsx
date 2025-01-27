@@ -23,11 +23,13 @@ import { BsFillFunnelFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 import Layout from "../Components/Layout";
 import { useDispatch, useSelector } from "react-redux";
+import Batik from "../assets/BATIK.png";
 function tambahObatBaru() {
   const [kelasTerapiId, setKelasTerapiId] = useState([]);
   const [kategoriId, setKategoriId] = useState([]);
   const [satuanId, setSatuanId] = useState([]);
   const [profile, setProfile] = useState([]);
+  const [sumberDanaId, setSumberDanaId] = useState([]);
 
   const history = useHistory();
   // const [selectedFile, setSelectedFile] = useState(null);
@@ -54,7 +56,7 @@ function tambahObatBaru() {
       nama: "",
       kelasTerapiId: 0,
       kategoriId: 0,
-
+      sumberDanaId: 0,
       satuanId: 0,
       // pic: selectedFile,
       profileId: 0,
@@ -80,19 +82,30 @@ function tambahObatBaru() {
         .min(1, "Pilih profile")
         .required("profile wajib diisi")
         .typeError("profile wajib isi"),
+      sumberDanaId: Yup.number()
+        .min(1, "Pilih sumber dana")
+        .required("sumber dana wajib diisi")
+        .typeError("sumber dana wajib diisi"),
     }),
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values) => {
       console.log(values, "tes formik");
-      const { nama, kelasTerapiId, kategoriId, satuanId, profileId } = values;
+      const {
+        nama,
+        kelasTerapiId,
+        kategoriId,
+        satuanId,
+        profileId,
+        sumberDanaId,
+      } = values;
 
       // kirim data ke back-end
       await axios
         .post(
           `${
             import.meta.env.VITE_REACT_APP_API_BASE_URL
-          }/obat/post?nama=${nama}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&profileReduxId=${profileReduxId}`
+          }/obat/post?nama=${nama}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&profileReduxId=${profileReduxId}&sumberDanaId=${sumberDanaId}`
         )
         .then(async (res) => {
           //console.log(res.data);
@@ -117,6 +130,7 @@ function tambahObatBaru() {
         setKelasTerapiId(res.data.seederKelasTerapi);
         setKategoriId(res.data.seederKategori);
         setSatuanId(res.data.seederSatuan);
+        setSumberDanaId(res.data.seedSumberDana);
 
         setProfile(res.data.profileStaff);
       })
@@ -130,6 +144,16 @@ function tambahObatBaru() {
       return (
         <option key={val.id} value={val.id}>
           {val.nama}
+        </option>
+      );
+    });
+  }
+
+  function renderSumberDana() {
+    return sumberDanaId.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.sumber}
         </option>
       );
     });
@@ -173,7 +197,12 @@ function tambahObatBaru() {
   return (
     <>
       <Layout>
-        <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          pt={"80px"}
+          pb={"40px"}
+          bgColor={"rgba(249, 250, 251, 1)"}
+        >
           <Container
             bgColor={"white"}
             borderRadius={"5px"}
@@ -306,6 +335,30 @@ function tambahObatBaru() {
               ) : null}
             </FormControl>
             <FormControl mt={"20px"}>
+              <FormLabel>Pilih Sumber Dana</FormLabel>
+              <Select
+                mt="5px"
+                placeholder="Sumber Dana"
+                border="1px"
+                borderRadius={"8px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                onChange={(e) => {
+                  formik.setFieldValue(
+                    "sumberDanaId",
+                    parseInt(e.target.value)
+                  );
+                }}
+                onBlur={formik.handleBlur}
+              >
+                {renderSumberDana()}
+              </Select>
+              {formik.touched.sumberDanaId && formik.errors.sumberDanaId ? (
+                <Alert status="error" color="red" text="center">
+                  <Text ms="10px">{formik.errors.sumberDanaId}</Text>
+                </Alert>
+              ) : null}
+            </FormControl>
+            <FormControl mt={"20px"}>
               <FormLabel>Pilih Penanggungjawab</FormLabel>
               <Select
                 mt="5px"
@@ -326,7 +379,13 @@ function tambahObatBaru() {
                 </Alert>
               ) : null}
             </FormControl>
-            <Button w="100%" mt="20px" mb="40px" onClick={formik.handleSubmit}>
+            <Button
+              variant={"primary"}
+              w="100%"
+              mt="20px"
+              mb="40px"
+              onClick={formik.handleSubmit}
+            >
               Save
             </Button>
           </Container>

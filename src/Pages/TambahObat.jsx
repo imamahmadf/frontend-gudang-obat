@@ -12,9 +12,14 @@ import {
   Input,
   Alert,
   Image,
+  IconButton,
   FormHelperText,
+  Flex,
+  Tooltip,
+  Spacer,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { BsPlusCircle } from "react-icons/bs";
 import { useToast } from "@chakra-ui/react";
 import addFoto from "./../assets/add_photo.png";
 import { useFormik } from "formik";
@@ -29,6 +34,7 @@ import axios from "axios";
 import Layout from "../Components/Layout";
 import { BsFillFunnelFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
+import Batik from "../assets/BATIK.png";
 
 function tambahObat() {
   const toast = useToast();
@@ -38,7 +44,7 @@ function tambahObat() {
   const [perusahaanId, setPerusahaanId] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileSizeMsg, setFileSizeMsg] = useState("");
-  const [sumberDanaId, setSumberDanaId] = useState([]);
+
   const history = useHistory();
 
   const { profileId, UserRoles } = useSelector((state) => state.user);
@@ -58,16 +64,6 @@ function tambahObat() {
       return (
         <option key={val.id} value={val.id}>
           {val.nama}
-        </option>
-      );
-    });
-  }
-
-  function renderSumberDana() {
-    return sumberDanaId.map((val) => {
-      return (
-        <option key={val.id} value={val.id}>
-          {val.sumber}
         </option>
       );
     });
@@ -100,7 +96,6 @@ function tambahObat() {
       .then((res) => {
         console.log(res.data, "tessss");
         setNamaObat(res.data);
-        setSumberDanaId(res.data.seedSumberDana);
       })
       .catch((err) => {
         console.error(err.Message);
@@ -116,7 +111,7 @@ function tambahObat() {
       // harga: "",
       stok: "",
       perushaaan: 0,
-      sumberDana: 0,
+
       kotak: "",
     },
     // onSubmit: (values) => {
@@ -132,9 +127,7 @@ function tambahObat() {
       perusahaan: Yup.number("masukkan angka").required(
         "Perusahaan wajib diisi"
       ),
-      sumberDana: Yup.number("masukkan angka").required(
-        "Sumber Dana wajib diisi"
-      ),
+
       stok: Yup.number("masukkan angka").required("stok obat wajib disi"),
     }),
     validateOnChange: false,
@@ -153,7 +146,7 @@ function tambahObat() {
       formData.append("perusahaan", perusahaan);
       formData.append("obatId", selectedObat?.value);
       formData.append("kotak", kotak);
-      formData.append("sumberDana", sumberDana);
+
       await axios
         .post(
           `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/post`,
@@ -190,7 +183,13 @@ function tambahObat() {
   return (
     <>
       <Layout>
-        <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          pt={"80px"}
+          pb={"40px"}
+          minHeight={{ ss: "300px", sl: "800px" }}
+          bgColor={"rgba(249, 250, 251, 1)"}
+        >
           <Container
             bgColor={"white"}
             borderRadius={"5px"}
@@ -201,7 +200,25 @@ function tambahObat() {
           >
             {" "}
             <FormControl>
-              <FormLabel>Pilih Nama Obat</FormLabel>
+              <Flex mb={"10px"}>
+                <FormLabel mb={0} pb={0} mt={5}>
+                  Pilih Nama Obat
+                </FormLabel>{" "}
+                <Spacer />
+                <Tooltip label="tambah nama obat" aria-label="A tooltip">
+                  <IconButton
+                    m={0}
+                    icon={<BsPlusCircle />}
+                    aria-label="toggle filters"
+                    variant="secondary"
+                    border="1px"
+                    borderRadius={"5px"}
+                    onClick={() => {
+                      history.push("/gfk/tambah-obat-baru");
+                    }}
+                  />
+                </Tooltip>
+              </Flex>
               <Select2
                 options={namaObat.result?.map((val) => {
                   return {
@@ -217,20 +234,6 @@ function tambahObat() {
                 closeMenuOnSelect={false}
               />
             </FormControl>
-            <Button
-              leftIcon={<BsFillFunnelFill />}
-              color="rgba(175, 175, 175, 1)"
-              aria-label="toggle filters"
-              variant="solid"
-              backgroundColor="white"
-              border="1px"
-              borderRadius={"8px"}
-              onClick={() => {
-                history.push("/gfk/tambah-obat-baru");
-              }}
-            >
-              Tambah Obat Baru
-            </Button>
           </Container>
           <Container
             bgColor={"white"}
@@ -240,6 +243,7 @@ function tambahObat() {
             maxW={"1280px"}
             display={selectedObat ? "block" : "none"}
             p={"30px"}
+            mt={"40px"}
           >
             <FormControl>
               <Input
@@ -267,7 +271,11 @@ function tambahObat() {
             </FormControl>{" "}
             <FormControl mt="20px">
               <FormHelperText>Max size: 1MB</FormHelperText>
-              <Button w="100%" onClick={() => inputFileRef.current.click()}>
+              <Button
+                variant={"secondary"}
+                w="100%"
+                onClick={() => inputFileRef.current.click()}
+              >
                 Add Photo
               </Button>
               {fileSizeMsg ? (
@@ -395,28 +403,12 @@ function tambahObat() {
                 </Alert>
               ) : null}
             </FormControl>
-            <FormControl mt={"20px"}>
-              <FormLabel>Pilih Sumber Dana</FormLabel>
-              <Select
-                mt="5px"
-                placeholder="Sumber Dana"
-                border="1px"
-                borderRadius={"8px"}
-                borderColor={"rgba(229, 231, 235, 1)"}
-                onChange={(e) => {
-                  formik.setFieldValue("sumberDana", parseInt(e.target.value));
-                }}
-                onBlur={formik.handleBlur}
-              >
-                {renderSumberDana()}
-              </Select>
-              {formik.touched.sumberDana && formik.errors.sumberDana ? (
-                <Alert status="error" color="red" text="center">
-                  <Text ms="10px">{formik.errors.sumberDana}</Text>
-                </Alert>
-              ) : null}
-            </FormControl>
-            <Button w="100%" mb="40px" onClick={formik.handleSubmit}>
+            <Button
+              marginTop={"20px"}
+              variant={"primary"}
+              w="100%"
+              onClick={formik.handleSubmit}
+            >
               Save
             </Button>
           </Container>

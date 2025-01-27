@@ -23,6 +23,8 @@ import {
   Center,
   Checkbox,
   SimpleGrid,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Layout from "../Components/Layout";
@@ -160,35 +162,59 @@ function PenanggungJawabObat() {
           borderRadius={"5px"}
           p={"30px"}
         >
-          <Select
-            placeholder="Penanggungjawab"
-            border="1px"
-            borderRadius={"8px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-            onChange={(e) => {
-              const value = e.target.value ? parseInt(e.target.value) : 0;
-              setPenanggungjawabProfile(value);
-            }}
+          {" "}
+          <FormControl mb={"20px"}>
+            {" "}
+            <FormLabel>Pilih Penanggung Jawab</FormLabel>
+            <Select
+              placeholder="Penanggungjawab"
+              border="1px"
+              borderRadius={"8px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              onChange={(e) => {
+                const value = e.target.value ? parseInt(e.target.value) : 0;
+                setPenanggungjawabProfile(value);
+              }}
+            >
+              {renderProfile()}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Pilih Kategori</FormLabel>
+            <Select
+              placeholder="Kategori"
+              border="1px"
+              borderRadius={"8px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              onChange={(e) => {
+                const value = e.target.value ? parseInt(e.target.value) : 0;
+                setKategoriId(value);
+              }}
+            >
+              {renderKategori()}
+            </Select>
+          </FormControl>
+        </Container>
+        <Container
+          mt={"30px"}
+          maxW={"1280px"}
+          bgColor={"white"}
+          borderRadius={"5px"}
+          p={"30px"}
+        >
+          <Box
+            borderRadius={"5px"}
+            p={"10px"}
+            bgColor={"secondary"}
+            my={"20px"}
+            border={"1px"}
+            borderColor={"primary"}
+            width={{ ss: "100%", sl: "32%" }}
           >
-            {renderProfile()}
-          </Select>
-
-          <Select
-            placeholder="Kategori"
-            border="1px"
-            borderRadius={"8px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-            onChange={(e) => {
-              const value = e.target.value ? parseInt(e.target.value) : 0;
-              setKategoriId(value);
-            }}
-          >
-            {renderKategori()}
-          </Select>
-
-          <Checkbox isChecked={allChecked} onChange={handleAllCheckboxChange}>
-            Centang Semua
-          </Checkbox>
+            <Checkbox isChecked={allChecked} onChange={handleAllCheckboxChange}>
+              Centang Semua
+            </Checkbox>
+          </Box>
           <Box>
             <SimpleGrid minChildWidth="300px" columns={2} spacing={5}>
               {dataPenanggungJawab.map((item, index) => (
@@ -209,10 +235,18 @@ function PenanggungJawabObat() {
               ))}
             </SimpleGrid>
           </Box>
-          <Text>Checked IDs: {selectedIds.join(", ")}</Text>
-          {penanggungJawabProfile ? (
-            <Button onClick={onPenanggungJawabOpen}>ganti</Button>
-          ) : null}
+
+          <Box mt={"20px"}>
+            {penanggungJawabProfile ? (
+              <Button
+                w={"100%"}
+                variant={"primary"}
+                onClick={onPenanggungJawabOpen}
+              >
+                ganti
+              </Button>
+            ) : null}
+          </Box>
         </Container>
       </Box>
 

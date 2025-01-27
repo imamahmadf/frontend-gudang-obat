@@ -30,6 +30,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import Layout from "../Components/Layout";
 import addFoto from "./../assets/add_photo.png";
 import { useDispatch, useSelector } from "react-redux";
+import Batik from "../assets/BATIK.png";
 
 function EditObat(props) {
   const inputFileRef = useRef(null);
@@ -169,6 +170,12 @@ function EditObat(props) {
             id: res.data.result.kategori.id,
             nama: res.data.result.kategori.nama,
           },
+
+          aplikasi: {
+            id: res?.data?.result?.aplikasi?.id || 0,
+            nama: res?.data?.result?.aplikasi?.nama,
+          },
+
           satuan: {
             id: res.data.result.satuan.id,
             nama: res.data.result.satuan.nama,
@@ -205,6 +212,7 @@ function EditObat(props) {
         kategoriFE: editedData.kategori || originalData.kategori,
         satuanFE: editedData.satuan || originalData.satuan.id,
         kelasterapiFE: editedData.kelasterapi || originalData.kelasterapi.id,
+        aplikasiFE: editedData.aplikasi || originalData.aplikasi.id,
         kode: editingColumn,
         profileId,
       })
@@ -242,7 +250,12 @@ function EditObat(props) {
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+          backgroundImage={`url(${Batik})`}
+        >
           <Container
             mt={"30px"}
             maxW={"1280px"}
@@ -361,7 +374,6 @@ function EditObat(props) {
                       )}
                     </Td>
                   </Tr>
-
                   {/* ////////////////////// */}
                   <Tr>
                     <Th>Kelas Terapi</Th>
@@ -404,8 +416,45 @@ function EditObat(props) {
                       )}
                     </Td>
                   </Tr>
-
-                  {/* /////////////////// */}
+                  {/* /////////////////// */}{" "}
+                  <Tr>
+                    <Th>Aplikasi</Th>
+                    <Td>
+                      {editingColumn === "aplikasi" ? (
+                        <Select
+                          value={editedData.aplikasi?.id}
+                          onChange={(e) =>
+                            handleSelectChange("aplikasi", e.target.value)
+                          }
+                        >
+                          <option value="">Pilih Kelas Terapi</option>
+                          {dataSeeder.aplikasiSeed &&
+                            dataSeeder.aplikasiSeed.map((aplikasi) => (
+                              <option key={aplikasi?.id} value={aplikasi?.id}>
+                                {aplikasi?.nama}
+                              </option>
+                            ))}
+                        </Select>
+                      ) : (
+                        editedData.aplikasi?.nama || "Tidak ada Aplikasi"
+                      )}
+                    </Td>
+                    <Td>
+                      {editingColumn === "aplikasi" ? (
+                        <>
+                          <Button onClick={handleSaveClick}>Simpan</Button>
+                          <Button onClick={handleCancelClick}>Batal</Button>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => handleEditClick("aplikasi")}
+                          isDisabled={!editedData?.aplikasi?.nama}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
                 </Tbody>
               </Table>
             </Box>

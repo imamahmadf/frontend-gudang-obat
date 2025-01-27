@@ -36,6 +36,7 @@ import {
 import axios from "axios";
 import Layout from "../Components/Layout";
 import { Link, useHistory } from "react-router-dom";
+import Batik from "../assets/BATIK.png";
 function ObatUser(props) {
   const today = new Date();
   const [dataObatUser, setDataObatUser] = useState([]);
@@ -289,7 +290,12 @@ function ObatUser(props) {
   return (
     <Box>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+        >
           <Container
             maxW={"1280px"}
             bgColor={"white"}

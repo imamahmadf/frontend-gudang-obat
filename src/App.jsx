@@ -36,6 +36,7 @@ import ObatUser from "./Pages/ObatUser";
 import Laporan from "./Pages/Laporan";
 import ErrorBoundary from "./Components/ErrorBoundary";
 import AdminObat from "./Pages/AdminObat";
+import LupaPassword from "./Pages/LupaPassword";
 import {
   getAuth,
   onAuthStateChanged,
@@ -291,6 +292,7 @@ function App() {
             />
             <Route component={Login} path="/login" exact />
             <Route component={Register} path="/register" exact />
+            <Route component={LupaPassword} path="/lupa-password" exact />
             <Route component={Home} path="/" />
           </Switch>
         </BrowserRouter>

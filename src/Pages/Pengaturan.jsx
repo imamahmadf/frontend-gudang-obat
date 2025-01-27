@@ -30,6 +30,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import Layout from "../Components/Layout";
+import Batik from "../assets/BATIK.png";
 
 function Pengaturan() {
   const [userRole, setUserRole] = useState([]);
@@ -210,6 +211,40 @@ function Pengaturan() {
     },
   });
 
+  const formikAplikasi = useFormik({
+    initialValues: {
+      namaAplikasi: "",
+      warnaAplikasi: "",
+    },
+
+    validationSchema: Yup.object().shape({
+      namaAplikasi: Yup.string().required("nama Aplikasi wajib diisi"),
+      warnaAplikasi: Yup.string().required("Warna wajib diisi"),
+    }),
+
+    validateOnChange: true,
+
+    onSubmit: async (values) => {
+      console.log("Submitted values:", values);
+      const { namaAplikasi, warnaAplikasi } = values;
+
+      await axios
+        .post(
+          `${
+            import.meta.env.VITE_REACT_APP_API_BASE_URL
+          }/pengaturan/post/aplikasi`,
+          { nama: namaAplikasi, warna: warnaAplikasi }
+        )
+        .then((res) => {
+          getDataSeeed();
+          formikAplikasi.resetForm();
+        })
+        .catch((err) => {
+          console.error(err.Message);
+        });
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       nama: "",
@@ -247,7 +282,11 @@ function Pengaturan() {
 
   return (
     <Layout>
-      <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+      <Box
+        backgroundImage={`url(${Batik})`}
+        pt={"80px"}
+        bgColor={"rgba(249, 250, 251, 1)"}
+      >
         <Container
           bgColor={"white"}
           borderRadius={"5px"}
@@ -257,13 +296,14 @@ function Pengaturan() {
           marginBottom={"20px"}
           padding={"20px"}
         >
-          <Tabs isFitted variant="enclosed">
+          <Tabs isFitted variant="soft-rounded" colorScheme="green">
             <TabList mb="1em">
               <Tab>Satuan</Tab>
               <Tab>Kelas terapi</Tab>
               <Tab>Kategori</Tab>
               <Tab>Tujuan Obat</Tab>
               <Tab>Asal Obat</Tab>
+              <Tab>Aplikasi</Tab>
               <Tab>Sumber Dana</Tab>
             </TabList>
             <TabPanels>
@@ -314,7 +354,12 @@ function Pengaturan() {
                         </Alert>
                       ) : null}
                     </FormControl>
-                    <Button onClick={formikSatuan.handleSubmit}>Apply</Button>
+                    <Button
+                      onClick={formikSatuan.handleSubmit}
+                      variant={"primary"}
+                    >
+                      Apply
+                    </Button>
                   </Box>
                 </Flex>
               </TabPanel>
@@ -325,7 +370,7 @@ function Pengaturan() {
                     <Table variant="simple">
                       <Thead>
                         <Tr>
-                          <Th>ID</Th>
+                          <Th>No.</Th>
                           <Th>Nama</Th>
                         </Tr>
                       </Thead>
@@ -367,7 +412,10 @@ function Pengaturan() {
                         </Alert>
                       ) : null}
                     </FormControl>
-                    <Button onClick={formikKelasTerapi.handleSubmit}>
+                    <Button
+                      variant={"primary"}
+                      onClick={formikKelasTerapi.handleSubmit}
+                    >
                       Apply
                     </Button>
                   </Box>
@@ -380,14 +428,14 @@ function Pengaturan() {
                     <Table variant="simple">
                       <Thead>
                         <Tr>
-                          <Th>ID</Th>
+                          <Th>No.</Th>
                           <Th>Nama</Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.kategoriSeed?.map((item) => (
+                        {seed?.kategoriSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{item.id}</Td>
+                            <Td>{idx + 1}</Td>
                             <Td>{item.nama}</Td>
                           </Tr>
                         ))}
@@ -422,7 +470,12 @@ function Pengaturan() {
                         </Alert>
                       ) : null}
                     </FormControl>
-                    <Button onClick={formikKategori.handleSubmit}>Apply</Button>
+                    <Button
+                      onClick={formikKategori.handleSubmit}
+                      variant={"primary"}
+                    >
+                      Apply
+                    </Button>
                   </Box>
                 </Flex>
               </TabPanel>
@@ -432,17 +485,15 @@ function Pengaturan() {
                     <Table variant="simple">
                       <Thead>
                         <Tr>
-                          <Th>ID</Th>
+                          <Th>No.</Th>
                           <Th>Nama</Th>
-                          <Th>Status</Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.uptdSeed?.map((item) => (
+                        {seed?.uptdSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{item.id}</Td>
+                            <Td>{idx + 1}</Td>
                             <Td>{item.nama}</Td>
-                            <Td>{item.status}</Td>
                           </Tr>
                         ))}
                       </Tbody>
@@ -475,7 +526,12 @@ function Pengaturan() {
                         </Alert>
                       ) : null}
                     </FormControl>
-                    <Button onClick={formikTujuan.handleSubmit}>Apply</Button>
+                    <Button
+                      onClick={formikTujuan.handleSubmit}
+                      variant={"primary"}
+                    >
+                      Apply
+                    </Button>
                   </Box>
                 </Flex>
               </TabPanel>
@@ -486,14 +542,14 @@ function Pengaturan() {
                     <Table variant="simple">
                       <Thead>
                         <Tr>
-                          <Th>ID</Th>
+                          <Th>No.</Th>
                           <Th>Nama</Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.perusahaanSeed?.map((item) => (
+                        {seed?.perusahaanSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{item.id}</Td>
+                            <Td>{idx + 1}</Td>
                             <Td>{item.nama}</Td>
                           </Tr>
                         ))}
@@ -521,25 +577,111 @@ function Pengaturan() {
                         </Alert>
                       ) : null}
                     </FormControl>
-                    <Button onClick={formik.handleSubmit}>Apply</Button>
+                    <Button onClick={formik.handleSubmit} variant={"primary"}>
+                      Apply
+                    </Button>
                   </Box>
                 </Flex>
               </TabPanel>
-
+              {/* //////// */}
               <TabPanel>
                 <Flex>
                   <Box w={"50%"} me={"10px"}>
                     <Table variant="simple">
                       <Thead>
                         <Tr>
-                          <Th>ID</Th>
+                          <Th>No.</Th>
+                          <Th>Nama Aplikasi</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {seed?.aplikasiSeed?.map((item, idx) => (
+                          <Tr key={item.id}>
+                            <Td>{idx + 1}</Td>
+                            <Td bgColor={item.warna}>{item.nama}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </Box>{" "}
+                  <Box w={"50%"} ms={"10px"}>
+                    <FormControl pb="20px">
+                      <FormLabel>Tambah Aplikasi</FormLabel>
+                      <Input
+                        mt={"10px"}
+                        type="text"
+                        placeholder="Aplikasi"
+                        border="1px"
+                        borderRadius={"8px"}
+                        borderColor={"rgba(229, 231, 235, 1)"}
+                        // value={formikSatuan.values.namaSatuan}
+                        onChange={(e) => {
+                          formikAplikasi.setFieldValue(
+                            "namaAplikasi",
+                            e.target.value
+                          );
+                        }}
+                      />{" "}
+                      {formikAplikasi.errors.namaAplikasi ? (
+                        <Alert status="error" color="red" text="center">
+                          <i className="fa-solid fa-circle-exclamation"></i>
+                          <Text ms="10px">
+                            {formikAplikasi.errors.namaAplikasi}
+                          </Text>
+                        </Alert>
+                      ) : null}
+                    </FormControl>{" "}
+                    <FormControl pb="20px">
+                      <FormLabel>Warna</FormLabel>
+                      <Input
+                        mt={"10px"}
+                        type="color"
+                        placeholder="Aplikasi"
+                        border="1px"
+                        borderRadius={"8px"}
+                        borderColor={"rgba(229, 231, 235, 1)"}
+                        value={formikAplikasi.values.warnaAplikasi}
+                        onChange={(e) => {
+                          formikAplikasi.setFieldValue(
+                            "warnaAplikasi",
+                            e.target.value.toString()
+                          );
+                          console.log(e.target.value.toString());
+                        }}
+                      />{" "}
+                      {formikAplikasi.errors.warnaAplikasi ? (
+                        <Alert status="error" color="red" text="center">
+                          <i className="fa-solid fa-circle-exclamation"></i>
+                          <Text ms="10px">
+                            {formikAplikasi.errors.warnaAplikasi}
+                          </Text>
+                        </Alert>
+                      ) : null}
+                    </FormControl>
+                    <Button
+                      onClick={formikAplikasi.handleSubmit}
+                      variant={"primary"}
+                    >
+                      Apply
+                    </Button>
+                  </Box>
+                </Flex>
+              </TabPanel>{" "}
+              {/* //////// */}
+              <TabPanel>
+                <Flex>
+                  <Box w={"50%"} me={"10px"}>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>No.</Th>
                           <Th>Sumber</Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.sumberDanaSeed?.map((item) => (
+                        {seed?.sumberDanaSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{item.id}</Td>
+                            <Td>{idx + 1}</Td>
                             <Td>{item.sumber}</Td>
                           </Tr>
                         ))}
@@ -573,7 +715,10 @@ function Pengaturan() {
                         </Alert>
                       ) : null}
                     </FormControl>
-                    <Button onClick={formikSumberDana.handleSubmit}>
+                    <Button
+                      variant={"primary"}
+                      onClick={formikSumberDana.handleSubmit}
+                    >
                       Apply
                     </Button>
                   </Box>

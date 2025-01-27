@@ -11,6 +11,7 @@ import {
   Button,
   SimpleGrid,
   Input,
+  Center,
   FormControl,
   FormLabel,
   Table,
@@ -19,11 +20,16 @@ import {
   Tr,
   Th,
   Td,
+  ListItem,
+  List,
+  UnorderedList,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Layout from "../Components/Layout";
 import { Link, useHistory } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
+import { BsXCircle } from "react-icons/bs";
+import { BsPlusCircle } from "react-icons/bs";
 import {
   Modal,
   ModalOverlay,
@@ -135,49 +141,117 @@ function PengaturanUser() {
             <Text fontSize="xl" mb={4}>
               Pengaturan User
             </Text>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>Nama</Th>
-                  <Th>Jabatan</Th>
-                  <Th>User Roles</Th>
-                  <Th>Aksi</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {dataUser.map((user) => (
-                  <Tr key={user.user?.id}>
-                    <Td>{user.nama || "Tidak ada nama"}</Td>
-                    <Td>{user.jabatan || "Tidak ada jabatan"}</Td>
-                    <Td>
-                      {user.user.userRoles.map((val) => (
-                        <div key={val.id}>{val.role.name}</div>
-                      ))}
-                    </Td>
-                    <Td>
-                      <Button
-                        onClick={() => {
-                          setCurrentUserId(user.user?.id);
-                          onAddOpen();
-                        }}
-                      >
-                        Buka Modal
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          setCurrentUserId(user.user?.id);
-                          setAvailableRoles(user.user.userRoles); // Simpan role yang sesuai
-
-                          onDeleteOpen();
-                        }}
-                      >
-                        Buka Modal delete
-                      </Button>
-                    </Td>
+            <Box style={{ overflowX: "auto" }}>
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Nama
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Jabatan
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      User Roles
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Aksi
+                    </Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {dataUser.map((user) => (
+                    <Tr key={user.user?.id}>
+                      <Td borderWidth="1px" borderColor="primary">
+                        {user.nama || "Tidak ada nama"}
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary">
+                        {user.jabatan || "Tidak ada jabatan"}
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary">
+                        <UnorderedList>
+                          {user.user.userRoles.map((val) => (
+                            <ListItem key={val.id}>{val.role.name}</ListItem>
+                          ))}
+                        </UnorderedList>
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary">
+                        {/* ////////// */}
+                        <Flex gap={3}>
+                          <Center
+                            onClick={() => {
+                              setCurrentUserId(user.user?.id);
+                              onAddOpen();
+                            }}
+                            borderRadius={"5px"}
+                            as="button"
+                            h="35px"
+                            w="35px"
+                            fontSize="14px"
+                            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                            color="white"
+                            _hover={{
+                              bg: "black",
+                            }}
+                            bg="primary"
+                            // onClick={onOpen}
+                          >
+                            <BsPlusCircle />
+                          </Center>{" "}
+                          <Center
+                            onClick={() => {
+                              setCurrentUserId(user.user?.id);
+                              setAvailableRoles(user.user.userRoles); // Simpan role yang sesuai
+
+                              onDeleteOpen();
+                            }}
+                            borderRadius={"5px"}
+                            as="button"
+                            h="35px"
+                            w="35px"
+                            fontSize="14px"
+                            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                            color="white"
+                            _hover={{
+                              bg: "black",
+                            }}
+                            bg="danger"
+                            // onClick={onOpen}
+                          >
+                            <BsXCircle />
+                          </Center>
+                        </Flex>
+                        {/* ////////// */}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
           </Container>
         </Box>
 

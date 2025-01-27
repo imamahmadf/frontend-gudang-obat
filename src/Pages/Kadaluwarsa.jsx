@@ -33,6 +33,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { BsTrash3 } from "react-icons/bs";
 import addFoto from "./../assets/add_photo.png";
 import { useDispatch, useSelector } from "react-redux";
+import Batik from "../assets/BATIK.png";
 function Kadaluwarsa() {
   const history = useHistory();
   const [page, setPage] = useState(0);
@@ -136,14 +137,11 @@ function Kadaluwarsa() {
     <>
       <Layout>
         <Box
-          overflow="hidden"
-          objectFit="cover"
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          minHeight={"100vh"}
-          w="100%"
+          pt={"80px"}
+          bgColor={"rgba(249, 250, 251, 1)"}
+          backgroundImage={`url(${Batik})`}
         >
-          <Container pt={"100px"} maxW={"1280px"}>
+          <Container bgColor={"white"} pt={"100px"} maxW={"1280px"}>
             <Button
               onClick={() => {
                 history.push(`/gfk/daftar-kadaluwarsa`);
@@ -151,7 +149,8 @@ function Kadaluwarsa() {
             >
               Daftar Kadaluwarsa
             </Button>
-            <Box>
+            <Box style={{ overflowX: "auto" }}>
+              {" "}
               <Table variant="striped">
                 <Thead>
                   <Tr>

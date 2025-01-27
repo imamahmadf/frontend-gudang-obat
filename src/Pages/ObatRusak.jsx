@@ -33,6 +33,7 @@ import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
 import { BsChevronDoubleDown } from "react-icons/bs";
 import addFoto from "./../assets/add_photo.png";
+import Batik from "../assets/BATIK.png";
 function ObatRusak() {
   const toast = useToast();
   const history = useHistory();
@@ -149,7 +150,12 @@ function ObatRusak() {
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+        >
           <Container
             mt={"30px"}
             maxW={"1280px"}

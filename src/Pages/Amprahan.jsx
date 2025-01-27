@@ -25,6 +25,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import ReactPaginate from "react-paginate";
 import "../Style/pagination.css";
 import Layout from "../Components/Layout";
+import Batik from "../assets/BATIK.png";
 
 function Amprahan() {
   const history = useHistory();
@@ -154,7 +155,11 @@ function Amprahan() {
 
   return (
     <Layout>
-      <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+      <Box
+        pt={"80px"}
+        bgColor={"rgba(249, 250, 251, 1)"}
+        backgroundImage={`url(${Batik})`}
+      >
         <Container
           bgColor={"white"}
           borderRadius={"5px"}

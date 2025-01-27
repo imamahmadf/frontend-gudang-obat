@@ -27,6 +27,8 @@ import {
   Td,
 } from "@chakra-ui/react";
 import LogoAPP from "../assets/logo app.png";
+import Batik from "../assets/BATIK.png";
+
 import Layout from "../Components/Layout";
 import { useDisclosure } from "@chakra-ui/react";
 import axios, { Axios } from "axios";
@@ -452,217 +454,237 @@ function ObatMasuk() {
   return (
     <>
       <Layout>
-        {status.length === 0 ? (
-          dataObat.length === 0 ? (
-            <>
-              <Text marginTop={"250px"}>tidak ada dat</Text>
-            </>
-          ) : (
-            <>
-              <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+        <Box
+          pt={"80px"}
+          bgColor={"rgba(249, 250, 251, 1)"}
+          backgroundImage={`url(${Batik})`}
+          pb={"40px"}
+        >
+          {status.length === 0 ? (
+            dataObat.length === 0 ? (
+              <>
                 <Container
+                  p={"15px"}
                   bgColor={"white"}
                   borderRadius={"5px"}
                   border={"1px"}
                   borderColor={"rgba(229, 231, 235, 1)"}
                   maxW={"1280px"}
+                  h={"60vh"}
+                  mt={"20px"}
                 >
-                  {" "}
-                  <Box pt={"24px"} pb={"16px"} px={"30px"}>
-                    <HStack>
-                      <HStack>
-                        <Text fontSize={"20px"} fontWeight={600}>
-                          Daftar Obat Masuk
-                        </Text>
-                      </HStack>
-                      <Spacer />
-                      <HStack>
-                        <FormControl>
-                          <HStack>
-                            {" "}
-                            <Input
-                              onChange={inputHandler}
-                              type="name"
-                              placeholder="Cari Obat"
-                              borderRadius="8px"
-                              borderColor="rgba(175, 175, 175, 1)"
-                              width={"200px"}
-                            />{" "}
-                          </HStack>
-                        </FormControl>
-                      </HStack>
-                    </HStack>
-                  </Box>
-                  <Flex
-                    px={"30px"}
-                    py={"15px"}
-                    borderTop={"1px"}
-                    borderColor={"rgba(229, 231, 235, 1)"}
-                    display={{ ss: "none", sl: "block" }}
-                  >
-                    <Flex fontSize={"15px"} fontWeight={600} me={"10px"}>
-                      <Text width={"190px"} me={"10px"}>
-                        Nama Obat
-                      </Text>
-                      <Text width={"120px"} me={"10px"}>
-                        Kelas Terapi
-                      </Text>{" "}
-                      <Text width={"80px"} me={"10px"}>
-                        Satuan
-                      </Text>{" "}
-                      <Text width={"80px"} me={"10px"}>
-                        No. Batch
-                      </Text>
-                      <Text width={"100px"} me={"10px"}>
-                        EXP
-                      </Text>{" "}
-                      <Text width={"100px"} me={"10px"}>
-                        harga Satuan
-                      </Text>
-                      <Text width={"100px"} me={"10px"}>
-                        foto
-                      </Text>{" "}
-                      <Text width={"100px"} me={"10px"}>
-                        asal
-                      </Text>
-                      <Text width={"100px"} me={"10px"}>
-                        Stok
-                      </Text>
-                      <Spacer />
-                      <Text align={"right"} width={"100px"} me={"10px"}>
-                        Aksi
-                      </Text>
-                    </Flex>
-                  </Flex>{" "}
-                  {renderObat()}
+                  <Center h={"100%"}>
+                    <Text>Data Obat tidak Ditemukan</Text>
+                  </Center>
                 </Container>
-              </Box>
+              </>
+            ) : (
+              <>
+                <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+                  <Container
+                    bgColor={"white"}
+                    borderRadius={"5px"}
+                    border={"1px"}
+                    borderColor={"rgba(229, 231, 235, 1)"}
+                    maxW={"1280px"}
+                  >
+                    {" "}
+                    <Box pt={"24px"} pb={"16px"} px={"30px"}>
+                      <HStack>
+                        <HStack>
+                          <Text fontSize={"20px"} fontWeight={600}>
+                            Daftar Obat Masuk
+                          </Text>
+                        </HStack>
+                        <Spacer />
+                        <HStack>
+                          <FormControl>
+                            <HStack>
+                              {" "}
+                              <Input
+                                onChange={inputHandler}
+                                type="name"
+                                placeholder="Cari Obat"
+                                borderRadius="8px"
+                                borderColor="rgba(175, 175, 175, 1)"
+                                width={"200px"}
+                              />{" "}
+                            </HStack>
+                          </FormControl>
+                        </HStack>
+                      </HStack>
+                    </Box>
+                    <Flex
+                      px={"30px"}
+                      py={"15px"}
+                      borderTop={"1px"}
+                      borderColor={"rgba(229, 231, 235, 1)"}
+                      display={{ ss: "none", sl: "block" }}
+                    >
+                      <Flex fontSize={"15px"} fontWeight={600} me={"10px"}>
+                        <Text width={"190px"} me={"10px"}>
+                          Nama Obat
+                        </Text>
+                        <Text width={"120px"} me={"10px"}>
+                          Kelas Terapi
+                        </Text>{" "}
+                        <Text width={"80px"} me={"10px"}>
+                          Satuan
+                        </Text>{" "}
+                        <Text width={"80px"} me={"10px"}>
+                          No. Batch
+                        </Text>
+                        <Text width={"100px"} me={"10px"}>
+                          EXP
+                        </Text>{" "}
+                        <Text width={"100px"} me={"10px"}>
+                          harga Satuan
+                        </Text>
+                        <Text width={"100px"} me={"10px"}>
+                          foto
+                        </Text>{" "}
+                        <Text width={"100px"} me={"10px"}>
+                          asal
+                        </Text>
+                        <Text width={"100px"} me={"10px"}>
+                          Stok
+                        </Text>
+                        <Spacer />
+                        <Text align={"right"} width={"100px"} me={"10px"}>
+                          Aksi
+                        </Text>
+                      </Flex>
+                    </Flex>{" "}
+                    {renderObat()}
+                  </Container>
+                </Box>
+              </>
+            )
+          ) : (
+            <>
+              <Container
+                bgColor={
+                  status?.StatusAmprahanId <= 3
+                    ? "primary"
+                    : status?.StatusAmprahanId === 7
+                    ? "danger"
+                    : status?.StatusAmprahanId === 4
+                    ? "biru"
+                    : "white"
+                }
+                borderRadius={"5px"}
+                border={"1px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+                maxW={"1280px"}
+                marginBottom={"20px"}
+                padding={"20px"}
+              >
+                <AmprahanAktif data={status} />
+              </Container>
             </>
-          )
-        ) : (
-          <>
-            <Container
-              bgColor={
-                status?.StatusAmprahanId <= 3
-                  ? "primary"
-                  : status?.StatusAmprahanId === 7
-                  ? "danger"
-                  : status?.StatusAmprahanId === 4
-                  ? "biru"
-                  : "white"
-              }
-              borderRadius={"5px"}
-              border={"1px"}
-              borderColor={"rgba(229, 231, 235, 1)"}
-              maxW={"1280px"}
-              marginBottom={"20px"}
-              padding={"20px"}
-            >
-              <AmprahanAktif data={status} />
-            </Container>
-          </>
-        )}
+          )}
 
-        {selectedBatch && (
-          <>
-            <Modal
-              closeOnOverlayClick={false}
-              isOpen={isFilterOpen}
-              // onClose={onFilterClose}
-              onClose={() => {
-                setSelectedBatch(null);
-                onFilterClose();
-              }}
-            >
-              <ModalOverlay />
-              <ModalContent borderRadius={0}>
-                <ModalHeader>Terima barang Masuk</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody pb={6}>
-                  <Table>
-                    <Tbody>
-                      <Tr>
-                        <Td>Nama</Td>
-                        <Td>: {selectedBatch.nama}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>No. Batch</Td>
-                        <Td>: {selectedBatch.noBatch}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Stok</Td>
-                        <Td>: {selectedBatch.stok}</Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </ModalBody>
+          {selectedBatch && (
+            <>
+              <Modal
+                closeOnOverlayClick={false}
+                isOpen={isFilterOpen}
+                // onClose={onFilterClose}
+                onClose={() => {
+                  setSelectedBatch(null);
+                  onFilterClose();
+                }}
+              >
+                <ModalOverlay />
+                <ModalContent borderRadius={0}>
+                  <ModalHeader>Terima barang Masuk</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody pb={6}>
+                    <Table>
+                      <Tbody>
+                        <Tr>
+                          <Td>Nama</Td>
+                          <Td>: {selectedBatch.nama}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>No. Batch</Td>
+                          <Td>: {selectedBatch.noBatch}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Stok</Td>
+                          <Td>: {selectedBatch.stok}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </ModalBody>
 
-                <ModalFooter>
-                  <Button
-                    bg={"primary"}
-                    color={"white"}
-                    _hover={{
-                      bg: "black",
-                    }}
-                    onClick={() => {
-                      terima(selectedBatch);
-                    }}
-                  >
-                    Terima
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-            <Modal
-              closeOnOverlayClick={false}
-              isOpen={isDeleteOpen}
-              // onClose={onDeleteClose}
-              onClose={() => {
-                setSelectedBatch(null);
-                onDeleteClose();
-              }}
-            >
-              <ModalOverlay />
-              <ModalContent borderRadius={0}>
-                <ModalHeader>Tolak Barang Masuk</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody pb={6}>
-                  <Table>
-                    <Tbody>
-                      <Tr>
-                        <Td>Nama</Td>
-                        <Td>: {selectedBatch.nama}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>No. Batch</Td>
-                        <Td>: {selectedBatch.noBatch}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Stok</Td>
-                        <Td>: {selectedBatch.stok}</Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </ModalBody>
+                  <ModalFooter>
+                    <Button
+                      bg={"primary"}
+                      color={"white"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                      onClick={() => {
+                        terima(selectedBatch);
+                      }}
+                    >
+                      Terima
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+              <Modal
+                closeOnOverlayClick={false}
+                isOpen={isDeleteOpen}
+                // onClose={onDeleteClose}
+                onClose={() => {
+                  setSelectedBatch(null);
+                  onDeleteClose();
+                }}
+              >
+                <ModalOverlay />
+                <ModalContent borderRadius={0}>
+                  <ModalHeader>Tolak Barang Masuk</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody pb={6}>
+                    <Table>
+                      <Tbody>
+                        <Tr>
+                          <Td>Nama</Td>
+                          <Td>: {selectedBatch.nama}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>No. Batch</Td>
+                          <Td>: {selectedBatch.noBatch}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Stok</Td>
+                          <Td>: {selectedBatch.stok}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </ModalBody>
 
-                <ModalFooter>
-                  <Button
-                    bg={"danger"}
-                    color={"white"}
-                    _hover={{
-                      bg: "black",
-                    }}
-                    onClick={() => {
-                      tolak(selectedBatch);
-                    }}
-                  >
-                    Tolak
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </>
-        )}
+                  <ModalFooter>
+                    <Button
+                      bg={"danger"}
+                      color={"white"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                      onClick={() => {
+                        tolak(selectedBatch);
+                      }}
+                    >
+                      Tolak
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+            </>
+          )}
+        </Box>
       </Layout>
     </>
   );

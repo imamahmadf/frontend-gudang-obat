@@ -25,6 +25,7 @@ import {
   MenuList,
   MenuItem,
   Menu,
+  Heading,
   Stack,
   Table,
   Thead,
@@ -33,9 +34,11 @@ import {
   Th,
   Td,
 } from "@chakra-ui/react";
+import Batik from "../assets/BATIK.png";
 import Layout from "../Components/Layout";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { BsFileEarmarkXFill } from "react-icons/bs";
 import ExcelJS from "exceljs";
 
 function DetailAlokasi(props) {
@@ -66,10 +69,10 @@ function DetailAlokasi(props) {
 
     // Menambahkan header
     worksheet.columns = [
-      { header: "UPTD", key: "uptd", width: 30 },
+      { header: "Tujuan", key: "uptd", width: 30 },
       { header: "Obat", key: "obat", width: 30 },
       { header: "No Batch", key: "noBatch", width: 20 },
-      { header: "Permintaan", key: "permintaan", width: 20 },
+      { header: "Pemberian", key: "permintaan", width: 20 },
     ];
 
     // Menambahkan border untuk header
@@ -135,11 +138,27 @@ function DetailAlokasi(props) {
       window.URL.revokeObjectURL(url);
     });
   }
+  function formatTanggal(dateString) {
+    var objekTanggal = new Date(dateString);
+
+    // Mengambil nilai hari, bulan, dan tahun
+    var hari = objekTanggal.getUTCDate();
+    var bulan = objekTanggal.toLocaleString("default", { month: "short" });
+    var tahun = objekTanggal.getUTCFullYear();
+
+    // Menggabungkan hasilnya
+    return `${hari} ${bulan} ${tahun}`;
+  }
 
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+        >
           <Container
             maxW={"1280px"}
             p={"30px"}
@@ -147,21 +166,38 @@ function DetailAlokasi(props) {
             bgColor={"white"}
           >
             {/* Menggunakan tabel Chakra UI dengan garis */}
+            <Flex mb={"20px"}>
+              <Box>
+                <Heading>{detailAlokasi.nama}</Heading>
+                <Text>Tanggal: {formatTanggal(detailAlokasi.createdAt)}</Text>
+              </Box>
+              <Spacer />
+              <Button
+                // bgColor={"white"}
+                // color={"primary"}
+                fontSize={"25px"}
+                variant={"secondary"}
+                onClick={exportToExcel}
+                colorScheme="teal"
+              >
+                <BsFileEarmarkXFill />
+              </Button>
+            </Flex>
             <Box style={{ overflowX: "auto" }}>
               <Table variant="simple" borderWidth="1px" borderColor="gray.200">
-                <Thead>
+                <Thead bgColor={"primary"}>
                   <Tr>
-                    <Th borderWidth="1px" borderColor="gray.200">
-                      UPTD
+                    <Th borderWidth="1px" fontSize={"14px"} color={"white"}>
+                      Tujuan
                     </Th>
-                    <Th borderWidth="1px" borderColor="gray.200">
+                    <Th borderWidth="1px" fontSize={"14px"} color={"white"}>
                       Obat
                     </Th>
-                    <Th borderWidth="1px" borderColor="gray.200">
+                    <Th borderWidth="1px" fontSize={"14px"} color={"white"}>
                       No Batch
                     </Th>
-                    <Th borderWidth="1px" borderColor="gray.200">
-                      Permintaan
+                    <Th borderWidth="1px" fontSize={"14px"} color={"white"}>
+                      Pemberian
                     </Th>
                   </Tr>
                 </Thead>
@@ -172,31 +208,56 @@ function DetailAlokasi(props) {
                         <Tr key={`header-${index}`}>
                           <Td
                             borderWidth="1px"
-                            borderColor="gray.200"
+                            borderColor="primary"
+                            py={"15px"}
                             rowSpan={amprahan.amprahanItems.length}
                           >
                             {amprahan.uptd.nama}
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
-                            {amprahan.amprahanItems[0].noBatch.obat.nama}
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {amprahan?.amprahanItems[0]?.noBatch?.obat.nama}
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
-                            {amprahan.amprahanItems[0].noBatch.noBatch}
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {amprahan.amprahanItems[0]?.noBatch?.noBatch}
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
-                            {amprahan.amprahanItems[0].permintaan}
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {amprahan.amprahanItems[0]?.permintaan}
                           </Td>
                         </Tr>
                         {amprahan.amprahanItems.slice(1).map((item) => (
-                          <Tr key={item.noBatch.id}>
-                            <Td borderWidth="1px" borderColor="gray.200">
-                              {item.noBatch.obat.nama}
+                          <Tr key={item.noBatch?.id}>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item?.noBatch.obat.nama}
                             </Td>
-                            <Td borderWidth="1px" borderColor="gray.200">
-                              {item.noBatch.noBatch}
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item?.noBatch.noBatch}
                             </Td>
-                            <Td borderWidth="1px" borderColor="gray.200">
-                              {item.permintaan}
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item?.permintaan}
                             </Td>
                           </Tr>
                         ))}
@@ -206,9 +267,6 @@ function DetailAlokasi(props) {
               </Table>
             </Box>
             {/* Akhir tabel */}
-            <Button onClick={exportToExcel} colorScheme="teal" mb={4}>
-              Ekspor ke Excel
-            </Button>
           </Container>
         </Box>
       </Layout>

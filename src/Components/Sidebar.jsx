@@ -23,23 +23,22 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { authFirebase } from "../Config/firebase";
+import Logo from "../assets/logo.png";
+
 import { CgFormatJustify } from "react-icons/cg";
-import { BsBoxSeam } from "react-icons/bs";
 import { BiHome } from "react-icons/bi";
 import { BsCart3 } from "react-icons/bs";
 import { BsClipboard2Check } from "react-icons/bs";
 import { BsCapsule } from "react-icons/bs";
 import { BsGear } from "react-icons/bs";
-import Logo from "../assets/logo.png";
-import { Link, useHistory } from "react-router-dom";
 import { BsBarChartLine } from "react-icons/bs";
-import TambahAprahan from "./TambahAprahan";
 import { BsTruck } from "react-icons/bs";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import auth_types from "../Redux/Reducers/Types/userTypes";
+import { BsTrash3 } from "react-icons/bs";
 import { BsFillBoxSeamFill } from "react-icons/bs";
-import { authFirebase } from "../Config/firebase";
 import { BsXOctagon } from "react-icons/bs";
 import {
   onAuthStateChanged,
@@ -48,7 +47,8 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { BsTrash3 } from "react-icons/bs";
+import auth_types from "../Redux/Reducers/Types/userTypes";
+
 function Sidebar() {
   const {
     id,
@@ -64,6 +64,13 @@ function Sidebar() {
   const history = useHistory();
   const auth = authFirebase;
   const auth2 = getAuth();
+
+  const location = useLocation();
+  const lastSegment = location.pathname.substring(
+    location.pathname.lastIndexOf("/") + 1
+  );
+  console.log(location.pathname);
+
   const menuSidebar = [
     { menu: "Daftar Obat", logo: <BsCapsule />, URL: "/gfk/daftar-obat" },
     { menu: "Puskesmas", logo: <BiHome />, URL: "/gfk/puskesmas" },
@@ -173,7 +180,7 @@ function Sidebar() {
       <Box>
         <IconButton
           ref={btnRef}
-          colorScheme="blue"
+          variant={"primary"}
           onClick={onOpen}
           icon={<CgFormatJustify />}
         />
@@ -267,10 +274,12 @@ function Sidebar() {
                   borderRadius={"5px"}
                   w={"100%"}
                   p={"10px"}
+                  bgColor={location.pathname == val.URL ? "primary" : "white"}
+                  color={location.pathname == val.URL ? "white" : "black"}
                   transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
                   _hover={{
-                    bg: "black",
-                    color: "white",
+                    bg: "secondary",
+                    color: "black",
                   }}
                   as="button"
                   key={idx}
@@ -285,19 +294,9 @@ function Sidebar() {
                 </HStack>
               );
             })}
-            <Input placeholder="Type here..." />
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Save</Button>{" "}
-            <IconButton
-              aria-label="Add to friends"
-              icon={<CgFormatJustify />}
-            />
-          </DrawerFooter>
+          <DrawerFooter></DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>

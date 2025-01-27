@@ -33,6 +33,7 @@ import {
   Heading,
   Avatar,
 } from "@chakra-ui/react";
+import Batik from "../assets/BATIK.png";
 import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
 import axios from "axios";
@@ -175,7 +176,12 @@ function Puskesmas() {
   }, [inputStartDate, inputEndDate, puskesmasId, penanggungJawabProfile]);
   return (
     <Layout>
-      <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+      <Box
+        backgroundImage={`url(${Batik})`}
+        bgColor={"secondary"}
+        py={"50px"}
+        mt={"50px"}
+      >
         <Container
           mt={"30px"}
           maxW={"1280px"}
@@ -235,20 +241,22 @@ function Puskesmas() {
               />
             </FormControl>
           </Flex>{" "}
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Tanggal Dibuat</Th>
-                <Th>Nama Obat</Th>
-                <Th>No. Batch</Th>
-                <Th>Permintaan</Th>
+          <Box style={{ overflowX: "auto" }}>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th>Tanggal Dibuat</Th>
+                  <Th>Nama Obat</Th>
+                  <Th>No. Batch</Th>
+                  <Th>Permintaan</Th>
 
-                <Th>jenis</Th>
-                <Th>Nilai Aset</Th>
-              </Tr>
-            </Thead>
-            <Tbody>{renderDataPuskesmas()}</Tbody>
-          </Table>
+                  <Th>jenis</Th>
+                  <Th>Nilai Aset</Th>
+                </Tr>
+              </Thead>
+              <Tbody>{renderDataPuskesmas()}</Tbody>
+            </Table>
+          </Box>
           <div
             style={{
               display: "flex",

@@ -30,6 +30,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios, { Axios } from "axios";
 import { Link, useHistory } from "react-router-dom";
+import Batik from "../assets/BATIK.png";
 import Layout from "../Components/Layout";
 function DaftarAlokasi() {
   const history = useHistory();
@@ -79,7 +80,11 @@ function DaftarAlokasi() {
   return (
     <>
       <Layout>
-        <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          pt={"80px"}
+          bgColor={"rgba(249, 250, 251, 1)"}
+        >
           <Container
             bgColor={"white"}
             borderRadius={"5px"}
@@ -88,69 +93,71 @@ function DaftarAlokasi() {
             maxW={"1280px"}
             p={"30px"}
           >
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th
-                    bgColor={"primary"}
-                    color={"white"}
-                    py={"20px"}
-                    borderWidth="1px"
-                    borderColor="white"
-                  >
-                    no.
-                  </Th>
-                  <Th
-                    bgColor={"primary"}
-                    color={"white"}
-                    borderWidth="1px"
-                    borderColor="white"
-                  >
-                    Tanggal
-                  </Th>
-                  <Th
-                    bgColor={"primary"}
-                    color={"white"}
-                    borderWidth="1px"
-                    borderColor="white"
-                  >
-                    Nama
-                  </Th>
-                  <Th
-                    bgColor={"primary"}
-                    color={"white"}
-                    borderWidth="1px"
-                    borderColor="white"
-                  >
-                    Aksi
-                  </Th>
-                </Tr>
-              </Thead>{" "}
-              <Tbody>
-                {dataAlokasi?.map((item, index) => (
-                  <Tr key={item.id}>
-                    <Td borderWidth="1px" borderColor="primary">
-                      {index + 1}
-                    </Td>
-                    <Td borderWidth="1px" borderColor="primary">
-                      {formatDate(item.createdAt)}
-                    </Td>
-                    <Td borderWidth="1px" borderColor="primary">
-                      {item.nama || "Tidak ada nama"}
-                    </Td>
-                    <Td borderWidth="1px" borderColor="primary">
-                      <Button
-                        onClick={() => {
-                          history.push(`/gfk/detail-alokasi/${item.id}`);
-                        }}
-                      >
-                        detail
-                      </Button>
-                    </Td>
+            <Box style={{ overflowX: "auto" }}>
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      no.
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Tanggal
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Nama
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Aksi
+                    </Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>{" "}
+                <Tbody>
+                  {dataAlokasi?.map((item, index) => (
+                    <Tr key={item.id}>
+                      <Td borderWidth="1px" borderColor="primary">
+                        {index + 1}
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary">
+                        {formatDate(item.createdAt)}
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary">
+                        {item.nama || "Tidak ada nama"}
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary">
+                        <Button
+                          onClick={() => {
+                            history.push(`/gfk/detail-alokasi/${item.id}`);
+                          }}
+                        >
+                          detail
+                        </Button>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
           </Container>
         </Box>
       </Layout>

@@ -18,6 +18,7 @@ import axios from "axios";
 import Layout from "../Components/Layout";
 import { Link, useHistory } from "react-router-dom";
 import AmprahanAktif from "../Components/AmprahanAktif";
+import Batik from "../assets/BATIK.png";
 function Alokasi() {
   const [tujuan, setTujuan] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -107,7 +108,13 @@ function Alokasi() {
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"} minHeight={"80vh"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+          minHeight={"80vh"}
+        >
           {status ? (
             <>
               <Container
@@ -138,6 +145,8 @@ function Alokasi() {
               p={"30px"}
             >
               <Button
+                variant={"primary"}
+                mb={"20px"}
                 onClick={() => {
                   history.push("/gfk/daftar-alokasi");
                 }}
@@ -154,12 +163,22 @@ function Alokasi() {
                   borderColor="rgba(175, 175, 175, 1)"
                 ></Input>
               </FormControl>
-              <Checkbox
-                isChecked={allChecked}
-                onChange={handleAllCheckboxChange}
+              <Box
+                borderRadius={"5px"}
+                p={"10px"}
+                bgColor={"secondary"}
+                my={"20px"}
+                border={"1px"}
+                borderColor={"primary"}
+                width={"32%"}
               >
-                Centang Semua
-              </Checkbox>
+                <Checkbox
+                  isChecked={allChecked}
+                  onChange={handleAllCheckboxChange}
+                >
+                  Centang Semua
+                </Checkbox>
+              </Box>
               <SimpleGrid minChildWidth="300px" columns={2} spacing={5}>
                 {tujuan.map((item, index) => (
                   <Box borderRadius={"5px"} p={"10px"} bgColor={"secondary"}>
@@ -175,8 +194,8 @@ function Alokasi() {
                   </Box>
                 ))}
               </SimpleGrid>
-              <Text>Checked IDs: {checkedIds.join(", ")}</Text>
-              {namaAlokasi ? (
+
+              {namaAlokasi && checkedIds.length > 0 ? (
                 <>
                   {" "}
                   <Button onClick={handleSubmit} colorScheme="teal" mt={4}>

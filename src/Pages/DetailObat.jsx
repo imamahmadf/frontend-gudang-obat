@@ -34,6 +34,8 @@ import {
   Avatar,
 } from "@chakra-ui/react";
 import axios from "axios";
+import Batik from "../assets/BATIK.png";
+
 import { Link, useHistory } from "react-router-dom";
 import addFoto from "./../assets/add_photo.png";
 import Layout from "../Components/Layout";
@@ -44,6 +46,7 @@ import { BsCaretLeftFill } from "react-icons/bs";
 import { BsChevronDoubleDown } from "react-icons/bs";
 import { useDisclosure } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { BsPencilFill } from "react-icons/bs";
 
 function DetailObat(props) {
   const [dataObat, setDataObat] = useState([]);
@@ -291,7 +294,12 @@ function DetailObat(props) {
 
   return (
     <Layout>
-      <Box pt={"80px"} bgColor={"secondary"}>
+      <Box
+        pb={"40px"}
+        pt={"80px"}
+        bgColor={"secondary"}
+        backgroundImage={`url(${Batik})`}
+      >
         {" "}
         {/* /////////MOBILE////////////// */}
         <Container
@@ -335,6 +343,44 @@ function DetailObat(props) {
               </Text>
             ) : null}
           </SimpleGrid>
+          <Flex gap={4} mt={"10px"}>
+            <Center
+              onClick={() => {
+                history.push(`/gfk/edit-obat/${props.match.params.obatId}`);
+              }}
+              borderRadius={"5px"}
+              as="button"
+              h="25px"
+              w="25px"
+              fontSize="15px"
+              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+              color="white"
+              _hover={{
+                bg: "primaryGelap",
+              }}
+              bg="primary"
+            >
+              <BsPencilFill />
+            </Center>{" "}
+            <Center
+              onClick={() => {
+                history.push(`/gfk/admin-obat/${props.match.params.obatId}`);
+              }}
+              borderRadius={"5px"}
+              as="button"
+              h="25px"
+              w="25px"
+              fontSize="15px"
+              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+              color="white"
+              _hover={{
+                bg: "black",
+              }}
+              bg="danger"
+            >
+              <BsPencilFill />
+            </Center>{" "}
+          </Flex>
         </Container>
         <HStack
           display={{ ss: "flex", sl: "none" }}
@@ -371,10 +417,57 @@ function DetailObat(props) {
               p={"15px"}
               borderColor={"secondary"}
             >
-              <Heading mb={"10px"}> {dataObat?.nama}</Heading>
-              <Heading as="h6" size="md">
-                Tanggal Input: {formatTanggal(dataObat?.createdAt)}
-              </Heading>
+              <Flex>
+                <Box>
+                  <Heading mb={"10px"}> {dataObat?.nama}</Heading>
+                  <Heading as="h6" size="md">
+                    Tanggal Input: {formatTanggal(dataObat?.createdAt)}
+                  </Heading>
+                </Box>
+                <Spacer />
+                <Flex gap={4}>
+                  <Center
+                    onClick={() => {
+                      history.push(
+                        `/gfk/edit-obat/${props.match.params.obatId}`
+                      );
+                    }}
+                    borderRadius={"5px"}
+                    as="button"
+                    h="25px"
+                    w="25px"
+                    fontSize="15px"
+                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                    color="white"
+                    _hover={{
+                      bg: "primaryGelap",
+                    }}
+                    bg="primary"
+                  >
+                    <BsPencilFill />
+                  </Center>{" "}
+                  <Center
+                    onClick={() => {
+                      history.push(
+                        `/gfk/admin-obat/${props.match.params.obatId}`
+                      );
+                    }}
+                    borderRadius={"5px"}
+                    as="button"
+                    h="25px"
+                    w="25px"
+                    fontSize="15px"
+                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                    color="white"
+                    _hover={{
+                      bg: "black",
+                    }}
+                    bg="danger"
+                  >
+                    <BsPencilFill />
+                  </Center>{" "}
+                </Flex>
+              </Flex>
               <Spacer />
               <Flex gap={"15px"}>
                 {" "}
@@ -496,7 +589,7 @@ function DetailObat(props) {
           borderColor={"rgba(229, 231, 235, 1)"}
           maxW={"1280px"}
         >
-          <SimpleGrid minChildWidth="180px">
+          <SimpleGrid minChildWidth="200px">
             <Box>
               {" "}
               {dataObat?.noBatches?.[0] ? (

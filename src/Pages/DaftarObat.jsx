@@ -30,6 +30,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { BsFillBoxSeamFill } from "react-icons/bs";
+import { BsEyeFill } from "react-icons/bs";
 import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
 import Sidebar from "../Components/Sidebar";
@@ -48,6 +49,7 @@ import { useDispatch, useSelector } from "react-redux";
 import addFoto from "./../assets/add_photo.png";
 import TambahObatRusak from "../Components/TambahObatRusak";
 import AmprahanAktif from "../Components/AmprahanAktif";
+import Batik from "../assets/BATIK.png";
 
 function DaftarObatAlkes() {
   const history = useHistory();
@@ -65,6 +67,7 @@ function DaftarObatAlkes() {
   const [kelasTerapiId, setKelasTerapiId] = useState(0);
   const [kategoriId, setKategoriId] = useState(0);
   const [satuanId, setSatuanId] = useState(0);
+  const [aplikasiId, setAplikasiId] = useState(0);
   const [seed, setSeed] = useState([]);
   const changePage = ({ selected }) => {
     setPage(selected);
@@ -80,7 +83,19 @@ function DaftarObatAlkes() {
       setKategoriId(value);
     } else if (field === "satuanId") {
       setSatuanId(value);
+    } else if (field === "aplikasiId") {
+      setAplikasiId(value);
     }
+  }
+
+  function renderAplikasi() {
+    return seed?.aplikasiSeed?.map((val) => {
+      return (
+        <option key={val.id} value={val.id}>
+          {val.nama} {val.warna}
+        </option>
+      );
+    });
   }
 
   function renderKelasTerapi() {
@@ -183,7 +198,7 @@ function DaftarObatAlkes() {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/obat/get?search_query=${keyword}&alfabet=${alfabet}&time=${time}&page=${page}&limit=${limit}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}`
+        }/obat/get?search_query=${keyword}&alfabet=${alfabet}&time=${time}&page=${page}&limit=${limit}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&aplikasiId=${aplikasiId}`
       )
       .then((res) => {
         setPage(res.data.page);
@@ -228,17 +243,13 @@ function DaftarObatAlkes() {
             display={{ ss: "none", sl: "block" }}
           >
             <Flex>
-              <Flex
-                onClick={() => {
-                  history.push(`/gfk/detail-obat/${val.id}`);
-                }}
-              >
+              <Flex>
                 <Image
                   borderRadius={"5px"}
                   alt="foto obat"
                   width="30px"
                   height="40px"
-                  me="10px"
+                  me="5px"
                   overflow="hiden"
                   objectFit="cover"
                   src={
@@ -248,14 +259,19 @@ function DaftarObatAlkes() {
                       : addFoto
                   }
                 />
-                <Text
-                  // border={{ base: "1px", md: "1px" }}
-                  fontSize={"13px"}
-                  width={"150px"}
-                  me={"10px"}
-                >
-                  {val.nama}
-                </Text>
+                <Box>
+                  <Text
+                    borderRadius={"5px"}
+                    p={"5px"}
+                    bgColor={val?.aplikasi?.warna}
+                    // border={{ base: "1px", md: "1px" }}
+                    fontSize={"13px"}
+                    width={"150px"}
+                    me={"10px"}
+                  >
+                    {val.nama}
+                  </Text>
+                </Box>
                 <Text
                   // border={{ base: "1px", md: "1px" }}
                   fontSize={"13px"}
@@ -424,7 +440,7 @@ function DaftarObatAlkes() {
               </Box>
               <Flex
                 // border={{ base: "1px", md: "1px" }}
-                marginStart={"60px"}
+                marginStart={"85px"}
               >
                 <>
                   {UserRoles.includes(7) || UserRoles.includes(8) ? (
@@ -471,33 +487,24 @@ function DaftarObatAlkes() {
                       ) : null}
                     </>
                   ) : null}
-                  <Menu>
-                    <MenuButton
-                      p={0}
-                      h="25px"
-                      w="25px"
-                      fontSize="12px"
-                      as={Button}
-                    ></MenuButton>
-                    <MenuList>
-                      <MenuItem
-                        onClick={() => {
-                          history.push(`/gfk/detail-obat/${val.id}`);
-                        }}
-                      >
-                        Detail Obat
-                      </MenuItem>
-                      {val.profileId === profileId ? (
-                        <MenuItem
-                          onClick={() => {
-                            history.push(`/gfk/edit-obat/${val.id}`);
-                          }}
-                        >
-                          Edit Obat
-                        </MenuItem>
-                      ) : null}
-                    </MenuList>
-                  </Menu>
+                  <Center
+                    onClick={() => {
+                      history.push(`/gfk/detail-obat/${val.id}`);
+                    }}
+                    borderRadius={"5px"}
+                    as="button"
+                    h="25px"
+                    w="25px"
+                    fontSize="15px"
+                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                    color="white"
+                    _hover={{
+                      bg: "black",
+                    }}
+                    bg="primary"
+                  >
+                    <BsEyeFill />
+                  </Center>{" "}
                 </>
               </Flex>
             </Flex>
@@ -690,11 +697,24 @@ function DaftarObatAlkes() {
     fetchStatus();
     fetchDataSeed();
     console.log(status);
-  }, [keyword, page, randomNumber, satuanId, kelasTerapiId, kategoriId]);
+  }, [
+    keyword,
+    page,
+    randomNumber,
+    satuanId,
+    kelasTerapiId,
+    kategoriId,
+    aplikasiId,
+  ]);
   return (
     <>
       <Layout>
-        <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+        <Box
+          pt={"80px"}
+          bgColor={"rgba(249, 250, 251, 1)"}
+          backgroundImage={`url(${Batik})`}
+          pb={"40px"}
+        >
           <Container
             bgColor={
               status?.StatusAmprahanId <= 3
@@ -739,7 +759,7 @@ function DaftarObatAlkes() {
             p={"20px"}
           >
             <Box>
-              <HStack flexDirection={{ ss: "row", sl: "row" }}>
+              <HStack>
                 <Text
                   fontSize={"20px"}
                   fontWeight={600}
@@ -749,53 +769,53 @@ function DaftarObatAlkes() {
                 </Text>
 
                 <Spacer display={{ ss: "none", sl: "block" }} />
-                <HStack>
-                  <FormControl>
-                    <HStack p={0}>
+                <HStack mb={"20px"}>
+                  <Flex justifyContent="space-between" width="100%" gap={3}>
+                    <FormControl flex="1" mr={2}>
                       <Input
                         onChange={inputHandler}
                         type="name"
                         placeholder="Cari Obat"
                         borderRadius="8px"
                         borderColor="rgba(175, 175, 175, 1)"
-                        width={"200px"}
+                        width={{ ss: "65vw", sl: "20vw" }}
                       />{" "}
+                    </FormControl>{" "}
+                    <IconButton
+                      onClick={onFilterOpen}
+                      color="rgba(175, 175, 175, 1)"
+                      aria-label="toggle filters"
+                      icon={<BsFillFunnelFill />}
+                      backgroundColor="white"
+                      border="1px"
+                      borderRadius={"8px"}
+                      _hover={{
+                        bg: "black",
+                        color: "white",
+                      }}
+                    />
+                    {UserRoles.includes(3) ||
+                    UserRoles.includes(4) ||
+                    UserRoles.includes(7) ||
+                    UserRoles.includes(8) ? (
                       <IconButton
-                        onClick={onFilterOpen}
+                        m={0}
+                        icon={<BsPlusCircle />}
                         color="rgba(175, 175, 175, 1)"
                         aria-label="toggle filters"
-                        icon={<BsFillFunnelFill />}
+                        variant="solid"
                         backgroundColor="white"
                         border="1px"
                         borderRadius={"8px"}
-                        m={2}
-                        _hover={{
-                          bg: "black",
-                          color: "white",
+                        onClick={() => {
+                          history.push("/gfk/tambah-obat");
                         }}
                       />
-                      {UserRoles.includes(3) ||
-                      UserRoles.includes(4) ||
-                      UserRoles.includes(7) ||
-                      UserRoles.includes(8) ? (
-                        <Button
-                          leftIcon={<BsPlusCircle />}
-                          color="rgba(175, 175, 175, 1)"
-                          aria-label="toggle filters"
-                          variant="solid"
-                          backgroundColor="white"
-                          border="1px"
-                          borderRadius={"8px"}
-                          onClick={() => {
-                            history.push("/gfk/tambah-obat");
-                          }}
-                        ></Button>
-                      ) : null}
-                    </HStack>
-                  </FormControl>
+                    ) : null}
+                  </Flex>
                 </HStack>
               </HStack>
-              <HStack>
+              <HStack flexDirection={{ ss: "column", sl: "row" }}>
                 <FormControl>
                   <Select
                     mt="5px"
@@ -832,7 +852,21 @@ function DaftarObatAlkes() {
                     {renderSatuan()}
                   </Select>
                 </FormControl>
+                <FormControl>
+                  <Select
+                    mt="5px"
+                    placeholder="Aplikasi"
+                    border="1px"
+                    borderRadius={"8px"}
+                    borderColor={"rgba(229, 231, 235, 1)"}
+                    onChange={(e) => handleChange(e, "aplikasiId")}
+                  >
+                    {renderAplikasi()}
+                  </Select>
+                </FormControl>
                 <Button
+                  w={"300px"}
+                  variant={"secondary"}
                   onClick={() => {
                     setKeyword("");
                     setAlfabet("");
@@ -843,7 +877,7 @@ function DaftarObatAlkes() {
                     setSatuanId(0);
                   }}
                 >
-                  reset
+                  Reset
                 </Button>
               </HStack>
             </Box>
@@ -987,7 +1021,7 @@ function DaftarObatAlkes() {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  padding: 20,
+
                   boxSizing: "border-box",
                   width: "100%",
                   height: "100%",
@@ -1003,7 +1037,7 @@ function DaftarObatAlkes() {
                   breakLabel={"..."}
                   containerClassName={"pagination"}
                   disabledClassName={"disabled-page"}
-                  marginPagesDisplayed={2}
+                  marginPagesDisplayed={1}
                   nextClassName={"item next "}
                   pageClassName={"item pagination-page "}
                   pageRangeDisplayed={2}

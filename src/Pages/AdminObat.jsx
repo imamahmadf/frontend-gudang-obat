@@ -34,6 +34,7 @@ import {
   Alert,
   Avatar,
 } from "@chakra-ui/react";
+import Batik from "../assets/BATIK.png";
 import { useDispatch, useSelector } from "react-redux";
 import AdminEditAmprahan from "../Components/AdminEditAmprahan";
 import AdminEditNoBatch from "../Components/AdminEditNoBatch";
@@ -122,16 +123,19 @@ function AdminObat(props) {
   return (
     <>
       <Layout>
-        <Box pt={"80px"} bgColor={"secondary"}>
+        <Box
+          pt={"80px"}
+          bgColor={"secondary"}
+          backgroundImage={`url(${Batik})`}
+          pb={"40px"}
+        >
           <Container
             borderRadius={"5px"}
             border={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
             maxW={"1280px"}
-            marginBottom={"20px"}
             padding={"20px"}
             bgColor={"white"}
-            mb={"20px"}
           >
             <Text fontSize={"16px"} fontWeight={400}>
               {dataObat?.totalStok}
@@ -181,7 +185,41 @@ function AdminObat(props) {
             mb={"20px"}
           >
             <Heading mb={"10px"}>{dataObat?.nama}</Heading>
-            <Flex gap={"15px"}>
+            {/* //////MOBILE//////// */}
+            <Box display={{ ss: "block", sl: "none" }}>
+              <SimpleGrid columns={2}>
+                <Text fontSize={"14px"}>
+                  Sumber Dana: {dataObat?.sumberDana?.sumber}
+                </Text>{" "}
+                <Text fontSize={"14px"}>
+                  Kelas Terapi: {dataObat?.kelasterapi?.nama}
+                </Text>{" "}
+                <Text fontSize={"14px"}>
+                  Kategori: {dataObat?.kategori?.nama}
+                </Text>{" "}
+                <Text fontSize={"14px"}>Satuan: {dataObat?.satuan?.nama}</Text>{" "}
+                <Text fontSize={"14px"}>Total Stok: {dataObat?.totalStok}</Text>
+              </SimpleGrid>{" "}
+              <Center
+                onClick={onEditOpen}
+                borderRadius={"5px"}
+                as="button"
+                h="25px"
+                w="25px"
+                fontSize="15px"
+                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                color="white"
+                _hover={{
+                  bg: "black",
+                }}
+                bg="green"
+              >
+                <BsPencilFill />
+              </Center>{" "}
+            </Box>
+
+            {/* ////////MOBILE/////// */}
+            <Flex gap={"15px"} display={{ ss: "none", sl: "flex" }}>
               {" "}
               <Box
                 borderRadius={"5px"}

@@ -29,6 +29,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import addFoto from "./../assets/add_photo.png";
+import Batik from "../assets/BATIK.png";
 
 function Profile() {
   const { id, ProfilePic, ProfileName, firebaseProviderId, UserRoles } =
@@ -150,7 +151,12 @@ function Profile() {
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+        >
           <Container
             maxW={"1280px"}
             bgColor={"white"}

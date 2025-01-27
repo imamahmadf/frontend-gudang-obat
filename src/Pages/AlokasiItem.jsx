@@ -12,13 +12,17 @@ import {
   Th,
   Tbody,
   Td,
+  Alert,
   Input,
   Flex,
   Text,
   Spacer,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Layout from "../Components/Layout";
+import { BsXCircle } from "react-icons/bs";
+import { BsPlusCircle } from "react-icons/bs";
 
 function AlokasiItem(props) {
   const [dataAlokasi, setDataAlokasi] = useState([]);
@@ -108,6 +112,11 @@ function AlokasiItem(props) {
       return; // Jangan lanjutkan jika ada kesalahan
     }
 
+    if (inputValue == 0) {
+      setErrorMessage("Nilai yang diinput tidak boleh kosong"); // Set pesan kesalahan
+      return; // Jangan lanjutkan jika ada kesalahan
+    }
+
     const newInputValues = [...inputValues];
     const id = dataAlokasi[0]?.amprahans[index].id; // Ambil ID dari item yang bersangkutan
     newInputValues[index] = { id, value: inputValue }; // Simpan objek dengan ID dan nilai input
@@ -165,19 +174,13 @@ function AlokasiItem(props) {
     <Layout>
       <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
         <Container maxW={"1280px"} p={"0px"}>
-          <Flex>
-            <Box
-              bgColor={"white"}
-              borderRadius={"5px"}
-              w={"50%"}
-              me={"10px"}
-              p={"15px"}
-            >
+          <SimpleGrid minChildWidth="200px" gap={4}>
+            <Box bgColor={"white"} borderRadius={"5px"} p={"15px"}>
               <FormControl mt={"20px"}>
                 <FormLabel>Pilih Nomor Batch</FormLabel>
                 <Select
                   mt="5px"
-                  placeholder="Kelas Terapi"
+                  placeholder="Nomor Batch"
                   border="1px"
                   borderRadius={"8px"}
                   borderColor={"rgba(229, 231, 235, 1)"}
@@ -191,13 +194,7 @@ function AlokasiItem(props) {
                 Tutup
               </Button>
             </Box>
-            <Box
-              bgColor={"white"}
-              borderRadius={"5px"}
-              w={"50%"}
-              p={"20px"}
-              ms={"10px"}
-            >
+            <Box bgColor={"white"} borderRadius={"5px"} p={"20px"}>
               {selectedBatch && (
                 <Table variant="simple" size="md" mt="20px">
                   <Thead>
@@ -217,7 +214,7 @@ function AlokasiItem(props) {
                 </Table>
               )}
             </Box>
-          </Flex>
+          </SimpleGrid>
         </Container>
 
         <Container
@@ -226,9 +223,11 @@ function AlokasiItem(props) {
           bgColor={"white"}
           borderRadius={"5px"}
           p={"30px"}
+          style={{ overflowX: "auto" }}
         >
           {" "}
           <Flex
+            minW={"500px"}
             bgColor={"primary"}
             color={"white"}
             p={"10px"}
@@ -259,6 +258,7 @@ function AlokasiItem(props) {
             return (
               <Box>
                 <Flex
+                  minW={"500px"}
                   my={"15px"}
                   px={"10px"}
                   key={index}
@@ -293,31 +293,53 @@ function AlokasiItem(props) {
                   </Box>
                   <Spacer />
                   <Box w={"80px"}>
-                    <Button onClick={() => handleInputVisibility(index)}>
+                    <Button
+                      onClick={() => {
+                        handleInputVisibility(index);
+                        setErrorMessage(null);
+                      }}
+                    >
                       Submit
                     </Button>
                   </Box>
                 </Flex>
                 {isInputVisible && (
-                  <Flex mt="10px">
-                    <Input
-                      type="number"
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      placeholder="Masukkan jumlah"
-                    />
-                    <Button mx={"10px"} onClick={() => handleSubmit(index)}>
-                      Kirim
-                    </Button>
-                    <Button onClick={() => handleInputVisibility(null)}>
-                      Batal
-                    </Button>
-                    {errorMessage && (
-                      <Text color="red.500" mt="5px">
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </Flex>
+                  <>
+                    <Flex mt="10px" px={"10px"}>
+                      <Input
+                        type="number"
+                        w={"100%"}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        placeholder="Masukkan jumlah"
+                      />
+                      <Button
+                        variant={"primary"}
+                        mx={"10px"}
+                        fontSize={"22px"}
+                        onClick={() => handleSubmit(index)}
+                      >
+                        <BsPlusCircle />
+                      </Button>
+                      <Button
+                        variant={"primary"}
+                        bgColor={"danger"}
+                        onClick={() => handleInputVisibility(null)}
+                        fontSize={"22px"}
+                      >
+                        <BsXCircle />
+                      </Button>
+                    </Flex>
+                    <Box px={"10px"}>
+                      {errorMessage && (
+                        <Alert status="error" color="red" text="center">
+                          <Text color="red.500" mt="5px">
+                            {errorMessage}
+                          </Text>
+                        </Alert>
+                      )}
+                    </Box>
+                  </>
                 )}
               </Box>
             );

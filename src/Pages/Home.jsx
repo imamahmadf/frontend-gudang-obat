@@ -12,27 +12,140 @@ import {
   Image,
   ModalCloseButton,
   Container,
+  FormControl,
+  FormLabel,
+  Center,
+  HStack,
 } from "@chakra-ui/react";
-import FotoHome from "../assets/GFK.jpeg";
+import {
+  Select as Select2,
+  CreatableSelect,
+  AsyncSelect,
+} from "chakra-react-select";
+import { useDispatch, useSelector } from "react-redux";
+import { BsSearch } from "react-icons/bs";
+import axios from "axios";
+import FotoHome from "../assets/gfk-depan.png";
+import { Link, useHistory } from "react-router-dom";
 
 import Layout from "../Components/Layout";
 
 function Home() {
+  const history = useHistory();
+  const [namaObat, setNamaObat] = useState([]);
+  const [selectedObat, setSelectedObat] = useState(null);
+  const { profileId, UserRoles } = useSelector((state) => state.user);
+  async function fetchNamaObat() {
+    await axios
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/obat/get-nama?profileId=${
+          UserRoles.includes(4) ||
+          UserRoles.includes(7) ||
+          UserRoles.includes(8)
+            ? 0
+            : profileId
+        }`
+      )
+      .then((res) => {
+        console.log(res.data, "tessss");
+        setNamaObat(res.data);
+      })
+      .catch((err) => {
+        console.error(err.Message);
+      });
+  }
+  useEffect(() => {
+    fetchNamaObat();
+  }, []);
   return (
     <>
       <Layout>
         <Box
-          // backgroundImage={FotoHome}
-          overflow="hiden"
-          objectFit="cover"
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          height={"100vh"}
-          w="100%"
+          height="100vh"
+          backgroundImage={`url(${FotoHome})`}
+          backgroundSize="cover"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
         >
-          <Container pt={"300px"} height={"1000px"} maxW={"1280px"}>
-            <Text>INI HOME</Text>
-          </Container>
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            right="0"
+            bottom="0"
+            backgroundColor="rgba(0, 0, 0, 0.5)"
+          />
+          <Box>
+            <Text
+              fontSize="60px"
+              color="white"
+              textAlign="center"
+              position="relative"
+              fontWeight={800}
+            >
+              SELAMAT DATANG DI APTEKA
+            </Text>{" "}
+            {profileId ? (
+              <Box
+                mt={"30px"}
+                position="relative"
+                p={"10px"}
+                bgColor={"white"}
+                borderRadius={"5px"}
+              >
+                <HStack>
+                  <FormControl border={0} bgColor={"white"}>
+                    <Select2
+                      options={namaObat.result?.map((val) => {
+                        return {
+                          value: val.id,
+                          label: `${val.nama} - ${val.kategori.nama}`,
+                        };
+                      })}
+                      onChange={(choice) => {
+                        setSelectedObat(choice);
+                      }}
+                      value={selectedObat}
+                      placeholder="Cari Nama Obat"
+                      focusBorderColor="red"
+                      closeMenuOnSelect={false}
+                    />
+                  </FormControl>{" "}
+                  <Center
+                    borderRadius={"5px"}
+                    color={"white"}
+                    p={"10px"}
+                    bgColor={"primary"}
+                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                    as="button"
+                    _hover={{
+                      bg: "primaryGelap",
+                    }}
+                    onClick={() => {
+                      history.push(`/gfk/detail-obat/${selectedObat.value}`);
+                    }}
+                  >
+                    <BsSearch />
+                  </Center>
+                </HStack>
+              </Box>
+            ) : (
+              <Center>
+                <Button
+                  variant={"primary"}
+                  onClick={() => {
+                    history.push(`/login`);
+                  }}
+                >
+                  Login
+                </Button>
+              </Center>
+            )}
+          </Box>
         </Box>
       </Layout>
     </>

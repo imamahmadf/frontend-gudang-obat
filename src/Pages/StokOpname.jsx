@@ -25,6 +25,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
+import Batik from "../assets/BATIK.png";
 import { BsFileEarmarkXFill } from "react-icons/bs";
 import FotoHome from "../assets/GFK.jpeg";
 import axios from "axios";
@@ -263,7 +264,12 @@ function StokOpname() {
   return (
     <>
       <Layout>
-        <Box bgColor={"secondary"} py={"50px"} mt={"50px"}>
+        <Box
+          backgroundImage={`url(${Batik})`}
+          bgColor={"secondary"}
+          py={"50px"}
+          mt={"50px"}
+        >
           <Container
             maxW={"1280px"}
             p={"30px"}
@@ -307,13 +313,69 @@ function StokOpname() {
               <Table variant="simple" width="100%">
                 <Thead>
                   <Tr>
-                    <Th>Nama Obat</Th>
-                    <Th>Satuan</Th>
-                    <Th>Kemasan</Th>
-                    <Th>No Batch</Th>
-                    <Th>Exp</Th>
-                    <Th>Stok</Th>
-                    <Th>Total Stok</Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Nama Obat
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Satuan
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Kemasan
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      No Batch
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Exp
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Stok
+                    </Th>
+                    <Th
+                      bgColor={"primary"}
+                      color={"white"}
+                      py={"20px"}
+                      borderWidth="1px"
+                      borderColor="white"
+                    >
+                      Total Stok
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -325,31 +387,31 @@ function StokOpname() {
                       <>
                         <Tr key={item.nama}>
                           <Td
-                            rowSpan={batches.length}
                             borderWidth="1px"
-                            borderColor="gray.200"
+                            borderColor="primary"
+                            rowSpan={batches.length}
                           >
                             {item.nama}
                           </Td>
                           <Td
                             rowSpan={batches.length}
                             borderWidth="1px"
-                            borderColor="gray.200"
+                            borderColor="primary"
                           >
                             {item.satuan.nama}
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
+                          <Td borderWidth="1px" borderColor="primary">
                             {batches[0].kotak} / kemasan
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
+                          <Td borderWidth="1px" borderColor="primary">
                             {batches[0].noBatch}
                           </Td>
-                          <Td borderWidth="1px" borderColor="gray.200">
+                          <Td borderWidth="1px" borderColor="primary">
                             {formatDate(batches[0].exp)}
                           </Td>
                           <Td
                             borderWidth="1px"
-                            borderColor="gray.200"
+                            borderColor="primary"
                             bgColor={
                               batches[0].amprahanItems[0] ? "orange" : null
                             }
@@ -359,25 +421,25 @@ function StokOpname() {
                           <Td
                             rowSpan={batches.length}
                             borderWidth="1px"
-                            borderColor="gray.200"
+                            borderColor="primary"
                           >
                             {item.totalStok}
                           </Td>
                         </Tr>
                         {batches.slice(1).map((batch) => (
                           <Tr key={batch.noBatch}>
-                            <Td borderWidth="1px" borderColor="gray.200">
+                            <Td borderWidth="1px" borderColor="primary">
                               {batch.kotak} / kemasan
                             </Td>
-                            <Td borderWidth="1px" borderColor="gray.200">
+                            <Td borderWidth="1px" borderColor="primary">
                               {batch.noBatch}
                             </Td>
-                            <Td borderWidth="1px" borderColor="gray.200">
+                            <Td borderWidth="1px" borderColor="primary">
                               {formatDate(batch.exp)}
                             </Td>
                             <Td
                               borderWidth="1px"
-                              borderColor="gray.200"
+                              borderColor="primary"
                               bgColor={batch.amprahanItems[0] ? "orange" : null}
                             >
                               {batch.stok}

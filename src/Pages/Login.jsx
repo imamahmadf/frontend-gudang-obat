@@ -13,10 +13,15 @@ import {
   Container,
   InputGroup,
   InputRightElement,
+  Center,
   Alert,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import FotoHome from "../assets/GFK.jpeg";
+import Google from "../assets/google.png";
+import LogoAPP from "../assets/logo app.png";
+import { BsEye } from "react-icons/bs";
+import { BsEyeSlash } from "react-icons/bs";
+
 import { authFirebase } from "../Config/firebase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,7 +39,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import Layout from "../Components/Layout";
-import imageLogin from "../assets/login.png";
+import imageLogin from "../assets/BMHP.jpg";
 import { onAuthStateChanged } from "firebase/auth";
 function Login() {
   const global = useSelector((state) => state.user);
@@ -52,22 +57,26 @@ function Login() {
   }
   const handleWithGoogle = async () => {
     const providerGoogle = new GoogleAuthProvider();
-    const credential = await signInWithPopup(authFirebase, providerGoogle);
+    try {
+      const credential = await signInWithPopup(authFirebase, providerGoogle);
+      const user = credential.user;
 
-    const user = credential.user;
-
-    await axios
-      .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-by-id`, {
-        params: { id: user.uid },
-      })
-      .then((res) => {
-        history.push("/gfk/daftar-obat");
-      })
-      .catch((err) => {
-        //console.log(err)
-        alert("please registered your account in form register");
-        history.push("/register");
-      });
+      await axios
+        .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-by-id`, {
+          params: { id: user.uid },
+        })
+        .then((res) => {
+          history.push("/gfk/daftar-obat");
+        })
+        .catch((err) => {
+          //console.log(err)
+          alert("please registered your account in form register");
+          history.push("/register");
+        });
+    } catch (error) {
+      // Handle error
+      alert("Error during Google sign-in: " + error.message);
+    }
   };
 
   const formik = useFormik({
@@ -77,9 +86,9 @@ function Login() {
     },
     validationSchema: Yup.object().shape({
       email: Yup.string()
-        .required("your email is invalid")
-        .email("input your email"),
-      password: Yup.string().required("please fill in the password"),
+        .required("Email Wajib diisi")
+        .email("format email salah"),
+      password: Yup.string().required("pasword wajid diisi"),
     }),
     validateOnChange: false,
     onSubmit: async (values) => {
@@ -95,7 +104,7 @@ function Login() {
         var errorCode = error.code;
         var errorMessage = error.errorMessage;
         if (errorCode === "auth/wrong-password") {
-          setWrongPass("Wrong Password");
+          setWrongPass("Password Salah");
         } else {
           alert(errorMessage);
         }
@@ -141,20 +150,13 @@ function Login() {
   }, [history]);
   return (
     <>
-      <Box
-        overflow="hidden"
-        objectFit="cover"
-        backgroundPosition="center"
-        backgroundRepeat="no-repeat"
-        height={"100vh"}
-        w="100%"
-      >
+      <Center backgroundColor={"primary"} height={"100vh"} w="100%">
         <Container
-          marginTop={"80px"}
           borderRadius={"20px"}
           p={"00px"}
           height={"1000px"}
           maxW={"1680px"}
+          bgColor={"white"}
           boxShadow="0px 8px 16px rgba(0, 0, 0, 0.2)"
         >
           <Flex flexDirection={flexDirection} wrap="wrap" height="100%">
@@ -162,12 +164,13 @@ function Login() {
               flexDirection={"column"}
               borderLeftRadius={"20px"}
               flex="1"
-              p={"200px"}
+              p={"20px"}
               height={"100%"}
               alignItems="center"
               justifyContent="center"
             >
-              <FormControl id="email" pb="12px">
+              <Image mb={"50px"} width={"50%"} src={LogoAPP} />
+              <FormControl w={"60%"} id="email" pb="12px">
                 <Input
                   h={"50px"}
                   type="email"
@@ -185,7 +188,7 @@ function Login() {
                   </Alert>
                 ) : null}
               </FormControl>{" "}
-              <FormControl id="password" pb="15px">
+              <FormControl w={"60%"} id="password" pb="15px">
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -200,13 +203,11 @@ function Login() {
 
                   <InputRightElement>
                     <Button onClick={handleClick} h={"50px"} mt={"10px"}>
-                      <i
-                        className={
-                          showPassword
-                            ? "fa-sharp fa-solid fa-eye"
-                            : "fa-solid fa-eye-slash"
-                        }
-                      />
+                      {showPassword ? (
+                        <BsEye style={{ fontSize: "30px" }} />
+                      ) : (
+                        <BsEyeSlash style={{ fontSize: "30px" }} />
+                      )}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -238,9 +239,14 @@ function Login() {
                 cursor="pointer"
                 _hover={{ textDecoration: "underline" }}
               >
-                <Link to="/forgot-password">Forgot Password</Link>
+                <Link to="/lupa-password">Lupa Password</Link>
               </Text>
-              <Button variant="secondary" mt="20px" onClick={handleWithGoogle}>
+              <Button
+                variant="secondary"
+                mt="20px"
+                onClick={handleWithGoogle}
+                leftIcon={<Image height={"20px"} src={Google} mr="5px"></Image>}
+              >
                 Login With Google
               </Button>
             </Flex>
@@ -249,14 +255,18 @@ function Login() {
               flexDirection={"column"}
               borderRightRadius={"20px"}
               flex="1"
-              p={"200px"}
               height={"100%"}
             >
-              <Image src={imageLogin} />
+              <Image
+                width={"100%"}
+                height={"100%"}
+                src={imageLogin}
+                borderRadius={"0 20px 20px 0"}
+              />
             </Flex>
           </Flex>
         </Container>
-      </Box>
+      </Center>
     </>
   );
 }

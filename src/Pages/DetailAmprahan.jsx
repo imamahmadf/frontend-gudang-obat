@@ -31,6 +31,7 @@ import { BsCartXFill } from "react-icons/bs";
 import { BsPencilFill } from "react-icons/bs";
 import { FaRegUser } from "react-icons/fa6";
 import addFoto from "./../assets/add_photo.png";
+import Batik from "../assets/BATIK.png";
 function DetailAmprahan(props) {
   const [detailAmprahan, setDetailAmprahan] = useState([]);
   const [profile, setProfile] = useState([]);
@@ -488,7 +489,11 @@ function DetailAmprahan(props) {
 
   return (
     <Layout>
-      <Box pt={"80px"} bgColor={"rgba(249, 250, 251, 1)"}>
+      <Box
+        backgroundImage={`url(${Batik})`}
+        pt={"80px"}
+        bgColor={"rgba(249, 250, 251, 1)"}
+      >
         <Container
           bgColor={"white"}
           borderRadius={"5px"}
