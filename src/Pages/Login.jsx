@@ -21,6 +21,7 @@ import Google from "../assets/google.png";
 import LogoAPP from "../assets/logo app.png";
 import { BsEye } from "react-icons/bs";
 import { BsEyeSlash } from "react-icons/bs";
+import Jafar from "../assets/GFK-FOTO.png";
 
 import { authFirebase } from "../Config/firebase";
 import axios from "axios";
@@ -55,30 +56,67 @@ function Login() {
   if (global.id) {
     history.push("/");
   }
-  const handleWithGoogle = async () => {
-    const providerGoogle = new GoogleAuthProvider();
-    try {
-      const credential = await signInWithPopup(authFirebase, providerGoogle);
-      const user = credential.user;
+  // const handleWithGoogle = async () => {
+  //   const providerGoogle = new GoogleAuthProvider();
+  //   try {
+  //     const credential = await signInWithPopup(authFirebase, providerGoogle);
+  //     const user = credential.user;
 
-      await axios
-        .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-by-id`, {
-          params: { id: user.uid },
-        })
-        .then((res) => {
-          history.push("/gfk/daftar-obat");
-        })
-        .catch((err) => {
-          //console.log(err)
-          alert("please registered your account in form register");
-          history.push("/register");
-        });
-    } catch (error) {
-      // Handle error
-      alert("Error during Google sign-in: " + error.message);
+  //     await axios
+  //       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-by-id`, {
+  //         params: { id: user.uid },
+  //       })
+  //       .then((res) => {
+  //         history.push("/gfk/daftar-obat");
+  //       })
+  //       .catch((err) => {
+  //         //console.log(err)
+  //         alert("please registered your account in form register");
+  //         history.push("/register");
+  //       });
+  //   } catch (error) {
+  //     // Handle error
+  //     alert("Error during Google sign-in: " + error.message);
+  //   }
+  // };
+  const _handleRegister = async (credential, payload = {}) => {
+    const user = credential.user;
+    const providerId = credential.providerId
+      ? credential.providerId
+      : "password";
+    if (!providerId.toLowerCase().includes("google")) {
+      await sendEmailVerification(user);
     }
+
+    const registerUrl = `${
+      import.meta.env.VITE_REACT_APP_API_BASE_URL
+    }/user/register`;
+    payload =
+      Object.keys(payload).length === 0
+        ? {
+            id: user.uid,
+            name: user.displayName,
+            email: user.email,
+
+            firebaseProviderId: providerId,
+          }
+        : {
+            id: user.uid,
+            firebaseProviderId: providerId,
+            ...payload,
+          };
+
+    const response = await axios.post(registerUrl, payload);
+    console.log(payload, "register");
+    history.go("/gfk/daftar-obat");
   };
 
+  const handleWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const credential = await signInWithPopup(authFirebase, provider);
+
+    await _handleRegister(credential);
+  };
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -260,7 +298,7 @@ function Login() {
               <Image
                 width={"100%"}
                 height={"100%"}
-                src={imageLogin}
+                src={Jafar}
                 borderRadius={"0 20px 20px 0"}
               />
             </Flex>

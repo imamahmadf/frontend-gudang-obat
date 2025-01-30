@@ -47,6 +47,8 @@ import { BsChevronDoubleDown } from "react-icons/bs";
 import { useDisclosure } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { BsPencilFill } from "react-icons/bs";
+import DataChart from "../Components/DataChart";
+import PolarChart from "../Components/PolarChart";
 
 function DetailObat(props) {
   const [dataObat, setDataObat] = useState([]);
@@ -64,6 +66,8 @@ function DetailObat(props) {
   const [puskesmas, setPuskesmas] = useState([]);
   const [puskesmasId, setPuskesmasId] = useState(0);
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [dataStatistik, setDataStatistik] = useState([]);
+  const [dataStatistikTujuanObat, setDataStatistikTujuanObat] = useState([]);
   const changePage = ({ selected }) => {
     setPage(selected);
   };
@@ -132,6 +136,37 @@ function DetailObat(props) {
 
     // Menggabungkan hasilnya
     return `${hari} ${bulan} ${tahun}`;
+  }
+  async function fetchDataStatistikObatTujuan() {
+    await axios
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/statistik/get/tujuan-obat/${props.match.params.obatId}`
+      )
+      .then((res) => {
+        setDataStatistikTujuanObat(res.data);
+        console.log(res.data, "INI DATA STATITSIK!!!!!!!!");
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
+
+  async function fetchDataStatistik() {
+    await axios
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/statistik/get/detail-obat/${props.match.params.obatId}`
+      )
+      .then((res) => {
+        setDataStatistik(res.data.result);
+        console.log(res.data.result, "INI DATA STATITSIK!!!!!!!!");
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
   }
 
   async function fetchDataPuskesmas() {
@@ -290,6 +325,8 @@ function DetailObat(props) {
   useEffect(() => {
     fetchObat();
     fetchDataPuskesmas();
+    fetchDataStatistik();
+    fetchDataStatistikObatTujuan();
   }, [page, inputStartDate, inputEndDate, time, puskesmasId, jenis]);
 
   return (
@@ -836,6 +873,24 @@ function DetailObat(props) {
                   previousClassName={"item previous"}
                 />
               </div>
+            </Container>
+            <Container
+              p={"15px"}
+              bgColor={"white"}
+              borderRadius={"5px"}
+              border={"1px"}
+              borderColor={"rgba(229, 231, 235, 1)"}
+              maxW={"1280px"}
+              mt={"20px"}
+            >
+              <DataChart dataStatistik={dataStatistik} />{" "}
+              <Box px={"200px"}>
+                {" "}
+                <Text fontSize={"24px"} fontWeight={600} textAlign={"center"}>
+                  Diagram Persebaran Obat per tahun
+                </Text>
+                <PolarChart dataStatistik={dataStatistikTujuanObat} />
+              </Box>
             </Container>
           </>
         ) : (

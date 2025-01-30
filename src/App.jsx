@@ -37,6 +37,8 @@ import Laporan from "./Pages/Laporan";
 import ErrorBoundary from "./Components/ErrorBoundary";
 import AdminObat from "./Pages/AdminObat";
 import LupaPassword from "./Pages/LupaPassword";
+import Statistik from "./Pages/Statistik";
+import Tentang from "./Pages/Tentang";
 import {
   getAuth,
   onAuthStateChanged,
@@ -183,6 +185,12 @@ function App() {
               roleRoute={[1, 8]}
             />{" "}
             <AptekaRoute
+              component={Statistik}
+              path="/gfk/statistik"
+              exact
+              roleRoute={[1, 8]}
+            />{" "}
+            <AptekaRoute
               component={Amprahan}
               path="/gfk/amprahan"
               exact
@@ -290,7 +298,8 @@ function App() {
               exact
               roleRoute={[1, 2, 6, 7, 8]}
             />
-            <Route component={Login} path="/login" exact />
+            <Route component={Login} path="/login" exact />{" "}
+            <Route component={Tentang} path="/tentang" exact />
             <Route component={Register} path="/register" exact />
             <Route component={LupaPassword} path="/lupa-password" exact />
             <Route component={Home} path="/" />

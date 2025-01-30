@@ -40,6 +40,9 @@ import { BsTruck } from "react-icons/bs";
 import { BsTrash3 } from "react-icons/bs";
 import { BsFillBoxSeamFill } from "react-icons/bs";
 import { BsXOctagon } from "react-icons/bs";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { BsInfoCircle } from "react-icons/bs";
+
 import {
   onAuthStateChanged,
   signOut,
@@ -116,7 +119,7 @@ function Sidebar() {
       ? [
           {
             menu: "Laporan",
-            logo: <BsBarChartLine />,
+            logo: <HiOutlineDocumentReport />,
             URL: "/gfk/laporan",
           },
         ]
@@ -156,6 +159,8 @@ function Sidebar() {
           },
         ]
       : []),
+    { menu: "Statistik Obat", logo: <BsBarChartLine />, URL: "/gfk/statistik" },
+    { menu: "Tentang Aplikasi", logo: <BsInfoCircle />, URL: "/tentang" },
   ];
 
   //console.log(UserRoles);

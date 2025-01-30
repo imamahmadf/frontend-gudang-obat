@@ -125,16 +125,7 @@ function TambahAprahan() {
   }, []);
   return (
     <Box>
-      <Button
-        leftIcon={<BsPlusCircle />}
-        color="rgba(175, 175, 175, 1)"
-        aria-label="toggle filters"
-        variant="solid"
-        backgroundColor="white"
-        border="1px"
-        borderRadius={"8px"}
-        onClick={onOpen}
-      >
+      <Button leftIcon={<BsPlusCircle />} variant="primary" onClick={onOpen}>
         Buat Amprahan
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>

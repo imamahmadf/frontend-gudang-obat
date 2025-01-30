@@ -35,8 +35,22 @@ function Amprahan() {
   const [pages, setPages] = useState(0);
   const [rows, setRows] = useState(0);
   const [time, setTime] = useState("");
-  const [selectedTab, setSelectedTab] = useState("Members");
+  const [status, setStatus] = useState([]);
   const [jenis, setJenis] = useState(1);
+
+  async function fetchStatus() {
+    await axios
+      .get(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
+      )
+      .then((res) => {
+        setStatus(res.data[0]);
+        console.log(res.data[0], "STATUSSSS");
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
 
   const changePage = ({ selected }) => {
     setPage(selected);
@@ -168,19 +182,15 @@ function Amprahan() {
           maxW={"1280px"}
           p={"30px"}
         >
-          {(isAnyOpen === false || allAmprahan.length === 0) && (
-            <TambahAprahan />
-          )}
-
+          {status ? <TambahAprahan /> : null}
+          {JSON.stringify(status)}
           <Tabs variant="enclosed">
             <TabList>
               <Tab onClick={() => handleTabClick(1)}>Amprahan</Tab>
               <Tab onClick={() => handleTabClick(2)}>bon</Tab>
-              <Tab onClick={() => handleTabClick(3)}>Alokasi</Tab>
             </TabList>
 
             <TabPanels>
-              <TabPanel>{renderHalaman()}</TabPanel>
               <TabPanel>{renderHalaman()}</TabPanel>
               <TabPanel>{renderHalaman()}</TabPanel>
             </TabPanels>
