@@ -181,7 +181,12 @@ function Alokasi() {
               </Box>
               <SimpleGrid minChildWidth="300px" columns={2} spacing={5}>
                 {tujuan.map((item, index) => (
-                  <Box borderRadius={"5px"} p={"10px"} bgColor={"secondary"}>
+                  <Box
+                    key={index}
+                    borderRadius={"5px"}
+                    p={"10px"}
+                    bgColor={"secondary"}
+                  >
                     {" "}
                     <Checkbox
                       colorScheme="green"

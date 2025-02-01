@@ -194,7 +194,7 @@ function TambahAmprahanItem(props) {
           _hover={{
             bg: "black",
           }}
-          bg="green"
+          bg="secondary"
           // onClick={onOpen}
         >
           <BsCart4 />

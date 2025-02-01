@@ -204,7 +204,7 @@ function DetailAlokasi(props) {
                 <Tbody>
                   {detailAlokasi.amprahans &&
                     detailAlokasi.amprahans.map((amprahan, index) => (
-                      <>
+                      <React.Fragment key={amprahan.id}>
                         <Tr key={`header-${index}`}>
                           <Td
                             borderWidth="1px"
@@ -261,7 +261,7 @@ function DetailAlokasi(props) {
                             </Td>
                           </Tr>
                         ))}
-                      </>
+                      </React.Fragment>
                     ))}
                 </Tbody>
               </Table>

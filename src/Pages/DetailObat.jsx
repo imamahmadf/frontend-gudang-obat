@@ -380,44 +380,55 @@ function DetailObat(props) {
               </Text>
             ) : null}
           </SimpleGrid>
-          <Flex gap={4} mt={"10px"}>
-            <Center
-              onClick={() => {
-                history.push(`/gfk/edit-obat/${props.match.params.obatId}`);
-              }}
-              borderRadius={"5px"}
-              as="button"
-              h="25px"
-              w="25px"
-              fontSize="15px"
-              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-              color="white"
-              _hover={{
-                bg: "primaryGelap",
-              }}
-              bg="primary"
-            >
-              <BsPencilFill />
-            </Center>{" "}
-            <Center
-              onClick={() => {
-                history.push(`/gfk/admin-obat/${props.match.params.obatId}`);
-              }}
-              borderRadius={"5px"}
-              as="button"
-              h="25px"
-              w="25px"
-              fontSize="15px"
-              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-              color="white"
-              _hover={{
-                bg: "black",
-              }}
-              bg="danger"
-            >
-              <BsPencilFill />
-            </Center>{" "}
-          </Flex>
+          {UserRoles.includes(3) ||
+          UserRoles.includes(7) ||
+          UserRoles.includes(8) ? (
+            <Flex gap={4} mt={"10px"}>
+              <Center
+                onClick={() => {
+                  history.push(`/gfk/edit-obat/${props.match.params.obatId}`);
+                }}
+                borderRadius={"5px"}
+                as="button"
+                h="25px"
+                w="25px"
+                fontSize="15px"
+                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                color="white"
+                _hover={{
+                  bg: "primaryGelap",
+                }}
+                bg="primary"
+              >
+                <BsPencilFill />
+              </Center>{" "}
+              {UserRoles.includes(7) || UserRoles.includes(8) ? (
+                <>
+                  {" "}
+                  <Center
+                    onClick={() => {
+                      history.push(
+                        `/gfk/admin-obat/${props.match.params.obatId}`
+                      );
+                    }}
+                    borderRadius={"5px"}
+                    as="button"
+                    h="25px"
+                    w="25px"
+                    fontSize="15px"
+                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                    color="white"
+                    _hover={{
+                      bg: "black",
+                    }}
+                    bg="danger"
+                  >
+                    <BsPencilFill />
+                  </Center>{" "}
+                </>
+              ) : null}
+            </Flex>
+          ) : null}
         </Container>
         <HStack
           display={{ ss: "flex", sl: "none" }}
@@ -462,48 +473,54 @@ function DetailObat(props) {
                   </Heading>
                 </Box>
                 <Spacer />
-                <Flex gap={4}>
-                  <Center
-                    onClick={() => {
-                      history.push(
-                        `/gfk/edit-obat/${props.match.params.obatId}`
-                      );
-                    }}
-                    borderRadius={"5px"}
-                    as="button"
-                    h="25px"
-                    w="25px"
-                    fontSize="15px"
-                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    color="white"
-                    _hover={{
-                      bg: "primaryGelap",
-                    }}
-                    bg="primary"
-                  >
-                    <BsPencilFill />
-                  </Center>{" "}
-                  <Center
-                    onClick={() => {
-                      history.push(
-                        `/gfk/admin-obat/${props.match.params.obatId}`
-                      );
-                    }}
-                    borderRadius={"5px"}
-                    as="button"
-                    h="25px"
-                    w="25px"
-                    fontSize="15px"
-                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    color="white"
-                    _hover={{
-                      bg: "black",
-                    }}
-                    bg="danger"
-                  >
-                    <BsPencilFill />
-                  </Center>{" "}
-                </Flex>
+                {UserRoles.includes(3) ||
+                UserRoles.includes(7) ||
+                UserRoles.includes(8) ? (
+                  <Flex gap={4}>
+                    <Center
+                      onClick={() => {
+                        history.push(
+                          `/gfk/edit-obat/${props.match.params.obatId}`
+                        );
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="25px"
+                      w="25px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      _hover={{
+                        bg: "primaryGelap",
+                      }}
+                      bg="primary"
+                    >
+                      <BsPencilFill />
+                    </Center>{" "}
+                    {UserRoles.includes(7) || UserRoles.includes(8) ? (
+                      <Center
+                        onClick={() => {
+                          history.push(
+                            `/gfk/admin-obat/${props.match.params.obatId}`
+                          );
+                        }}
+                        borderRadius={"5px"}
+                        as="button"
+                        h="25px"
+                        w="25px"
+                        fontSize="15px"
+                        transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                        color="white"
+                        _hover={{
+                          bg: "black",
+                        }}
+                        bg="danger"
+                      >
+                        <BsPencilFill />
+                      </Center>
+                    ) : null}
+                  </Flex>
+                ) : null}
               </Flex>
               <Spacer />
               <Flex gap={"15px"}>
@@ -882,15 +899,21 @@ function DetailObat(props) {
               borderColor={"rgba(229, 231, 235, 1)"}
               maxW={"1280px"}
               mt={"20px"}
+              display={{ ss: "none", sl: "block" }}
             >
-              <DataChart dataStatistik={dataStatistik} />{" "}
-              <Box px={"200px"}>
+              <DataChart dataStatistik={dataStatistik} />
+              <Text
+                mt={"100px"}
+                fontSize={"24px"}
+                fontWeight={600}
+                textAlign={"center"}
+              >
+                Diagram Persebaran Obat per tahun
+              </Text>
+              <Center>
                 {" "}
-                <Text fontSize={"24px"} fontWeight={600} textAlign={"center"}>
-                  Diagram Persebaran Obat per tahun
-                </Text>
                 <PolarChart dataStatistik={dataStatistikTujuanObat} />
-              </Box>
+              </Center>
             </Container>
           </>
         ) : (

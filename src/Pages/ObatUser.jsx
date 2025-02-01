@@ -209,7 +209,7 @@ function ObatUser(props) {
                 color={"white"}
               >
                 EXp
-              </Th>{" "}
+              </Th>
               <Th
                 borderWidth="1px"
                 borderColor="white"
@@ -217,7 +217,7 @@ function ObatUser(props) {
                 color={"white"}
               >
                 Jumlah
-              </Th>{" "}
+              </Th>
               <Th
                 borderWidth="1px"
                 borderColor="white"
@@ -253,7 +253,7 @@ function ObatUser(props) {
                     </Td>
                     <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                       {formatDate(val.noBatch.exp)}
-                    </Td>{" "}
+                    </Td>
                     <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                       {val.permintaan}
                     </Td>
@@ -303,9 +303,7 @@ function ObatUser(props) {
             p={"30px"}
           >
             <Flex>
-              {" "}
               <FormControl border={"1px"} borderColor="gray.400" me="5px">
-                {" "}
                 <Text ms="18px">Awal</Text>
                 <Input
                   placeholder="Select Date and Time"
@@ -328,7 +326,7 @@ function ObatUser(props) {
                   onChange={(e) => handleChange(e, "endDate")}
                 />
               </FormControl>
-            </Flex>{" "}
+            </Flex>
             <FormControl>
               <Select
                 mb="20px"

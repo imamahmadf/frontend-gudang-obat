@@ -30,11 +30,12 @@ import { BsFileEarmarkXFill } from "react-icons/bs";
 import FotoHome from "../assets/GFK.jpeg";
 import axios from "axios";
 import Layout from "../Components/Layout";
+import { Link, useHistory } from "react-router-dom";
 import ExcelJS from "exceljs";
 
 function StokOpname() {
   const [profile, setProfile] = useState([]);
-
+  const history = useHistory();
   const [Penanggungjawab, setPenanggungjawab] = useState(0);
   const [dataStokOpname, setDataStokOpname] = useState([]);
 
@@ -136,6 +137,7 @@ function StokOpname() {
       )
       .then((response) => {
         console.log("Data berhasil dikirim:", response.data);
+        history.push(`/gfk/daftar-obat`);
       })
       .catch((error) => {
         console.error("Terjadi kesalahan saat mengirim data:", error);
@@ -288,10 +290,15 @@ function StokOpname() {
                 <BsFileEarmarkXFill />
               </Button>
 
-              <Button variant={"primary"} onClick={onTutupSOOpen}>
+              <Button
+                variant={"primary"}
+                onClick={onTutupSOOpen}
+                isDisabled={Penanggungjawab === 0 || Penanggungjawab === null}
+              >
                 Tambahkan SO
               </Button>
             </HStack>
+
             <Box>
               <FormLabel>Penanggungjawab</FormLabel>
               <Select
@@ -469,12 +476,7 @@ function StokOpname() {
             </ModalBody>
 
             <ModalFooter>
-              <Button
-                height={"20px"}
-                width={"60px"}
-                fontSize={"12px"}
-                onClick={tutupSO}
-              >
+              <Button variant={"primary"} onClick={tutupSO}>
                 Terima
               </Button>
             </ModalFooter>

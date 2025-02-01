@@ -184,30 +184,13 @@ function ObatRusak() {
                 {dataObatRusak?.map((item) => (
                   <Tr key={item.id}>
                     <Td>
-                      <Flex>
-                        <Image
-                          borderRadius={"5px"}
-                          alt="foto obat"
-                          width="30px"
-                          height="40px"
-                          me="10px"
-                          objectFit="cover"
-                          src={
-                            item.noBatch.pic
-                              ? `${
-                                  import.meta.env.VITE_REACT_APP_API_BASE_URL
-                                }${item.noBatch.pic}`
-                              : addFoto
-                          }
-                        />
-                        {item.noBatch.obat.nama}
-                      </Flex>
+                      <Flex>{item.noBatch?.obat.nama}</Flex>
                     </Td>
-                    <Td>{item.noBatch.noBatch}</Td>
-                    <Td>{item.noBatch.harga}</Td>
-                    <Td>{item.permintaan}</Td>
-                    <Td>{formatDate(item.noBatch.exp)}</Td>
-                    <Td>{item.catatan}</Td>
+                    <Td>{item.noBatch?.noBatch}</Td>
+                    <Td>{item.noBatch?.harga}</Td>
+                    <Td>{item?.permintaan}</Td>
+                    <Td>{formatDate(item.noBatch?.exp)}</Td>
+                    <Td>{item?.catatan}</Td>
                   </Tr>
                 ))}
               </Tbody>

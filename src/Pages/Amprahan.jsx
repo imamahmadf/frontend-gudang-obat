@@ -45,7 +45,7 @@ function Amprahan() {
       )
       .then((res) => {
         setStatus(res.data[0]);
-        console.log(res.data[0], "STATUSSSS");
+        console.log(res.data, "STATUSSSS");
       })
       .catch((err) => {
         console.error(err.message);
@@ -159,6 +159,7 @@ function Amprahan() {
   const isAnyOpen = allAmprahan.some((val) => val.isOpen === 1);
   useEffect(() => {
     fetchAllAmprahan();
+    fetchStatus();
     console.log(isAnyOpen);
   }, [page, jenis]);
 
@@ -182,8 +183,9 @@ function Amprahan() {
           maxW={"1280px"}
           p={"30px"}
         >
-          {status ? <TambahAprahan /> : null}
-          {JSON.stringify(status)}
+          {/* <TambahAprahan /> */}
+          {status?.isOpen ? null : <TambahAprahan />}
+          {JSON.stringify(status?.isOpen)}
           <Tabs variant="enclosed">
             <TabList>
               <Tab onClick={() => handleTabClick(1)}>Amprahan</Tab>

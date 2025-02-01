@@ -40,7 +40,7 @@ function Statistik() {
             maxW={"1280px"}
             p={"30px"}
           >
-            ssssss
+            <Center minHeight={"500px"}>Coming Soon</Center>
           </Container>
         </Box>
       </Layout>

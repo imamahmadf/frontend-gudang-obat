@@ -22,6 +22,7 @@ import {
 import axios from "axios";
 import Layout from "../Components/Layout";
 import { BsXCircle } from "react-icons/bs";
+import { Link, useHistory } from "react-router-dom";
 import { BsPlusCircle } from "react-icons/bs";
 
 function AlokasiItem(props) {
@@ -32,6 +33,7 @@ function AlokasiItem(props) {
   const [inputValue, setInputValue] = useState(0);
   const [inputValues, setInputValues] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const history = useHistory();
 
   function formatDate(dateString) {
     const months = [
@@ -160,6 +162,7 @@ function AlokasiItem(props) {
       )
       .then((res) => {
         console.log(res.data);
+        history.push("/");
       })
       .catch((err) => {
         console.error(err);
@@ -256,7 +259,7 @@ function AlokasiItem(props) {
             const isInputVisible = inputVisibleStates[index] || false;
 
             return (
-              <Box>
+              <Box key={val.id}>
                 <Flex
                   minW={"500px"}
                   my={"15px"}
@@ -273,7 +276,9 @@ function AlokasiItem(props) {
                       ? val.amprahanItems.map((val2) => {
                           return (
                             <>
-                              <Box mt={"10px"}>{val2.permintaan}</Box>
+                              <Box key={val2.id} mt={"10px"}>
+                                {val2.permintaan}
+                              </Box>
                             </>
                           );
                         })
@@ -284,9 +289,9 @@ function AlokasiItem(props) {
                     {val.amprahanItems[0]
                       ? val.amprahanItems.map((val2) => {
                           return (
-                            <>
-                              <Box mt={"10px"}>{val2.noBatch.noBatch}</Box>
-                            </>
+                            <Box key={val2.id} mt={"10px"}>
+                              {val2.noBatch.noBatch}
+                            </Box>
                           );
                         })
                       : "-"}

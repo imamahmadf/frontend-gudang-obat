@@ -206,31 +206,29 @@ function Footer() {
             <Divider mt={"10px"} mb={"10px"} />
           </Box>
           <SimpleGrid color={"white"} mt={"5px"} minChildWidth="350px">
-            {menuFooter.map((val, idx) => {
+            {menuFooter.map((val) => {
               return (
-                <>
-                  <HStack
-                    borderRadius={"5px"}
-                    w={"100%"}
-                    p={"10px"}
-                    as="button"
-                    key={idx}
-                    fontSize={"15px"}
-                    my={"5px"}
-                    onClick={() => {
-                      history.push(val.URL);
-                    }}
+                <HStack
+                  borderRadius={"5px"}
+                  w={"100%"}
+                  p={"10px"}
+                  as="button"
+                  key={val.menu}
+                  fontSize={"15px"}
+                  my={"5px"}
+                  onClick={() => {
+                    history.push(val.URL);
+                  }}
+                >
+                  <Text
+                    align={"left"}
+                    fontSize={"18px"}
+                    width={"150px"}
+                    me={"10px"}
                   >
-                    <Text
-                      align={"left"}
-                      fontSize={"18px"}
-                      width={"150px"}
-                      me={"10px"}
-                    >
-                      {val.menu}
-                    </Text>
-                  </HStack>
-                </>
+                    {val.menu}
+                  </Text>
+                </HStack>
               );
             })}
           </SimpleGrid>

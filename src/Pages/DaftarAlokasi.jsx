@@ -131,7 +131,7 @@ function DaftarAlokasi() {
                       Aksi
                     </Th>
                   </Tr>
-                </Thead>{" "}
+                </Thead>
                 <Tbody>
                   {dataAlokasi?.map((item, index) => (
                     <Tr key={item.id}>

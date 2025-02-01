@@ -39,6 +39,7 @@ import AdminObat from "./Pages/AdminObat";
 import LupaPassword from "./Pages/LupaPassword";
 import Statistik from "./Pages/Statistik";
 import Tentang from "./Pages/Tentang";
+import NoBatchNol from "./Pages/NoBatchNol";
 import {
   getAuth,
   onAuthStateChanged,
@@ -289,6 +290,12 @@ function App() {
             <Route
               component={PengaturanUser}
               path="/gfk/pengaturan/user"
+              exact
+              roleRoute={[7, 8]}
+            />
+            <Route
+              component={NoBatchNol}
+              path="/gfk/nomor-batch-nol"
               exact
               roleRoute={[7, 8]}
             />

@@ -136,25 +136,25 @@ function AdminObat(props) {
             maxW={"1280px"}
             padding={"20px"}
             bgColor={"white"}
+            mb={"20px"}
           >
-            <Text fontSize={"16px"} fontWeight={400}>
+            {/* <Text fontSize={"16px"} fontWeight={400}>
               {dataObat?.totalStok}
             </Text>{" "}
             <Text fontSize={"16px"} fontWeight={400}>
-              {dataAmprahan[dataAmprahan.length - 1]?.sisa}
+              {dataAmprahan[0]?.sisa}
             </Text>
             <Text fontSize={"16px"} fontWeight={400}>
               {dataObat?.noBatches?.reduce(
                 (total, batch) => total + batch.stok,
                 0
               )}
-            </Text>
-            {dataObat?.totalStok ===
-              dataAmprahan[dataAmprahan.length - 1]?.sisa &&
+            </Text> */}
+            {dataObat?.totalStok === dataAmprahan[0]?.sisa &&
             dataObat?.noBatches?.reduce(
               (total, batch) => total + batch.stok,
               0
-            ) === dataAmprahan[dataAmprahan.length - 1]?.sisa ? (
+            ) === dataAmprahan[0]?.sisa ? (
               <Box
                 borderRadius={"5px"}
                 p={"15px"}
@@ -411,55 +411,91 @@ function AdminObat(props) {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {dataAmprahan?.map((val, idx) => {
-                    const tanggal = formatTanggal(val.amprahan.tanggal);
-                    // ... existing logic for sisaStok ...
+                  {dataAmprahan
+                    ?.slice()
+                    .reverse()
+                    .map((val, idx) => {
+                      // Menggunakan slice() untuk menghindari mutasi array asli
+                      const tanggal = formatTanggal(val.amprahan.tanggal);
+                      // ... existing logic for sisaStok ...
 
-                    return (
-                      <Tr key={`${idx}`}>
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {tanggal}
-                        </Td>
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {val.noBatch?.noBatch}
-                        </Td>
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {val.amprahan?.uptd?.nama}
-                        </Td>
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {val.amprahan?.uptd?.statusTujuanId === 2
-                            ? val.permintaan
-                            : "-"}
-                        </Td>
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {val.amprahan?.uptd?.statusTujuanId === 1 ||
-                          val.amprahan?.uptd?.statusTujuanId === 4
-                            ? val.permintaan
-                            : "-"}
-                        </Td>
+                      return (
+                        <Tr key={`${idx}`}>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {tanggal}
+                          </Td>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {val.noBatch?.noBatch}
+                          </Td>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {val.amprahan?.uptd?.nama}
+                          </Td>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {val.amprahan?.uptd?.statusTujuanId === 2
+                              ? val.permintaan
+                              : "-"}
+                          </Td>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {val.amprahan?.uptd?.statusTujuanId === 1 ||
+                            val.amprahan?.uptd?.statusTujuanId === 4
+                              ? val.permintaan
+                              : "-"}
+                          </Td>
 
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {val.sisa}
-                        </Td>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {val.sisa}
+                          </Td>
 
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          {val.amprahan.StatusAmprahan?.nama}
-                          <br />
-                          {val.amprahan?.StatusAmprahan?.id === 7
-                            ? val.catatan
-                            : null}
-                        </Td>
-                        <Td borderWidth="1px" borderColor="primary" py={"15px"}>
-                          <Flex gap={4}>
-                            <AdminEditAmprahan
-                              data={val}
-                              randomNumber={setRandomNumber}
-                            />
-                          </Flex>
-                        </Td>
-                      </Tr>
-                    );
-                  })}
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            {val.amprahan.StatusAmprahan?.nama}
+                            <br />
+                            {val.amprahan?.StatusAmprahan?.id === 7
+                              ? val.catatan
+                              : null}
+                          </Td>
+                          <Td
+                            borderWidth="1px"
+                            borderColor="primary"
+                            py={"15px"}
+                          >
+                            <Flex gap={4}>
+                              <AdminEditAmprahan
+                                data={val}
+                                randomNumber={setRandomNumber}
+                              />
+                            </Flex>
+                          </Td>
+                        </Tr>
+                      );
+                    })}
                 </Tbody>
               </Table>
             </Box>

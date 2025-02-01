@@ -339,7 +339,7 @@ function Laporan() {
                 color={"white"}
               >
                 Total
-              </Th>{" "}
+              </Th>
               <Th
                 borderWidth="1px"
                 borderColor="white"
@@ -566,11 +566,8 @@ function Laporan() {
           borderRadius={"5px"}
           p={"30px"}
         >
-          {" "}
           <Flex>
-            {" "}
             <FormControl border={"1px"} borderColor="gray.400" me="5px">
-              {" "}
               <Text ms="18px">Awal</Text>
               <Input
                 placeholder="Select Date and Time"
@@ -587,13 +584,13 @@ function Laporan() {
               <Input
                 placeholder="Select Date and Time"
                 size="md"
-                defaultValue={inputStartDate}
+                defaultValue={inputEndDate}
                 type="date"
                 border={"none"}
                 onChange={(e) => handleChange(e, "endDate")}
               />
             </FormControl>
-          </Flex>{" "}
+          </Flex>
           <FormControl mt={"20px"}>
             <FormLabel>Pilih Kategori</FormLabel>
             <Select
@@ -608,7 +605,7 @@ function Laporan() {
             </Select>
           </FormControl>
           {renderLaporan()}
-        </Container>{" "}
+        </Container>
       </Box>
     </Layout>
   );

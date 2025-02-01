@@ -109,7 +109,7 @@ function EditObat(props) {
     return dataNoBatch.map((val) => {
       return (
         <option
-          key={val.nobatch}
+          key={val.id}
           value={JSON.stringify({
             id: val.id,
             noBatch: val.noBatch,
@@ -416,7 +416,7 @@ function EditObat(props) {
                       )}
                     </Td>
                   </Tr>
-                  {/* /////////////////// */}{" "}
+                  {/* /////////////////// */}
                   <Tr>
                     <Th>Aplikasi</Th>
                     <Td>
@@ -481,7 +481,7 @@ function EditObat(props) {
                 {renderNoBatch()}
               </Select>
             </FormControl>
-          </Container>{" "}
+          </Container>
           <Container
             mt={"30px"}
             maxW={"1280px"}
@@ -559,7 +559,7 @@ function EditObat(props) {
 
                   // hidden="hidden"
                 />
-              </FormControl>{" "}
+              </FormControl>
               <FormControl>
                 <Image
                   src={
@@ -577,7 +577,7 @@ function EditObat(props) {
                   overflow="hiden"
                   objectFit="cover"
                 />
-              </FormControl>{" "}
+              </FormControl>
               <FormControl mt="20px">
                 <FormHelperText>Max size: 1MB</FormHelperText>
                 <Button w="100%" onClick={() => inputFileRef.current.click()}>
@@ -613,7 +613,7 @@ function EditObat(props) {
                     })
                   }
                 />
-              </FormControl>{" "}
+              </FormControl>
               <FormControl>
                 <FormLabel>Kotak</FormLabel>
                 <Input

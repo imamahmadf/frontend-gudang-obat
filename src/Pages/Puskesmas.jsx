@@ -150,8 +150,8 @@ function Puskesmas() {
   }
 
   function renderDataPuskesmas() {
-    return dataPuskesmas.map((item) => (
-      <Tr key={item.id}>
+    return dataPuskesmas.map((item, idx) => (
+      <Tr key={idx}>
         <Td>{item.items[0].amprahan.tanggal}</Td>
         <Td>{item.nama}</Td>
         <Td>{item.items[0].noBatch.noBatch}</Td>
@@ -189,7 +189,6 @@ function Puskesmas() {
           borderRadius={"5px"}
           p={"30px"}
         >
-          {" "}
           <FormControl>
             <Select
               mb="20px"
@@ -213,11 +212,9 @@ function Puskesmas() {
             >
               {renderProfile()}
             </Select>
-          </FormControl>{" "}
+          </FormControl>
           <Flex>
-            {" "}
             <FormControl border={"1px"} borderColor="gray.400" me="5px">
-              {" "}
               <Text ms="18px">Awal</Text>
               <Input
                 placeholder="Select Date and Time"
@@ -240,7 +237,7 @@ function Puskesmas() {
                 onChange={(e) => handleChange(e, "endDate")}
               />
             </FormControl>
-          </Flex>{" "}
+          </Flex>
           <Box style={{ overflowX: "auto" }}>
             <Table variant="simple">
               <Thead>
