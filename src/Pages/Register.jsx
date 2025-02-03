@@ -32,6 +32,8 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 import "yup-phone";
 import { authFirebase } from "../Config/firebase";
+import { BsEye } from "react-icons/bs";
+import { BsEyeSlash } from "react-icons/bs";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -80,7 +82,7 @@ function RegisterUser() {
           };
 
     const response = await axios.post(registerUrl, payload);
-    console.log(payload, "register");
+    // console.log(payload, "register");
     history.go("/gfk/daftar-obat");
   };
 
@@ -161,7 +163,7 @@ function RegisterUser() {
             <Heading as="h1" size="md" m="10px">
               Join APTEKA
             </Heading>
-            <Flex justifyContent="center">
+            <Flex justifyContent="center" mb={"20px"}>
               <Text
                 fontSize="12px"
                 lineHeight="15.6px"
@@ -183,7 +185,7 @@ function RegisterUser() {
               </Text>
             </Flex>
 
-            <FormControl w={"60%"} id="name" pb="12px">
+            <FormControl w={{ ss: "85%", sl: "60%" }} id="name" pb="12px">
               <Input
                 h={"50px"}
                 type="text"
@@ -198,7 +200,7 @@ function RegisterUser() {
                 </Alert>
               ) : null}
             </FormControl>
-            <FormControl w={"60%"} id="email" pb="12px">
+            <FormControl w={{ ss: "85%", sl: "60%" }} id="email" pb="12px">
               <Input
                 h={"50px"}
                 type="email"
@@ -214,7 +216,7 @@ function RegisterUser() {
               ) : null}
             </FormControl>
 
-            <FormControl w={"60%"} id="password" pb="12px">
+            <FormControl w={{ ss: "85%", sl: "60%" }} id="password" pb="12px">
               <InputGroup>
                 <Input
                   h={"50px"}
@@ -227,12 +229,14 @@ function RegisterUser() {
                 />
                 <InputRightElement>
                   <Button
+                    h={"50px"}
+                    mt={"10px"}
                     onClick={() => setShowPassword((current) => !current)}
                   >
                     {showPassword ? (
-                      <i className="fa-sharp fa-solid fa-eye"></i>
+                      <BsEye style={{ fontSize: "30px" }} />
                     ) : (
-                      <i className="fa-solid fa-eye-slash"></i>
+                      <BsEyeSlash style={{ fontSize: "30px" }} />
                     )}
                   </Button>
                 </InputRightElement>
@@ -244,7 +248,11 @@ function RegisterUser() {
                 </Alert>
               ) : null}
             </FormControl>
-            <FormControl w={"60%"} id="confirmPassword" pb="12px">
+            <FormControl
+              w={{ ss: "85%", sl: "60%" }}
+              id="confirmPassword"
+              pb="12px"
+            >
               <InputGroup>
                 <Input
                   h={"50px"}
@@ -257,14 +265,16 @@ function RegisterUser() {
                 />
                 <InputRightElement>
                   <Button
+                    h={"50px"}
+                    mt={"10px"}
                     onClick={(e) =>
                       setShowConfirmPassword((current) => !current)
                     }
                   >
-                    {showConfirmPassword ? (
-                      <i className="fa-sharp fa-solid fa-eye"></i>
+                    {showPassword ? (
+                      <BsEye style={{ fontSize: "30px" }} />
                     ) : (
-                      <i className="fa-solid fa-eye-slash"></i>
+                      <BsEyeSlash style={{ fontSize: "30px" }} />
                     )}
                   </Button>
                 </InputRightElement>
@@ -295,6 +305,7 @@ function RegisterUser() {
             borderRightRadius={"20px"}
             flex="1"
             height={"100%"}
+            display={{ ss: "none", sl: "flex" }}
           >
             <Image
               width={"100%"}

@@ -70,7 +70,7 @@ function Laporan() {
         }/laporan/get/${kategoriId}?startDate=${inputStartDate}&endDate=${inputEndDate}`
       )
       .then((res) => {
-        console.log(res.data, "LAPORAN");
+        // console.log(res.data, "LAPORAN");
         setDataLaporan(res.data.result);
         setkategoriData(res.data.kategoriFE);
       })
@@ -183,6 +183,16 @@ function Laporan() {
               >
                 Pemakaian
               </Th>
+              <Th
+                borderWidth="1px"
+                borderColor="white"
+                rowSpan={2}
+                fontSize={"14px"}
+                color={"white"}
+              >
+                Harga Satuan
+              </Th>
+
               <Th
                 borderWidth="1px"
                 borderColor="white"
@@ -521,6 +531,23 @@ function Laporan() {
                     {val.pemakaian}
                   </Td>
                   {/* //////// */}
+                  <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                    {val?.daftarHarga.map((harga) => {
+                      return (
+                        <>
+                          <Text mb={"5px"}>
+                            {new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(harga)}
+                            ,
+                          </Text>
+                        </>
+                      );
+                    })}
+                  </Td>
                   <Td borderWidth="1px" borderColor="primary" py={"15px"}>
                     {new Intl.NumberFormat("id-ID", {
                       style: "currency",

@@ -19,6 +19,11 @@ import {
   MenuDivider,
   Button,
   Spacer,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Accordion,
   Avatar,
   Text,
 } from "@chakra-ui/react";
@@ -28,6 +33,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { authFirebase } from "../Config/firebase";
 import Logo from "../assets/logo.png";
+import { BsCaretDownFill } from "react-icons/bs";
 
 import { CgFormatJustify } from "react-icons/cg";
 import { BiHome } from "react-icons/bi";
@@ -42,6 +48,7 @@ import { BsFillBoxSeamFill } from "react-icons/bs";
 import { BsXOctagon } from "react-icons/bs";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { BsInfoCircle } from "react-icons/bs";
+import { BsCartX } from "react-icons/bs";
 
 import {
   onAuthStateChanged,
@@ -72,7 +79,7 @@ function Sidebar() {
   const lastSegment = location.pathname.substring(
     location.pathname.lastIndexOf("/") + 1
   );
-  console.log(location.pathname);
+  // console.log(location.pathname);
 
   const menuSidebar = [
     { menu: "Daftar Obat", logo: <BsCapsule />, URL: "/gfk/daftar-obat" },
@@ -149,7 +156,7 @@ function Sidebar() {
           },
         ]
       : []),
-
+    { menu: "Obat Habis", logo: <BsCartX />, URL: "/gfk/obat-habis" },
     ...(UserRoles?.includes(7) || UserRoles?.includes(8)
       ? [
           {
@@ -164,7 +171,7 @@ function Sidebar() {
   ];
 
   //console.log(UserRoles);
-  console.log(useSelector((state) => state.user));
+  // console.log(useSelector((state) => state.user));
 
   const logout = async () => {
     await signOut(auth).catch((error) => alert(error));
@@ -219,60 +226,65 @@ function Sidebar() {
           </DrawerHeader>
 
           <DrawerBody>
-            <Flex w="100%" mx="auto" justifyContent="space-between">
-              <Spacer />
-              <Flex fontWeight="bold" fontSize="18px" my="auto" mr="20px">
-                <Menu>
-                  {id ? (
-                    <Box>
-                      <MenuButton
-                        fontWeight="bold"
-                        fontSize="18px"
-                        my="auto"
-                        ms={"8px"}
-                      >
-                        {ProfileName}
-                      </MenuButton>
-                    </Box>
-                  ) : (
-                    <Box>
-                      <i className="fa-solid fa-caret-down"></i>
-                      <MenuButton
-                        fontWeight="bold"
-                        fontSize="18px"
-                        my="auto"
-                        ms={"3px"}
-                      >
-                        {ProfileName}
-                      </MenuButton>
-                    </Box>
-                  )}
-                  <MenuList>
-                    <MenuItem onClick={() => history.push("/gfk/profile")}>
+            {/* //////// */}
+            <Accordion allowMultiple>
+              <AccordionItem bgColor={"white"} borderColor={"white"}>
+                <h2>
+                  <AccordionButton>
+                    {" "}
+                    <Avatar />
+                    {id ? (
+                      <HStack>
+                        <Text
+                          fontWeight="bold"
+                          fontSize="18px"
+                          my="auto"
+                          ms={"8px"}
+                        >
+                          {" "}
+                          {ProfileName}
+                        </Text>
+                      </HStack>
+                    ) : null}
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <Flex flexDirection={"column"}>
+                    <Button
+                      bgColor={"white"}
+                      ms={"10px"}
+                      fontWeight={450}
+                      onClick={() => history.push("/gfk/profile")}
+                      justifyContent="flex-start"
+                    >
                       Profile
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuDivider />{" "}
-                    <MenuItem
+                    </Button>
+                    <Button
+                      bgColor={"white"}
+                      ms={"10px"}
+                      fontWeight={450}
                       onClick={() =>
                         history.push("/gfk/obat-user/" + profileId)
                       }
+                      justifyContent="flex-start"
                     >
-                      Obat Saya
-                    </MenuItem>{" "}
-                    <MenuDivider /> <MenuItem onClick={logout}>Logout</MenuItem>
-                    <MenuDivider />
-                  </MenuList>
-                </Menu>
-              </Flex>
-              {/* <Avatar
-                size="md"
-                objectFit={"cover"}
-                overflow="hidden"
-                my="auto"
-                src={import.meta.env.VITE_REACT_APP_API_BASE_URL + ProfilePic}
-              /> */}
-            </Flex>
+                      Obat saya
+                    </Button>
+                    <Button
+                      bgColor={"white"}
+                      ms={"10px"}
+                      fontWeight={450}
+                      onClick={logout}
+                      justifyContent="flex-start"
+                    >
+                      Logout
+                    </Button>
+                  </Flex>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+
             {menuSidebar.map((val, idx) => {
               return (
                 <HStack

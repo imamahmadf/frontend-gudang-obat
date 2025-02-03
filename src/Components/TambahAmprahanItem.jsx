@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-
+import addFoto from "./../assets/add_photo.png";
 import { BsCart4 } from "react-icons/bs";
 import {
   Box,
@@ -194,7 +194,7 @@ function TambahAmprahanItem(props) {
           _hover={{
             bg: "black",
           }}
-          bg="secondary"
+          bg="primary"
           // onClick={onOpen}
         >
           <BsCart4 />
@@ -219,38 +219,58 @@ function TambahAmprahanItem(props) {
               {/* /////// */}
             </FormControl>{" "}
             {selectedBatch && (
-              <Table variant="simple" size="md">
-                <Thead>
-                  <Tr>
-                    <Th>EXP</Th>
-                    <Th>Stok</Th>
-                    <Th>Kotak</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Td
-                      backgroundColor={
-                        new Date(formatDate(selectedBatch.exp)) <=
-                        new Date(
-                          new Date().setMonth(new Date().getMonth() + 1, 0)
-                        )
-                          ? "danger"
-                          : new Date(formatDate(selectedBatch.exp)) <=
-                            new Date(
-                              new Date().setMonth(new Date().getMonth() + 6, 0)
-                            )
-                          ? "orange"
-                          : ""
-                      }
-                    >
-                      {formatDate(selectedBatch.exp)}
-                    </Td>
-                    <Td>{selectedBatch.stok}</Td>
-                    <Td>{selectedBatch.kotak}</Td>
-                  </Tr>
-                </Tbody>
-              </Table>
+              <Flex mb={"15px"}>
+                <Image
+                  mt={"15px"}
+                  width={"55px"}
+                  height={"75px"}
+                  borderRadius={"5px"}
+                  overflow="hiden"
+                  objectFit="cover"
+                  me={"5px"}
+                  src={
+                    selectedBatch.pic
+                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                        selectedBatch.pic
+                      : addFoto
+                  }
+                />
+                <Table variant="simple" size="md">
+                  <Thead>
+                    <Tr>
+                      <Th>EXP</Th>
+                      <Th>Stok</Th>
+                      <Th>Kotak</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td
+                        backgroundColor={
+                          new Date(formatDate(selectedBatch.exp)) <=
+                          new Date(
+                            new Date().setMonth(new Date().getMonth() + 1, 0)
+                          )
+                            ? "danger"
+                            : new Date(formatDate(selectedBatch.exp)) <=
+                              new Date(
+                                new Date().setMonth(
+                                  new Date().getMonth() + 6,
+                                  0
+                                )
+                              )
+                            ? "orange"
+                            : ""
+                        }
+                      >
+                        {formatDate(selectedBatch.exp)}
+                      </Td>
+                      <Td>{selectedBatch.stok}</Td>
+                      <Td>{selectedBatch.kotak}</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </Flex>
             )}
             <FormControl>
               <FormLabel>Pilih Nomor Batch</FormLabel>

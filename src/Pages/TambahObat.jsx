@@ -73,7 +73,7 @@ function tambahObat() {
     await axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/uptd/perusahaan`)
       .then((res) => {
-        console.log(res.data, "perusahaan");
+        // console.log(res.data, "perusahaan");
         setPerusahaanId(res.data);
       })
       .catch((err) => {
@@ -94,7 +94,7 @@ function tambahObat() {
         }`
       )
       .then((res) => {
-        console.log(res.data, "tessss");
+        // console.log(res.data, "tessss");
         setNamaObat(res.data);
       })
       .catch((err) => {
@@ -132,7 +132,7 @@ function tambahObat() {
     }),
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log(values, "tes formik");
+      // console.log(values, "tes formik");
       const { noBatch, exp, harga, stok, perusahaan, kotak, sumberDana } =
         values;
 

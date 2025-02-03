@@ -32,6 +32,8 @@ import {
   SimpleGrid,
   Heading,
   Avatar,
+  InputLeftAddon,
+  InputGroup,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Batik from "../assets/BATIK.png";
@@ -67,6 +69,7 @@ function DetailObat(props) {
   const [puskesmasId, setPuskesmasId] = useState(0);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [dataStatistik, setDataStatistik] = useState([]);
+  const [tahun, setTahun] = useState(0);
   const [dataStatistikTujuanObat, setDataStatistikTujuanObat] = useState([]);
   const changePage = ({ selected }) => {
     setPage(selected);
@@ -79,7 +82,7 @@ function DetailObat(props) {
 
   const { UserRoles } = useSelector((state) => state.user);
 
-  console.log(UserRoles, "ROLEEEEEEE");
+  // console.log(UserRoles, "ROLEEEEEEE");
 
   const handleChange = (e, field) => {
     //console.log(field);
@@ -138,15 +141,18 @@ function DetailObat(props) {
     return `${hari} ${bulan} ${tahun}`;
   }
   async function fetchDataStatistikObatTujuan() {
+    // console.log(tahun);
     await axios
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/statistik/get/tujuan-obat/${props.match.params.obatId}`
+        }/statistik/get/tujuan-obat/${props.match.params.obatId}?year=${
+          2000 + tahun
+        }`
       )
       .then((res) => {
         setDataStatistikTujuanObat(res.data);
-        console.log(res.data, "INI DATA STATITSIK!!!!!!!!");
+        // console.log(res.data, "INI DATA STATITSIK!!!!!!!!");
       })
       .catch((err) => {
         console.error(err.message);
@@ -158,11 +164,13 @@ function DetailObat(props) {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/statistik/get/detail-obat/${props.match.params.obatId}`
+        }/statistik/get/detail-obat/${props.match.params.obatId}?year=${
+          2000 + tahun
+        }`
       )
       .then((res) => {
         setDataStatistik(res.data.result);
-        console.log(res.data.result, "INI DATA STATITSIK!!!!!!!!");
+        // console.log(res.data.result, "INI DATA STATITSIK!!!!!!!!");
       })
       .catch((err) => {
         console.error(err.message);
@@ -315,7 +323,7 @@ function DetailObat(props) {
         );
 
         setTotalAset(totalAset); // Simpan total aset ke dalam state
-        console.log(res.data); // Menampilkan total aset di console
+        // console.log(res.data); // Menampilkan total aset di console
       })
       .catch((err) => {
         console.log(err);
@@ -327,7 +335,7 @@ function DetailObat(props) {
     fetchDataPuskesmas();
     fetchDataStatistik();
     fetchDataStatistikObatTujuan();
-  }, [page, inputStartDate, inputEndDate, time, puskesmasId, jenis]);
+  }, [page, inputStartDate, inputEndDate, time, puskesmasId, jenis, tahun]);
 
   return (
     <Layout>
@@ -901,6 +909,32 @@ function DetailObat(props) {
               mt={"20px"}
               display={{ ss: "none", sl: "block" }}
             >
+              <FormControl>
+                <FormLabel>Tahun</FormLabel>
+                <InputGroup>
+                  <InputLeftAddon mt={"10px"}> 20</InputLeftAddon>
+                  <Input
+                    w={"60px"}
+                    type="number"
+                    mt={"10px"}
+                    border="1px"
+                    borderRadius={"5px"}
+                    borderColor={"rgba(229, 231, 235, 1)"}
+                    max={99}
+                    onChange={(e) => {
+                      setTahun(parseInt(e.target.value));
+                    }}
+                  />
+                </InputGroup>
+              </FormControl>
+              <Text
+                mb={"20px"}
+                fontSize={"24px"}
+                fontWeight={600}
+                textAlign={"center"}
+              >
+                Chart Mutasi Barang per tahun {tahun ? 2000 + tahun : null}
+              </Text>
               <DataChart dataStatistik={dataStatistik} />
               <Text
                 mt={"100px"}
@@ -908,8 +942,9 @@ function DetailObat(props) {
                 fontWeight={600}
                 textAlign={"center"}
               >
-                Diagram Persebaran Obat per tahun
+                Diagram Persebaran Obat per tahun {tahun ? 2000 + tahun : null}
               </Text>
+
               <Center>
                 {" "}
                 <PolarChart dataStatistik={dataStatistikTujuanObat} />

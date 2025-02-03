@@ -65,7 +65,7 @@ function AmprahanAktif(props) {
 
   const { UserRoles, profileId } = useSelector((state) => state.user);
   function hapusPermintaan(val) {
-    console.log(val, "DELETE PERMINTAAN");
+    // console.log(val, "DELETE PERMINTAAN");
     // Tambahkan logika untuk menghapus permintaan di sini
     axios
       .post(
@@ -83,7 +83,7 @@ function AmprahanAktif(props) {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setEditIndex(null);
         setDeleteIndex(null);
         props.randomNumber(Math.random());
@@ -93,7 +93,7 @@ function AmprahanAktif(props) {
       });
   }
   function ubahPermintaan(val) {
-    console.log(val, "PERMINTAAN", inputValue);
+    // console.log(val, "PERMINTAAN", inputValue);
     axios
       .patch(
         `${
@@ -111,7 +111,7 @@ function AmprahanAktif(props) {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setEditIndex(null);
         setDeleteIndex(null);
         props.randomNumber(Math.random());
@@ -125,7 +125,7 @@ function AmprahanAktif(props) {
       {UserRoles.includes(7) ||
       UserRoles.includes(8) ||
       (UserRoles.includes(6) && props.data.StatusAmprahanId === 7) ? (
-        <Flex gap={"20px"}>
+        <Flex gap={"5px"} overflowX="auto">
           <Flex
             onClick={() => {
               {
@@ -139,7 +139,7 @@ function AmprahanAktif(props) {
             bgColor={"white"}
             borderRadius={"5px"}
             p={"10px"}
-            w={{ ss: "100%", sl: "33%" }}
+            minWidth={{ ss: "350px", sl: "33%" }}
           >
             {" "}
             <Center
@@ -188,7 +188,7 @@ function AmprahanAktif(props) {
               border={"1px"}
               borderColor={"rgba(229, 231, 235, 1)"}
               p={"10px"}
-              w={{ ss: "100%", sl: "33%" }}
+              minWidth={{ ss: "350px", sl: "33%" }}
             >
               <Image
                 borderRadius={"5px"}

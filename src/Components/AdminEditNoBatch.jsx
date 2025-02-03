@@ -68,7 +68,8 @@ function AdminEditNoBatch(props) {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          ///////////
+          // console.log(res.data);
           props.randomNumber(Math.random());
           onEditClose();
         })

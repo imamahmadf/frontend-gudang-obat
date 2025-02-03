@@ -45,7 +45,7 @@ function Amprahan() {
       )
       .then((res) => {
         setStatus(res.data[0]);
-        console.log(res.data, "STATUSSSS");
+        // console.log(res.data, "STATUSSSS");
       })
       .catch((err) => {
         console.error(err.message);
@@ -63,14 +63,14 @@ function Amprahan() {
         }/amprahan/get/all-amprahan?&time=${time}&page=${page}&jenis=${jenis}&limit=${limit}`
       )
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         setAllAmprahan(res.data.result.rows);
         setPage(res.data.page);
         setPages(res.data.totalPage);
         setRows(res.data.totalRows);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
@@ -160,12 +160,12 @@ function Amprahan() {
   useEffect(() => {
     fetchAllAmprahan();
     fetchStatus();
-    console.log(isAnyOpen);
+    // console.log(isAnyOpen);
   }, [page, jenis]);
 
   const handleTabClick = (val) => {
     setJenis(val);
-    console.log(val, "JENISSS");
+    // console.log(val, "JENISSS");
   };
 
   return (
@@ -185,18 +185,25 @@ function Amprahan() {
         >
           {/* <TambahAprahan /> */}
           {status?.isOpen ? null : <TambahAprahan />}
-          {JSON.stringify(status?.isOpen)}
-          <Tabs variant="enclosed">
-            <TabList>
-              <Tab onClick={() => handleTabClick(1)}>Amprahan</Tab>
-              <Tab onClick={() => handleTabClick(2)}>bon</Tab>
-            </TabList>
 
-            <TabPanels>
-              <TabPanel>{renderHalaman()}</TabPanel>
-              <TabPanel>{renderHalaman()}</TabPanel>
-            </TabPanels>
-          </Tabs>
+          <Box style={{ overflowX: "auto" }}>
+            <Tabs
+              isFitted
+              variant="soft-rounded"
+              colorScheme="green"
+              mt={"20px"}
+            >
+              <TabList>
+                <Tab onClick={() => handleTabClick(1)}>Amprahan</Tab>
+                <Tab onClick={() => handleTabClick(2)}>bon</Tab>
+              </TabList>
+
+              <TabPanels>
+                <TabPanel>{renderHalaman()}</TabPanel>
+                <TabPanel>{renderHalaman()}</TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Box>
           <div
             style={{
               display: "flex",

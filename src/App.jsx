@@ -281,25 +281,25 @@ function App() {
               exact
               roleRoute={[2, 7, 8]}
             />
-            <Route
+            <AptekaRoute
               component={DaftarAlokasi}
               path="/gfk/daftar-alokasi"
               exact
               roleRoute={[2, 7, 8]}
             />
-            <Route
+            <AptekaRoute
               component={PengaturanUser}
               path="/gfk/pengaturan/user"
               exact
               roleRoute={[7, 8]}
             />
-            <Route
+            <AptekaRoute
               component={NoBatchNol}
-              path="/gfk/nomor-batch-nol"
+              path="/gfk/obat-habis"
               exact
               roleRoute={[7, 8]}
             />
-            <Route
+            <AptekaRoute
               component={DaftarKadaluwarsa}
               path="/gfk/daftar-kadaluwarsa"
               exact

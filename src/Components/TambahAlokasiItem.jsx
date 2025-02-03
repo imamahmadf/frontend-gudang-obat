@@ -47,7 +47,7 @@ const TambahAlokasiItem = (props) => {
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/alokasi/get`)
       .then((res) => {
         setDataAlokasi(res.data[0]);
-        console.log(res.data[0]);
+        // console.log(res.data[0]);
       })
       .catch((err) => {
         console.error(err);
@@ -109,14 +109,14 @@ const TambahAlokasiItem = (props) => {
   };
 
   const handleSubmit = () => {
-    console.log(inputValues);
+    // console.log(inputValues);
     axios
       .post(
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/alokasi/submit`,
         inputValues
       )
       .then((res) => {
-        console.log("Data submitted:", res.data);
+        // console.log("Data submitted:", res.data);
       })
       .catch((err) => {
         console.error(err);

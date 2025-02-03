@@ -67,7 +67,7 @@ function Kadaluwarsa() {
         setPage(res.data.page);
         setPages(res.data.totalPage);
         setRows(res.data.totalRows);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err.message);
@@ -91,7 +91,7 @@ function Kadaluwarsa() {
         setSelectedBatch(null);
         onDetailClose();
         setSelectedBatchDetail(null);
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.error(err);
@@ -131,7 +131,7 @@ function Kadaluwarsa() {
   }
   useEffect(() => {
     fetchDataObat();
-    console.log(dataObat, "CEK KADALUWARSA");
+    // console.log(dataObat, "CEK KADALUWARSA");
   }, [keyword, page]);
   return (
     <>
@@ -140,9 +140,16 @@ function Kadaluwarsa() {
           pt={"80px"}
           bgColor={"rgba(249, 250, 251, 1)"}
           backgroundImage={`url(${Batik})`}
+          pb={"40px"}
         >
-          <Container bgColor={"white"} pt={"100px"} maxW={"1280px"}>
+          <Container
+            minH={"500px"}
+            bgColor={"white"}
+            p={"20px"}
+            maxW={"1280px"}
+          >
             <Button
+              variant={"primary"}
               onClick={() => {
                 history.push(`/gfk/daftar-kadaluwarsa`);
               }}
@@ -151,7 +158,7 @@ function Kadaluwarsa() {
             </Button>
             <Box style={{ overflowX: "auto" }}>
               {" "}
-              <Table variant="striped">
+              <Table variant="striped" mt={"20px"}>
                 <Thead>
                   <Tr>
                     <Th>Nama Obat</Th>

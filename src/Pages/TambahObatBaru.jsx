@@ -90,7 +90,7 @@ function tambahObatBaru() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values) => {
-      console.log(values, "tes formik");
+      // console.log(values, "tes formik");
       const {
         nama,
         kelasTerapiId,
@@ -125,7 +125,7 @@ function tambahObatBaru() {
         }/obat/get-nama?profileId=${0}`
       )
       .then((res) => {
-        console.log(res.data, "tessss");
+        // console.log(res.data, "tessss");
 
         setKelasTerapiId(res.data.seederKelasTerapi);
         setKategoriId(res.data.seederKategori);
@@ -180,7 +180,7 @@ function tambahObatBaru() {
   }
 
   function renderProfile() {
-    console.log(profile);
+    // console.log(profile);
     return profile.map((val) => {
       return (
         <option key={val.id} value={val.id}>
@@ -191,7 +191,7 @@ function tambahObatBaru() {
   }
   useEffect(() => {
     fetchNamaObat();
-    console.log(profileReduxId, "TES REDUX PROFILE ID");
+    // console.log(profileReduxId, "TES REDUX PROFILE ID");
   }, []);
 
   return (

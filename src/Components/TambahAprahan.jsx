@@ -95,7 +95,7 @@ function TambahAprahan() {
     onSubmit: async (values) => {
       const { puskesmasId, statusId } = values;
       const tanggal = 1;
-      console.log("aaaaaaaaaaaaaaa", puskesmasId, statusId);
+      // console.log("aaaaaaaaaaaaaaa", puskesmasId, statusId);
       await axios
         .post(
           `${

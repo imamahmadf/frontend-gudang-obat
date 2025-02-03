@@ -24,15 +24,18 @@ import {
   Tr,
   Th,
   Td,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useFormik } from "formik";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import Layout from "../Components/Layout";
 import Batik from "../assets/BATIK.png";
 
 function Pengaturan() {
+  const history = useHistory();
   const [userRole, setUserRole] = useState([]);
   const [seed, setSeed] = useState([]);
   async function fetchUserRole() {
@@ -40,7 +43,7 @@ function Pengaturan() {
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-role`)
       .then((res) => {
         setUserRole(res.data.result);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -54,7 +57,7 @@ function Pengaturan() {
       )
       .then((res) => {
         setSeed(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -225,7 +228,7 @@ function Pengaturan() {
     validateOnChange: true,
 
     onSubmit: async (values) => {
-      console.log("Submitted values:", values);
+      // console.log("Submitted values:", values);
       const { namaAplikasi, warnaAplikasi } = values;
 
       await axios
@@ -296,8 +299,26 @@ function Pengaturan() {
           marginBottom={"20px"}
           padding={"20px"}
         >
+          <Flex gap={4} mb={"20px"}>
+            <Button
+              onClick={() => {
+                history.push("/gfk/pengaturan/penanggung-jawab-obat");
+              }}
+              variant={"secondary"}
+            >
+              Penanggung jawab
+            </Button>
+            <Button
+              onClick={() => {
+                history.push("/gfk/pengaturan/user");
+              }}
+              variant={"secondary"}
+            >
+              User Role
+            </Button>
+          </Flex>
           <Tabs isFitted variant="soft-rounded" colorScheme="green">
-            <TabList mb="1em">
+            <TabList mb="1em" style={{ overflowX: "auto" }}>
               <Tab>Satuan</Tab>
               <Tab>Kelas terapi</Tab>
               <Tab>Kategori</Tab>
@@ -308,26 +329,8 @@ function Pengaturan() {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>No.</Th>
-                          <Th>Nama</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {seed?.satuanSeed?.map((item, idx) => (
-                          <Tr key={item.id}>
-                            <Td>{idx + 1}</Td>
-                            <Td>{item.nama}</Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </Box>
-                  <Box w={"50%"} ms={"10px"}>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box>
                     <FormControl pb="20px">
                       <FormLabel>Satuan</FormLabel>
                       <Input
@@ -361,31 +364,59 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
-              </TabPanel>
-              <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
-                    {" "}
+                  <Box>
                     <Table variant="simple">
-                      <Thead>
+                      <Thead bgColor={"primary"}>
                         <Tr>
-                          <Th>No.</Th>
-                          <Th>Nama</Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Nama
+                          </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.kelasterapiSeed?.map((item) => (
+                        {seed?.satuanSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{item.id}</Td>
-                            <Td>{item.nama}</Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {idx + 1}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.nama}
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
-                  </Box>{" "}
-                  <Box w={"50%"} ms={"10px"}>
-                    {" "}
+                  </Box>
+                </SimpleGrid>
+              </TabPanel>
+              <TabPanel>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box mb={"20px"}>
                     <FormControl pb="20px">
                       <FormLabel>Kelas Terapi</FormLabel>
                       <Input
@@ -419,30 +450,60 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
-              </TabPanel>
-              <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
+                  <Box me={"10px"}>
                     {" "}
                     <Table variant="simple">
-                      <Thead>
+                      <Thead bgColor={"primary"}>
                         <Tr>
-                          <Th>No.</Th>
-                          <Th>Nama</Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Nama
+                          </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.kategoriSeed?.map((item, idx) => (
+                        {seed?.kelasterapiSeed?.map((item) => (
                           <Tr key={item.id}>
-                            <Td>{idx + 1}</Td>
-                            <Td>{item.nama}</Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.id}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.nama}
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
                   </Box>{" "}
-                  <Box w={"50%"} ms={"10px"}>
+                </SimpleGrid>
+              </TabPanel>
+              <TabPanel>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box mb={"20px"}>
                     {" "}
                     <FormControl pb="20px">
                       <FormLabel>Kategori</FormLabel>
@@ -477,29 +538,60 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
-              </TabPanel>
-              <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
+                  <Box>
+                    {" "}
                     <Table variant="simple">
-                      <Thead>
+                      <Thead bgColor={"primary"}>
                         <Tr>
-                          <Th>No.</Th>
-                          <Th>Nama</Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Nama
+                          </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.uptdSeed?.map((item, idx) => (
+                        {seed?.kategoriSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{idx + 1}</Td>
-                            <Td>{item.nama}</Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {idx + 1}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.nama}
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
                   </Box>{" "}
-                  <Box w={"50%"} ms={"10px"}>
+                </SimpleGrid>
+              </TabPanel>
+              <TabPanel>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box mb={"20px"}>
                     <FormControl pb="20px">
                       <FormLabel>Tujuan Obat</FormLabel>
                       <Input
@@ -533,30 +625,59 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
-              </TabPanel>
-              <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
-                    {" "}
+                  <Box>
                     <Table variant="simple">
-                      <Thead>
+                      <Thead bgColor={"primary"}>
                         <Tr>
-                          <Th>No.</Th>
-                          <Th>Nama</Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Nama
+                          </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.perusahaanSeed?.map((item, idx) => (
+                        {seed?.uptdSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{idx + 1}</Td>
-                            <Td>{item.nama}</Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {idx + 1}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.nama}
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
-                  </Box>
-                  <Box w={"50%"} ms={"10px"}>
+                  </Box>{" "}
+                </SimpleGrid>
+              </TabPanel>
+              <TabPanel>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box mb={"20px"}>
                     <FormControl pb="20px">
                       <FormLabel>Nama Perushaan</FormLabel>
                       <Input
@@ -581,30 +702,60 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
-              </TabPanel>
-              {/* //////// */}
-              <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
+                  <Box>
                     <Table variant="simple">
-                      <Thead>
+                      <Thead bgColor={"primary"}>
                         <Tr>
-                          <Th>No.</Th>
-                          <Th>Nama Aplikasi</Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Nama
+                          </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.aplikasiSeed?.map((item, idx) => (
+                        {seed?.perusahaanSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{idx + 1}</Td>
-                            <Td bgColor={item.warna}>{item.nama}</Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {idx + 1}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.nama}
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
-                  </Box>{" "}
-                  <Box w={"50%"} ms={"10px"}>
+                  </Box>
+                </SimpleGrid>
+              </TabPanel>
+              {/* //////// */}
+              <TabPanel>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box mb={"20px"}>
                     <FormControl pb="20px">
                       <FormLabel>Tambah Aplikasi</FormLabel>
                       <Input
@@ -646,7 +797,7 @@ function Pengaturan() {
                             "warnaAplikasi",
                             e.target.value.toString()
                           );
-                          console.log(e.target.value.toString());
+                          // console.log(e.target.value.toString());
                         }}
                       />{" "}
                       {formikAplikasi.errors.warnaAplikasi ? (
@@ -665,30 +816,61 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
-              </TabPanel>{" "}
-              {/* //////// */}
-              <TabPanel>
-                <Flex>
-                  <Box w={"50%"} me={"10px"}>
+                  <Box>
                     <Table variant="simple">
-                      <Thead>
+                      <Thead bgColor={"primary"}>
                         <Tr>
-                          <Th>No.</Th>
-                          <Th>Sumber</Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Nama Aplikasi
+                          </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {seed?.sumberDanaSeed?.map((item, idx) => (
+                        {seed?.aplikasiSeed?.map((item, idx) => (
                           <Tr key={item.id}>
-                            <Td>{idx + 1}</Td>
-                            <Td>{item.sumber}</Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {idx + 1}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                              bgColor={item.warna}
+                            >
+                              {item.nama}
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
                   </Box>{" "}
-                  <Box w={"50%"} ms={"10px"}>
+                </SimpleGrid>
+              </TabPanel>{" "}
+              {/* //////// */}
+              <TabPanel>
+                <SimpleGrid columns={2} minChildWidth="200px" gap={3}>
+                  <Box mb={"20px"}>
                     <FormControl pb="20px">
                       <FormLabel>Tambah Sumber Dana</FormLabel>
                       <Input
@@ -722,7 +904,55 @@ function Pengaturan() {
                       Apply
                     </Button>
                   </Box>
-                </Flex>
+                  <Box>
+                    <Table variant="simple">
+                      <Thead bgColor={"primary"}>
+                        <Tr>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            No.
+                          </Th>
+                          <Th
+                            borderWidth="1px"
+                            borderColor="white"
+                            rowSpan={2}
+                            fontSize={"14px"}
+                            color={"white"}
+                            py={"20px"}
+                          >
+                            Sumber
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {seed?.sumberDanaSeed?.map((item, idx) => (
+                          <Tr key={item.id}>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {idx + 1}
+                            </Td>
+                            <Td
+                              borderWidth="1px"
+                              borderColor="primary"
+                              py={"15px"}
+                            >
+                              {item.sumber}
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </Box>
+                </SimpleGrid>
               </TabPanel>
             </TabPanels>
           </Tabs>

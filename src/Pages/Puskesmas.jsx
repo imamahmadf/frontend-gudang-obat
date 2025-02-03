@@ -85,7 +85,7 @@ function Puskesmas() {
     await axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-profile`)
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         setProfile(res.data.result);
       })
       .catch((err) => {
@@ -121,7 +121,7 @@ function Puskesmas() {
         }/puskesmas/get/${puskesmasId}?startDate=${inputStartDate}&endDate=${inputEndDate}&profileId=${penanggungJawabProfile}`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setDataPuskesmas(res.data.result);
         setPage(res.data.page);
         setPages(res.data.totalPage);

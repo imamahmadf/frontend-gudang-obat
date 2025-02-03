@@ -77,7 +77,7 @@ function AdminObat(props) {
       .then((res) => {
         setDataAmprahan(res.data.result);
         setDataObat(res.data.resultObat);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -105,7 +105,7 @@ function AdminObat(props) {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
 
           fetchAmprahan();
           onEditClose();

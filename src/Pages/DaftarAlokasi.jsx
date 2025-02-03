@@ -65,7 +65,7 @@ function DaftarAlokasi() {
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/alokasi/get/all/alokasi`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setDataAlokasi(res.data.result);
       })
       .catch((err) => {

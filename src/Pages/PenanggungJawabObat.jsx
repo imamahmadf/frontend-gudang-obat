@@ -56,7 +56,7 @@ function PenanggungJawabObat() {
         { selectedIds, profileId: gantiPenanggungJawab }
       )
       .then((res) => {
-        console.log(res.data, "VEK!@##", selectedIds, gantiPenanggungJawab);
+        // console.log(res.data, "VEK!@##", selectedIds, gantiPenanggungJawab);
       });
   }
 
@@ -68,7 +68,7 @@ function PenanggungJawabObat() {
         }/obat/get/penanggung-jawab?profileId=${penanggungJawabProfile}&kategoriId=${kategoriId}`
       )
       .then((res) => {
-        console.log(res.data.result, penanggungJawabProfile);
+        // console.log(res.data.result, penanggungJawabProfile);
         setDataPenanggungJawab(res.data.result);
         setDatakategori(res.data.dataKategori);
         setAllChecked(false);
@@ -87,7 +87,7 @@ function PenanggungJawabObat() {
         }/user/get-profile/penanggung-jawab`
       )
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         setProfile(res.data.result);
       })
       .catch((err) => {
@@ -257,12 +257,11 @@ function PenanggungJawabObat() {
       >
         <ModalOverlay />
         <ModalContent borderRadius={0}>
-          <ModalHeader>Shory by:</ModalHeader>
+          <ModalHeader>Ganti Penanggung jawab</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <Text>ss</Text>
             <Select
-              placeholder="Penanggungjawab"
+              placeholder="Penanggung jawab"
               border="1px"
               borderRadius={"8px"}
               borderColor={"rgba(229, 231, 235, 1)"}
@@ -275,13 +274,8 @@ function PenanggungJawabObat() {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              onClick={patchPenanggungJawab}
-              height={"20px"}
-              width={"60px"}
-              fontSize={"12px"}
-            >
-              Terima
+            <Button onClick={patchPenanggungJawab} variant={"primary"}>
+              Ganti
             </Button>
           </ModalFooter>
         </ModalContent>

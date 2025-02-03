@@ -70,8 +70,8 @@ function PengaturanUser() {
         }/user/delete/user-role?userId=${currentUserId}&id=${selectedRole}`
       )
       .then((res) => {
-        console.log(res.data.result);
-        console.log(selectedRole);
+        // console.log(res.data.result);
+        // console.log(selectedRole);
         fetchDataUser();
         setAvailableRoles([]);
         onDeleteClose();
@@ -89,7 +89,7 @@ function PengaturanUser() {
         }/user/post/user-role?userId=${currentUserId}&roleId=${selectedRole}`
       )
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         fetchDataUser();
         setSelectedRole("");
         setAvailableRoles([]);
@@ -104,7 +104,7 @@ function PengaturanUser() {
     axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get/role`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setRole(res.data);
       })
       .catch((err) => {
@@ -117,7 +117,7 @@ function PengaturanUser() {
       const res = await axios.get(
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-profile`
       );
-      console.log(res.data.result);
+      // console.log(res.data.result);
       setDataUser(res.data.result);
     } catch (err) {
       console.error(err);

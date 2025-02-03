@@ -25,7 +25,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { BsSearch } from "react-icons/bs";
 import axios from "axios";
-import FotoHome from "../assets/gfk-depan.png";
+import FotoHome from "../assets/gfk-depan.jpg";
 import { Link, useHistory } from "react-router-dom";
 
 import Layout from "../Components/Layout";
@@ -40,16 +40,10 @@ function Home() {
       .get(
         `${
           import.meta.env.VITE_REACT_APP_API_BASE_URL
-        }/obat/get-nama?profileId=${
-          UserRoles.includes(4) ||
-          UserRoles.includes(7) ||
-          UserRoles.includes(8)
-            ? 0
-            : profileId
-        }`
+        }/obat/get-nama?profileId=${0}`
       )
       .then((res) => {
-        console.log(res.data, "tessss");
+        // console.log(res.data, "tessss");
         setNamaObat(res.data);
       })
       .catch((err) => {
@@ -81,11 +75,12 @@ function Home() {
           />
           <Box>
             <Text
-              fontSize="60px"
               color="white"
               textAlign="center"
               position="relative"
               fontWeight={800}
+              fontSize={{ ss: "30px", sl: "60px" }}
+              mb={"20px"}
             >
               SELAMAT DATANG DI APTEKA
             </Text>{" "}
@@ -134,7 +129,7 @@ function Home() {
                 </HStack>
               </Box>
             ) : (
-              <Center>
+              <Center gap={4}>
                 <Button
                   variant={"primary"}
                   onClick={() => {
@@ -142,6 +137,14 @@ function Home() {
                   }}
                 >
                   Login
+                </Button>
+                <Button
+                  variant={"secondary"}
+                  onClick={() => {
+                    history.push(`/register`);
+                  }}
+                >
+                  Register
                 </Button>
               </Center>
             )}

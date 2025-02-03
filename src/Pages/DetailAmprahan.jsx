@@ -20,9 +20,11 @@ import {
   Tooltip,
   FormControl,
   Input,
+  Heading,
   HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { BsFileEarmarkXFill } from "react-icons/bs";
 import { Link, useHistory } from "react-router-dom";
 import Layout from "../Components/Layout";
 import { useDisclosure } from "@chakra-ui/react";
@@ -83,7 +85,7 @@ function DetailAmprahan(props) {
   }
 
   function ubahPermintaan(val) {
-    console.log(val, "PERMINTAAN", inputValue);
+    // console.log(val, "PERMINTAAN", inputValue);
     axios
       .patch(
         `${
@@ -101,7 +103,7 @@ function DetailAmprahan(props) {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setEditIndex(null);
         setDeleteIndex(null);
       })
@@ -118,7 +120,7 @@ function DetailAmprahan(props) {
         }`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         history.push("/gfk/amprahan");
       })
       .catch((err) => {
@@ -133,7 +135,7 @@ function DetailAmprahan(props) {
         }?penanggungjawab=${Penanggungjawab}`
       )
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         setDetailAmprahan(res.data.result);
       })
       .catch((err) => {
@@ -143,15 +145,15 @@ function DetailAmprahan(props) {
   useEffect(() => {
     fetchDetailAmprahan();
     fetchProfile();
-    console.log(Penanggungjawab);
-    console.log(typeof Penanggungjawab);
+    // console.log(Penanggungjawab);
+    // console.log(typeof Penanggungjawab);
   }, [Penanggungjawab]);
 
   async function fetchProfile() {
     await axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-profile`)
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         setProfile(res.data.result);
       })
       .catch((err) => {
@@ -166,93 +168,95 @@ function DetailAmprahan(props) {
       return (
         <>
           <Box key={idx} display={{ ss: "none", sl: "block" }}>
-            <Center
-              py={"10px"}
-              borderBottom={"1px"}
-              borderColor={"rgba(229, 231, 235, 1)"}
-            >
-              <Image
-                width={"55px"}
-                height={"55px"}
-                borderRadius={"5px"}
-                overflow="hiden"
-                objectFit="cover"
-                me={"5px"}
-                src={
-                  val.noBatch.pic
-                    ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
-                      val.noBatch.pic
-                    : addFoto
-                }
-              />
-              <Text width={"190px"} me={"10px"}>
-                {val.noBatch.obat.nama}
-              </Text>
-              <Text width={"100px"} me={"10px"}>
-                {val.noBatch.noBatch}
-              </Text>
-              <Text me={"10px"} width={"80px"}>
-                {newExp}
-              </Text>
-              <Text me={"10px"} width={"80px"}>
-                {val.noBatch.obat.satuan.nama}
-              </Text>
-              <Text me={"10px"} width={"100px"}>
-                {val.permintaan}
-              </Text>
-              <Text me={"10px"} width={"80px"}>
-                {`${Math.floor(val.permintaan / val.noBatch.kotak)} kotak` +
-                  (val.permintaan % val.noBatch.kotak !== 0
-                    ? ` dan ${val.permintaan % val.noBatch.kotak} ecer`
-                    : "")}
-              </Text>
-              {detailAmprahan.isOpen === 0 ? null : (
-                <>
-                  <Tooltip label="Ubah" aria-label="A tooltip">
-                    <Center
-                      onClick={() => {
-                        setEditIndex(idx);
-                      }}
-                      borderRadius={"5px"}
-                      as="button"
-                      h="30px"
-                      w="30px"
-                      fontSize="15px"
-                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                      color="white"
-                      me={"10px"}
-                      _hover={{
-                        bg: "black",
-                      }}
-                      bg="green"
-                      // onClick={onOpen}
-                    >
-                      <BsPencilFill />
-                    </Center>
-                  </Tooltip>{" "}
-                  <Tooltip label="Hapus" aria-label="A tooltip">
-                    <Center
-                      onClick={() => {
-                        setDeleteIndex(idx);
-                      }}
-                      borderRadius={"5px"}
-                      as="button"
-                      h="30px"
-                      w="30px"
-                      fontSize="15px"
-                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                      color="white"
-                      _hover={{
-                        bg: "black",
-                      }}
-                      bg="red"
-                      // onClick={onOpen}
-                    >
-                      <BsCartXFill />
-                    </Center>
-                  </Tooltip>{" "}
-                </>
-              )}
+            <Center>
+              <Flex
+                py={"10px"}
+                borderBottom={"1px"}
+                borderColor={"rgba(229, 231, 235, 1)"}
+              >
+                <Image
+                  width={"55px"}
+                  height={"75px"}
+                  borderRadius={"5px"}
+                  overflow="hiden"
+                  objectFit="cover"
+                  me={"5px"}
+                  src={
+                    val.noBatch.pic
+                      ? import.meta.env.VITE_REACT_APP_API_BASE_URL +
+                        val.noBatch.pic
+                      : addFoto
+                  }
+                />
+                <Text width={"190px"} me={"10px"}>
+                  {val.noBatch.obat.nama}
+                </Text>
+                <Text width={"100px"} me={"10px"}>
+                  {val.noBatch.noBatch}
+                </Text>
+                <Text me={"10px"} width={"100px"}>
+                  {newExp}
+                </Text>
+                <Text me={"10px"} width={"80px"}>
+                  {val.noBatch.obat.satuan.nama}
+                </Text>
+                <Text me={"10px"} width={"100px"}>
+                  {val.permintaan}
+                </Text>
+                <Text me={"10px"} width={"80px"}>
+                  {`${Math.floor(val.permintaan / val.noBatch.kotak)} kotak` +
+                    (val.permintaan % val.noBatch.kotak !== 0
+                      ? ` dan ${val.permintaan % val.noBatch.kotak} ecer`
+                      : "")}
+                </Text>
+                {detailAmprahan.isOpen === 0 ? null : (
+                  <>
+                    <Tooltip label="Ubah" aria-label="A tooltip">
+                      <Center
+                        onClick={() => {
+                          setEditIndex(idx);
+                        }}
+                        borderRadius={"5px"}
+                        as="button"
+                        h="30px"
+                        w="30px"
+                        fontSize="15px"
+                        transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                        color="white"
+                        me={"10px"}
+                        _hover={{
+                          bg: "black",
+                        }}
+                        bg="green"
+                        // onClick={onOpen}
+                      >
+                        <BsPencilFill />
+                      </Center>
+                    </Tooltip>{" "}
+                    <Tooltip label="Hapus" aria-label="A tooltip">
+                      <Center
+                        onClick={() => {
+                          setDeleteIndex(idx);
+                        }}
+                        borderRadius={"5px"}
+                        as="button"
+                        h="30px"
+                        w="30px"
+                        fontSize="15px"
+                        transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                        color="white"
+                        _hover={{
+                          bg: "black",
+                        }}
+                        bg="red"
+                        // onClick={onOpen}
+                      >
+                        <BsCartXFill />
+                      </Center>
+                    </Tooltip>{" "}
+                  </>
+                )}
+              </Flex>
             </Center>
             <Modal
               closeOnOverlayClick={false}
@@ -417,7 +421,7 @@ function DetailAmprahan(props) {
   }
 
   function hapusPermintaan(val) {
-    console.log(val, "DELETE PERMINTAAN");
+    // console.log(val, "DELETE PERMINTAAN");
     // Tambahkan logika untuk menghapus permintaan di sini
     axios
       .post(
@@ -435,7 +439,7 @@ function DetailAmprahan(props) {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setEditIndex(null);
         setDeleteIndex(null);
         fetchDetailAmprahan();
@@ -493,6 +497,7 @@ function DetailAmprahan(props) {
         backgroundImage={`url(${Batik})`}
         pt={"80px"}
         bgColor={"rgba(249, 250, 251, 1)"}
+        pb={"40px"}
       >
         <Container
           bgColor={"white"}
@@ -503,30 +508,21 @@ function DetailAmprahan(props) {
           p={"30px"}
         >
           <Box>
-            <Text fontSize={"20px"} fontWeight={600}>
-              {" "}
-              Tujuan: {detailAmprahan?.uptd?.nama}
-            </Text>
+            <Heading mb={"10px"}> Tujuan: {detailAmprahan?.uptd?.nama}</Heading>
+
             <Text fontSize={"20px"} fontWeight={600}>
               {" "}
               Tanggal: {newTanggal}
             </Text>
           </Box>
           <Flex>
-            <Box minWidth={"600px"}></Box>
-
-            <HStack align="flex-start" justify="flex-start">
-              <Box
-                p={"8px"}
-                borderColor="gray" // Menambahkan border berwarna hitam
-                borderRadius="5px" // Menambahkan border radius 5px
-              >
-                <FaRegUser />
-              </Box>
+            <FormControl my="20px">
+              <FormLabel>Pilih Penanggung jawab</FormLabel>
               <Select
                 placeholder="Penanggungjawab"
                 border="1px"
-                borderRadius={"8px"}
+                width={"100%"}
+                borderRadius={"5px"}
                 borderColor={"rgba(229, 231, 235, 1)"}
                 onChange={(e) => {
                   setPenanggungjawab(parseInt(e.target.value));
@@ -534,26 +530,45 @@ function DetailAmprahan(props) {
               >
                 {renderProfile()}
               </Select>
-              <Button
-                onClick={exportToExcel}
-                colorScheme="teal"
-                width={"200px"}
-              >
-                Ekspor ke Excel
-              </Button>
-            </HStack>
+            </FormControl>
+          </Flex>
+          <Flex gap={3}>
+            <Button
+              // bgColor={"white"}
+              // color={"primary"}
+              fontSize={"25px"}
+              variant={"secondary"}
+              onClick={exportToExcel}
+              colorScheme="teal"
+            >
+              <BsFileEarmarkXFill />
+            </Button>{" "}
             {detailAmprahan.isOpen === 0 ? null : (
               <>
                 {" "}
-                <Button onClick={tutup}>Tutup</Button>
+                <Button variant={"primary"} onClick={tutup}>
+                  Tutup
+                </Button>
               </>
             )}
           </Flex>
+        </Container>
+        <Container
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px"}
+          borderColor={"rgba(229, 231, 235, 1)"}
+          maxW={"1280px"}
+          p={"30px"}
+          mt={"20px"}
+        >
           <Center
+            mt={"40px"}
             borderTop={"1px"}
             borderBottom={"1px"}
             borderColor={"rgba(229, 231, 235, 1)"}
             py={"10px"}
+            display={{ ss: "none", sl: "flex" }}
           >
             <Text
               fontSize={"15px"}
@@ -571,7 +586,12 @@ function DetailAmprahan(props) {
             >
               Nomor Batch
             </Text>{" "}
-            <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
+            <Text
+              fontSize={"15px"}
+              fontWeight={600}
+              width={"100px"}
+              me={"10px"}
+            >
               EXP
             </Text>{" "}
             <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>

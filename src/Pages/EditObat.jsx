@@ -45,6 +45,7 @@ function EditObat(props) {
     kategori: { id: "", nama: "" },
     satuan: { id: "", nama: "" },
     kelasterapi: { id: "", nama: "" },
+    sumberDana: { id: "", sumber: "" },
     totalStok: 0,
   });
   const [editingColumn, setEditingColumn] = useState(null);
@@ -78,7 +79,7 @@ function EditObat(props) {
   function handleNoBatch(e) {
     onNoBatchOpen();
     setSelectedNoBatch(JSON.parse(e.target.value));
-    console.log(selectedNoBatch, "HANDLE NOMOR BATCH");
+    // console.log(selectedNoBatch, "HANDLE NOMOR BATCH");
   }
 
   async function patchNoBatch() {
@@ -98,7 +99,7 @@ function EditObat(props) {
       .then((res) => {
         onNoBatchClose();
         setSelectedNoBatch({});
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -144,7 +145,7 @@ function EditObat(props) {
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/pengaturan/get/seeders`
       )
       .then((res) => {
-        console.log(res.data, "DATA SEEDERS");
+        // console.log(res.data, "DATA SEEDERS");
         setDataSeeder(res.data);
       })
       .catch((err) => {
@@ -159,7 +160,7 @@ function EditObat(props) {
         }`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setDataObat(res.data.result);
         setDataNoBatch(res.data.result.noBatches);
         setRiwayatData(res.data.getRiwayat);
@@ -184,6 +185,10 @@ function EditObat(props) {
             id: res.data.result.kelasterapi.id,
             nama: res.data.result.kelasterapi.nama,
           },
+          sumberDana: {
+            id: res.data.result.sumberDana.id,
+            sumber: res.data.result.sumberDana.sumber,
+          },
           totalStok: res.data.result.totalStok,
         });
       })
@@ -204,7 +209,7 @@ function EditObat(props) {
   };
 
   const patchObat = async () => {
-    console.log(editedData, "cek data yangdikirim ke API!!!");
+    // console.log(editedData, "cek data yangdikirim ke API!!!");
     await axios
       .patch(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/obat/patch/obat`, {
         id: editedData.id,
@@ -213,11 +218,12 @@ function EditObat(props) {
         satuanFE: editedData.satuan || originalData.satuan.id,
         kelasterapiFE: editedData.kelasterapi || originalData.kelasterapi.id,
         aplikasiFE: editedData.aplikasi || originalData.aplikasi.id,
+        sumberDanaFE: editedData.sumberDana || originalData.sumberDana.id,
         kode: editingColumn,
         profileId,
       })
       .then((res) => {
-        console.log(res.data, "TTTTTTTTTTTTTTs");
+        // console.log(res.data, "TTTTTTTTTTTTTTs");
         setEditingColumn(null);
         fetchData();
       })
@@ -368,6 +374,45 @@ function EditObat(props) {
                         <Button
                           onClick={() => handleEditClick("satuan")}
                           isDisabled={!editedData.satuan.nama}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                  {/* ////// */}
+                  <Tr>
+                    <Th>Sumber Dana</Th>
+                    <Td>
+                      {editingColumn === "sumberDana" ? (
+                        <Select
+                          value={editedData.sumberDana.id}
+                          onChange={(e) =>
+                            handleSelectChange("sumberDana", e.target.value)
+                          }
+                        >
+                          <option value="">Pilih Sumber Dana</option>
+                          {dataSeeder.sumberDanaSeed &&
+                            dataSeeder.sumberDanaSeed.map((sumber) => (
+                              <option key={sumber.id} value={sumber.id}>
+                                {sumber.sumber}
+                              </option>
+                            ))}
+                        </Select>
+                      ) : (
+                        editedData.sumberDana.sumber || "Tidak ada sumber dana"
+                      )}
+                    </Td>
+                    <Td>
+                      {editingColumn === "sumberDana" ? (
+                        <>
+                          <Button onClick={handleSaveClick}>Simpan</Button>
+                          <Button onClick={handleCancelClick}>Batal</Button>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => handleEditClick("sumberDana")}
+                          isDisabled={!editedData.sumberDana.sumber}
                         >
                           Edit
                         </Button>

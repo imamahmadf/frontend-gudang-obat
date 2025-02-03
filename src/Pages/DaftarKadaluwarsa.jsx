@@ -13,7 +13,6 @@ import {
   ModalCloseButton,
   Container,
 } from "@chakra-ui/react";
-import FotoHome from "../assets/GFK.jpeg";
 
 import Layout from "../Components/Layout";
 

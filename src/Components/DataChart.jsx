@@ -67,9 +67,6 @@ const DataChart = ({ dataStatistik }) => {
 
   return (
     <Box mb={"40px"}>
-      <Text mb={"20px"} fontSize={"24px"} fontWeight={600} textAlign={"center"}>
-        Chart Mutasi Barang per tahun
-      </Text>
       <Bar
         data={combinedData}
         options={{ plugins: { datalabels: { display: true } } }}

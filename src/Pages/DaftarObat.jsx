@@ -143,7 +143,7 @@ function DaftarObatAlkes() {
       )
       .then((res) => {
         setSeed(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -186,7 +186,7 @@ function DaftarObatAlkes() {
       )
       .then((res) => {
         setStatus(res.data[0]);
-        console.log(res.data[0], "STATUSSSS");
+        // console.log(res.data[0], "STATUSSSS");
       })
       .catch((err) => {
         console.error(err.message);
@@ -207,7 +207,7 @@ function DaftarObatAlkes() {
         setDataObat(res.data.result.rows);
         setAset(res.data.totalAset);
         onFilterClose();
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err.message);
@@ -492,16 +492,19 @@ function DaftarObatAlkes() {
                       history.push(`/gfk/detail-obat/${val.id}`);
                     }}
                     borderRadius={"5px"}
+                    border={"1px"}
                     as="button"
                     h="25px"
                     w="25px"
                     fontSize="15px"
+                    borderColor={"primary"}
                     transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    color="white"
+                    color="primary"
                     _hover={{
-                      bg: "black",
+                      bg: "primaryGelap",
+                      color: "white",
                     }}
-                    bg="primary"
+                    bg="rgba(239, 251, 239, 1)"
                   >
                     <BsEyeFill />
                   </Center>{" "}
@@ -680,10 +683,14 @@ function DaftarObatAlkes() {
               </Box>
             </Flex>{" "}
             <Divider mb={"5px"} mt={"15px"} />
-            <Text fontSize={"12px"} fontWeight={600}>
-              Jumlah Stok:
-              {val.noBatches.reduce((total, batch) => total + batch.stok, 0)}
-            </Text>
+            {UserRoles.includes(2) ||
+            UserRoles.includes(8) ||
+            UserRoles.includes(7) ? (
+              <Text fontSize={"12px"} fontWeight={600}>
+                Jumlah Stok:
+                {val.noBatches.reduce((total, batch) => total + batch.stok, 0)}
+              </Text>
+            ) : null}
           </Box>
 
           {/* //////////////////////////////////MOBILE////////////////////////////// */}
@@ -696,7 +703,7 @@ function DaftarObatAlkes() {
     fetchDataObat();
     fetchStatus();
     fetchDataSeed();
-    console.log(status);
+    // console.log(status);
   }, [
     keyword,
     page,

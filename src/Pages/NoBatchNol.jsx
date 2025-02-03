@@ -85,7 +85,7 @@ function NoBatchNol() {
       )
       .then((res) => {
         setData(res.data.result);
-        console.log(res.data.result);
+        // console.log(res.data.result);
       })
       .catch((err) => {
         console.error(err);

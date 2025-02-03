@@ -36,7 +36,7 @@ function PuskesmasDetail(props) {
       )
       .then((res) => {
         setDataObat(res.data.result);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);

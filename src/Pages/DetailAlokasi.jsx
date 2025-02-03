@@ -52,7 +52,7 @@ function DetailAlokasi(props) {
       )
       .then((res) => {
         setDetailAlokasi(res.data.result);
-        console.log(res.data.result);
+        // console.log(res.data.result);
       })
       .catch((err) => {
         console.error(err);

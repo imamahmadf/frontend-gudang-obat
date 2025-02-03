@@ -21,7 +21,7 @@ import Google from "../assets/google.png";
 import LogoAPP from "../assets/logo app.png";
 import { BsEye } from "react-icons/bs";
 import { BsEyeSlash } from "react-icons/bs";
-import Jafar from "../assets/GFK-FOTO.png";
+import Jafar from "../assets/gfk-depan.jpg";
 
 import { authFirebase } from "../Config/firebase";
 import axios from "axios";
@@ -52,7 +52,7 @@ function Login() {
   const handleClick = () => {
     setShowPassword(!showPassword);
   };
-  console.log(global);
+  // console.log(global);
   if (global.id) {
     history.push("/");
   }
@@ -107,7 +107,7 @@ function Login() {
           };
 
     const response = await axios.post(registerUrl, payload);
-    console.log(payload, "register");
+    // console.log(payload, "register");
     history.go("/gfk/daftar-obat");
   };
 
@@ -197,18 +197,22 @@ function Login() {
           bgColor={"white"}
           boxShadow="0px 8px 16px rgba(0, 0, 0, 0.2)"
         >
-          <Flex flexDirection={flexDirection} wrap="wrap" height="100%">
+          <Flex wrap="wrap" height="100%">
             <Flex
               flexDirection={"column"}
               borderLeftRadius={"20px"}
               flex="1"
-              p={"20px"}
+              p={{ ss: "0px", sl: "20px" }}
               height={"100%"}
               alignItems="center"
               justifyContent="center"
             >
-              <Image mb={"50px"} width={"50%"} src={LogoAPP} />
-              <FormControl w={"60%"} id="email" pb="12px">
+              <Image
+                mb={"50px"}
+                width={{ ss: "70%", sl: "50%" }}
+                src={LogoAPP}
+              />
+              <FormControl w={{ ss: "85%", sl: "60%" }} id="email" pb="12px">
                 <Input
                   h={"50px"}
                   type="email"
@@ -226,7 +230,7 @@ function Login() {
                   </Alert>
                 ) : null}
               </FormControl>{" "}
-              <FormControl w={"60%"} id="password" pb="15px">
+              <FormControl w={{ ss: "85%", sl: "60%" }} id="password" pb="15px">
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -286,7 +290,28 @@ function Login() {
                 leftIcon={<Image height={"20px"} src={Google} mr="5px"></Image>}
               >
                 Login With Google
-              </Button>
+              </Button>{" "}
+              <Flex justifyContent="center" mt={"20px"}>
+                <Text
+                  fontSize="12px"
+                  lineHeight="15.6px"
+                  fontWeight="300"
+                  textAlign="center"
+                  mr="5px"
+                >
+                  Belum Punya Akun?
+                </Text>
+                <Text
+                  fontSize="12px"
+                  lineHeight="15.6px"
+                  fontWeight="300"
+                  textAlign="center"
+                  _hover={{ textDecoration: "underline", fontWeight: "bold" }}
+                  cursor="pointer"
+                >
+                  <Link to="register">Register</Link>
+                </Text>
+              </Flex>
             </Flex>
             <Flex
               bgColor={"primary"}
@@ -294,12 +319,14 @@ function Login() {
               borderRightRadius={"20px"}
               flex="1"
               height={"100%"}
+              display={{ ss: "none", sl: "flex" }}
             >
               <Image
-                width={"100%"}
                 height={"100%"}
                 src={Jafar}
                 borderRadius={"0 20px 20px 0"}
+                overflow={"hiden"}
+                objectFit={"cover"}
               />
             </Flex>
           </Flex>

@@ -27,7 +27,7 @@ import {
 import { useDisclosure } from "@chakra-ui/react";
 import Batik from "../assets/BATIK.png";
 import { BsFileEarmarkXFill } from "react-icons/bs";
-import FotoHome from "../assets/GFK.jpeg";
+
 import axios from "axios";
 import Layout from "../Components/Layout";
 import { Link, useHistory } from "react-router-dom";
@@ -63,7 +63,7 @@ function StokOpname() {
         }/stok-opname/get/${Penanggungjawab}`
       )
       .then((res) => {
-        console.log(res.data, "DATA API STOK OPNAME");
+        // console.log(res.data, "DATA API STOK OPNAME");
         setDataStokOpname(res.data);
       })
       .catch((err) => {
@@ -75,7 +75,7 @@ function StokOpname() {
     await axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/user/get-profile`)
       .then((res) => {
-        console.log(res.data.result);
+        // console.log(res.data.result);
         setProfile(res.data.result);
       })
       .catch((err) => {
@@ -109,7 +109,7 @@ function StokOpname() {
   useEffect(() => {
     fetchProfile();
     fetchDataStokOpname();
-    console.log(Penanggungjawab);
+    // console.log(Penanggungjawab);
   }, [Penanggungjawab]);
 
   async function tutupSO() {
@@ -126,7 +126,7 @@ function StokOpname() {
         };
       })
       .filter((item) => item.noBatches.length > 0); // Hanya ambil item yang memiliki noBatches
-    console.log(filteredData, "FILER DATAAA!!!!");
+    // console.log(filteredData, "FILER DATAAA!!!!");
     // Mengirim data ke API
     await axios
       .post(
@@ -136,7 +136,7 @@ function StokOpname() {
         filteredData
       )
       .then((response) => {
-        console.log("Data berhasil dikirim:", response.data);
+        // console.log("Data berhasil dikirim:", response.data);
         history.push(`/gfk/daftar-obat`);
       })
       .catch((error) => {

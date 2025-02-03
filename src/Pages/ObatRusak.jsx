@@ -118,7 +118,7 @@ function ObatRusak() {
       )
       .then((res) => {
         setStatus(res.data[0]);
-        console.log(res.data[0], "STATUSSSS");
+        // console.log(res.data[0], "STATUSSSS");
       })
       .catch((err) => {
         console.error(err.message);
@@ -133,7 +133,7 @@ function ObatRusak() {
         }/rusak/get?page=${page}&limit=${limit}&time=${time}`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setDataObatRusak(res.data.result);
         setPage(res.data.page);
         setPages(res.data.totalPage);

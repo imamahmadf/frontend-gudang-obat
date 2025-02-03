@@ -140,7 +140,7 @@ function ObatUser(props) {
         }?startDate=${inputStartDate}&endDate=${inputEndDate}&puskesmasId=${puskesmasId}`
       )
       .then((res) => {
-        console.log(res.data, "INI DATA DARI OBAT USER");
+        // console.log(res.data, "INI DATA DARI OBAT USER");
         setDataObatUser(res.data.result);
       })
       .catch((err) => {
@@ -327,9 +327,8 @@ function ObatUser(props) {
                 />
               </FormControl>
             </Flex>
-            <FormControl>
+            <FormControl mt={"20px"}>
               <Select
-                mb="20px"
                 placeholder="Berdasarkan Tujuan"
                 borderRadius={0}
                 onClick={(e) => selectHandler(e, "puskesmasId")}
@@ -337,6 +336,14 @@ function ObatUser(props) {
                 {renderPuskesmas()}
               </Select>
             </FormControl>
+          </Container>
+          <Container
+            maxW={"1280px"}
+            bgColor={"white"}
+            borderRadius={"5px"}
+            p={"30px"}
+            mt={"20px"}
+          >
             {renderDaftarAmprahan()}
           </Container>
         </Box>

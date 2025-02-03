@@ -63,7 +63,7 @@ function AdminEditAmprahan(props) {
       })
       .then((res) => {
         props.randomNumber(Math.random());
-        console.log(res.data);
+        // console.log(res.data);
         onDeleteClose();
       })
       .catch((err) => {
@@ -96,7 +96,7 @@ function AdminEditAmprahan(props) {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           props.randomNumber(Math.random());
           onEditClose();
         })

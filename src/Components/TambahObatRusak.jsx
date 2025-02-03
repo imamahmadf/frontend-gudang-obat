@@ -74,7 +74,7 @@ function TambahObatRusak(props) {
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/get/is-open`
       )
       .then((res) => {
-        console.log(res.data, "STATUSSS");
+        // console.log(res.data, "STATUSSS");
         setTujuan(res.data);
       })
       .catch((err) => {

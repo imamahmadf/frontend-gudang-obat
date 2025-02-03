@@ -20,9 +20,10 @@ import {
   Input,
   Alert,
   FormHelperText,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import FotoHome from "../assets/GFK.jpeg";
+
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../Components/Layout";
 import axios from "axios";
@@ -44,6 +45,7 @@ function Profile() {
   const [old_img, setOld_img] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileSizeMsg, setFileSizeMsg] = useState("");
+  const [userRoles, setUserRoles] = useState([]);
 
   const {
     isOpen: isEditOpen,
@@ -56,7 +58,29 @@ function Profile() {
     onOpen: onEditFotoOpen,
     onClose: onEditFotoClose,
   } = useDisclosure();
+  function formatDate(dateString) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agu",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ];
 
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${day} ${month}, ${year}`;
+  }
   const handleFile = (event) => {
     if (event.target.files[0].size / 1024 > 1024) {
       setFileSizeMsg("File size is greater than maximum limit");
@@ -69,7 +93,7 @@ function Profile() {
   };
 
   async function postFotoProfile() {
-    console.log("cekkk");
+    // console.log("cekkk");
     const formData = new FormData();
 
     formData.append("old_img", old_img || "");
@@ -80,7 +104,7 @@ function Profile() {
         formData
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         onEditClose();
         fetchDataProfile();
       })
@@ -118,7 +142,7 @@ function Profile() {
           userId: id,
         })
         .then(async (res) => {
-          console.log(res.data);
+          // console.log(res.data);
           onEditClose();
           fetchDataProfile();
         })
@@ -131,15 +155,15 @@ function Profile() {
     axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/profile/get/${id}`)
       .then((res) => {
-        console.log(res.data.result.profilePic, "gambar");
+        // console.log(res.data.result.profilePic, "gambar");
         setDataProfile(res.data.result);
-        setOld_img(res.data.result.profilePic);
+        // setOld_img(res.data.result.profilePic);
         formik.values.nama = res.data.result.nama;
         formik.values.jabatan = res.data.result.jabatan;
         formik.values.nip = res.data.result.nip;
         formik.values.tanggalLahir = res.data.result.birthdate.split("T")[0];
-
-        console.log(res.data);
+        setUserRoles(res.data.result.user.userRoles);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -173,7 +197,7 @@ function Profile() {
                   borderRadius={"5px"}
                   src={import.meta.env.VITE_REACT_APP_API_BASE_URL + ProfilePic}
                 />
-                <Button
+                {/* <Button
                   position="absolute"
                   bottom={0}
                   right={0}
@@ -181,7 +205,7 @@ function Profile() {
                   onClick={onEditFotoOpen}
                 >
                   Edit Foto
-                </Button>
+                </Button> */}
               </Box>
               <Box ms={"20px"}>
                 <Text fontSize={"30px"} fontWeight={700}>
@@ -189,14 +213,38 @@ function Profile() {
                 </Text>
                 <Text>Jabatan: {dataprofile?.jabatan}</Text>
                 <Text>NIP. : {dataprofile?.nip}</Text>
-                <Text>Tanggal Lahir : {dataprofile?.birthdate}</Text>
-                <Text>Email: {dataprofile?.user.email}</Text>
+                <Text>
+                  Tanggal Lahir : {formatDate(dataprofile?.birthdate)}
+                </Text>
+                <Text>Email: {dataprofile?.user.email}</Text>{" "}
               </Box>
+
               <Spacer />
               <Box>
-                <Button onClick={onEditOpen}>Edit</Button>
+                <Button variant={"primary"} onClick={onEditOpen}>
+                  Edit
+                </Button>
               </Box>
             </Flex>
+            <SimpleGrid mt={"20px"} minChildWidth={"180px"} gap={3}>
+              {userRoles.map((val, idx) => {
+                return (
+                  <>
+                    <Box
+                      borderRadius={"5px"}
+                      borderColor={"primary"}
+                      color={"primary"}
+                      bgColor={"rgba(239, 251, 239, 1)"}
+                      border={"1px"}
+                      p={"10px"}
+                      key={idx}
+                    >
+                      {val.role.name}
+                    </Box>
+                  </>
+                );
+              })}
+            </SimpleGrid>
           </Container>
         </Box>
       </Layout>
@@ -208,14 +256,15 @@ function Profile() {
       >
         <ModalOverlay />
         <ModalContent borderRadius={0} maxW="800px" p={"10px"}>
-          <ModalHeader>Shory by:</ModalHeader>
+          <ModalHeader>edit profile:</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}></ModalBody>
           <Image
             src={
-              ProfilePic
-                ? import.meta.env.VITE_REACT_APP_API_BASE_URL + ProfilePic
-                : addFoto
+              // ProfilePic
+              //   ? import.meta.env.VITE_REACT_APP_API_BASE_URL + ProfilePic
+              //   :
+              addFoto
             }
             alt="Room image"
             id="imgpreview"
@@ -254,12 +303,12 @@ function Profile() {
           </FormControl>
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              variant={"primary"}
               onClick={() => {
                 postFotoProfile();
               }}
             >
-              Submit
+              simpan
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -272,7 +321,7 @@ function Profile() {
       >
         <ModalOverlay />
         <ModalContent borderRadius={0}>
-          <ModalHeader>Shory by:</ModalHeader>
+          <ModalHeader>edit profile:</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl pb="20px">
@@ -359,13 +408,13 @@ function Profile() {
 
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              variant={"primary"}
               onClick={() => {
-                console.log("Submit button clicked");
+                // console.log("Submit button clicked");
                 formik.handleSubmit();
               }}
             >
-              Submit
+              Simpan
             </Button>
           </ModalFooter>
         </ModalContent>

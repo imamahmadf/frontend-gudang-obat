@@ -66,9 +66,9 @@ function ObatMasuk() {
       .then((res) => {
         setDataObat(res.data.result);
         setStatus(res.data.resultStatus);
-        console.log(res.data);
+        // console.log(res.data);
         onFilterClose();
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err.message);
@@ -84,14 +84,14 @@ function ObatMasuk() {
   }
 
   function tolak(e) {
-    console.log(e, "DDDDDDDDDDDDDDDDDDDS");
+    // console.log(e, "DDDDDDDDDDDDDDDDDDDS");
     axios
       .post(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/tolak`, {
         id: e.noBatchId,
         old_img: e.old_img,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSelectedBatch(null);
         onDeleteClose();
         fetchDataObat();
@@ -102,7 +102,7 @@ function ObatMasuk() {
   }
 
   function terima(e) {
-    console.log(e, "DATAAAAAA");
+    // console.log(e, "DATAAAAAA");
     axios
       .post(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/no-batch/terima`, {
         noBatch: e.noBatch,
@@ -114,7 +114,7 @@ function ObatMasuk() {
         perusahaanId: e.perusahaanId,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSelectedBatch(null);
         onFilterClose();
         fetchDataObat();
@@ -257,6 +257,68 @@ function ObatMasuk() {
                       </Tr>
                     </Tbody>
                   </Table>
+                  <Flex justifyContent="flex-end" mt={"20px"}>
+                    <Center
+                      // onClick={onFilterOpen}
+                      onClick={() => {
+                        setSelectedBatch({
+                          nama: val.nama,
+                          noBatch: val2.noBatch,
+                          noBatchId: val2.id,
+                          exp: val2.exp,
+                          stok: val2.stok,
+                          obatId: val.id,
+                          totalStok: val.totalStok,
+                          perusahaanId: val2.perusahaanId,
+                        });
+                        onFilterOpen();
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="40px"
+                      w="40px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      me={"10px"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                      bg="primary"
+                    >
+                      <BsCheckLg />
+                    </Center>
+                    <Center
+                      onClick={() => {
+                        setSelectedBatch({
+                          nama: val.nama,
+                          noBatch: val2.noBatch,
+                          noBatchId: val2.id,
+                          exp: val2.exp,
+                          stok: val2.stok,
+                          obatId: val.id,
+                          totalStok: val.totalStok,
+                          perusahaanId: val2.perusahaanId,
+                          old_img: val2.pic,
+                        });
+                        onDeleteOpen();
+                      }}
+                      borderRadius={"5px"}
+                      as="button"
+                      h="40px"
+                      w="40px"
+                      fontSize="15px"
+                      transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                      color="white"
+                      me={"10px"}
+                      _hover={{
+                        bg: "black",
+                      }}
+                      bg="danger"
+                    >
+                      X
+                    </Center>
+                  </Flex>
                 </Box>
               </>
             );

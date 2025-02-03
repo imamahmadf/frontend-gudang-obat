@@ -31,7 +31,7 @@ function Alokasi() {
     axios
       .get(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/uptd/puskesmas`)
       .then((res) => {
-        console.log(res.data, "ALOKASI TUJUAN PKM");
+        // console.log(res.data, "ALOKASI TUJUAN PKM");
         setTujuan(res.data.result);
         setCheckedItems(new Array(res.data.result.length).fill(false));
       })
@@ -46,7 +46,7 @@ function Alokasi() {
       )
       .then((res) => {
         setStatus(res.data[0]);
-        console.log(res.data[0], "STATUSSSS");
+        // console.log(res.data[0], "STATUSSSS");
       })
       .catch((err) => {
         console.error(err.message);
@@ -85,10 +85,11 @@ function Alokasi() {
         judul: namaAlokasi,
       })
       .then((response) => {
-        console.log("Data berhasil dikirim:", response.data);
+        // console.log("Data berhasil dikirim:", response.data);
         setCheckedItems(new Array(tujuan.length).fill(false));
         setCheckedIds([]);
         setAllChecked(false);
+        history.push("/gfk/daftar-obat");
       })
       .catch((error) => {
         console.error("Terjadi kesalahan saat mengirim data:", error);
@@ -96,7 +97,7 @@ function Alokasi() {
   };
 
   function inputHandler(event) {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setNamaAlokasi(event.target.value);
   }
 
