@@ -70,7 +70,7 @@ function Laporan() {
         }/laporan/get/${kategoriId}?startDate=${inputStartDate}&endDate=${inputEndDate}`
       )
       .then((res) => {
-        // console.log(res.data, "LAPORAN");
+        console.log(res.data, "LAPORAN");
         setDataLaporan(res.data.result);
         setkategoriData(res.data.kategoriFE);
       })

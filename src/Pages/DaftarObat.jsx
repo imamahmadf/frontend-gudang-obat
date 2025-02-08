@@ -68,6 +68,7 @@ function DaftarObatAlkes() {
   const [kategoriId, setKategoriId] = useState(0);
   const [satuanId, setSatuanId] = useState(0);
   const [aplikasiId, setAplikasiId] = useState(0);
+  const [dataStatistik, setDataStatistik] = useState({});
   const [seed, setSeed] = useState([]);
   const changePage = ({ selected }) => {
     setPage(selected);
@@ -135,6 +136,22 @@ function DaftarObatAlkes() {
         </option>
       );
     });
+  }
+
+  async function fetchDataStatistik() {
+    await axios
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_API_BASE_URL
+        }/statistik/get/daftar-obat`
+      )
+      .then((res) => {
+        setDataStatistik(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
   async function fetchDataSeed() {
     await axios
@@ -703,6 +720,7 @@ function DaftarObatAlkes() {
     fetchDataObat();
     fetchStatus();
     fetchDataSeed();
+    fetchDataStatistik();
     // console.log(status);
   }, [
     keyword,
@@ -740,14 +758,53 @@ function DaftarObatAlkes() {
             padding={"20px"}
             style={{ overflowX: "auto" }}
           >
-            <Box>
-              <Text>
-                {new Intl.NumberFormat("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                }).format(aset)}
-              </Text>
-            </Box>
+            {status ? null : (
+              <Flex gap={"15px"}>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"primary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Total Nilai Aset:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                    }).format(dataStatistik.totalAset)}
+                  </Text>
+                </Box>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"primary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Total Obat:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataStatistik.totalObat}
+                  </Text>
+                </Box>
+                <Box
+                  borderRadius={"5px"}
+                  border={"1px"}
+                  p={"15px"}
+                  borderColor={"primary"}
+                >
+                  <Text fontSize={"16px"} fontWeight={400}>
+                    Total Item:
+                  </Text>
+                  <Text fontSize={"20px"} fontWeight={700} color={"primary"}>
+                    {dataStatistik.totalItem}
+                  </Text>
+                </Box>
+              </Flex>
+            )}
+
             <Box>
               <Text></Text>
             </Box>
