@@ -44,6 +44,7 @@ import ExcelJS from "exceljs";
 function DetailAlokasi(props) {
   const [detailAlokasi, setDetailAlokasi] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
+  const [grupTotalObat, setGrupTotalObat] = useState([]);
   function formatDate(dateString) {
     const months = [
       "Jan",
@@ -171,11 +172,11 @@ function DetailAlokasi(props) {
           " ",
           index + 1,
           item.noBatch.obat.nama,
-          "",
+          item.noBatch.obat.satuan.nama,
           item.noBatch.noBatch,
           formatDate(item.noBatch.exp),
           item.permintaan,
-          "",
+          item.noBatch.obat.sumberDana.sumber,
           // item.noBatch.obat.sumberDana.sumber,
         ]);
         row.eachCell((cell, colNumber) => {
@@ -219,7 +220,27 @@ function DetailAlokasi(props) {
       )
       .then((res) => {
         setDetailAlokasi(res.data.result);
-        // console.log(res.data.result);
+        const groupedData = {};
+
+        // Mengelompokkan data berdasarkan nama obat
+        res.data.result.amprahans.forEach((amprahan) => {
+          amprahan.amprahanItems.forEach((item) => {
+            const namaObat = item.noBatch.obat.nama;
+            if (!groupedData[namaObat]) {
+              groupedData[namaObat] = { totalPermintaan: 0 };
+            }
+            groupedData[namaObat].totalPermintaan += item.permintaan;
+          });
+        });
+
+        // Mengubah objek menjadi array untuk disimpan di state
+        const groupedArray = Object.keys(groupedData).map((key) => ({
+          namaObat: key,
+          totalPermintaan: groupedData[key].totalPermintaan,
+        }));
+
+        setGrupTotalObat(groupedArray); // Simpan ke state grupTotalObat
+        console.log(groupedArray);
       })
       .catch((err) => {
         console.error(err);
@@ -459,6 +480,32 @@ function DetailAlokasi(props) {
                         ))}
                       </React.Fragment>
                     ))}
+                </Tbody>
+              </Table>
+            </Box>
+            <Box style={{ overflowX: "auto" }}>
+              <Table variant="simple" borderWidth="1px" borderColor="gray.200">
+                <Thead bgColor={"primary"}>
+                  <Tr>
+                    <Th borderWidth="1px" fontSize={"14px"} color={"white"}>
+                      Nama Obat
+                    </Th>
+                    <Th borderWidth="1px" fontSize={"14px"} color={"white"}>
+                      Total Permintaan
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {grupTotalObat.map((item, index) => (
+                    <Tr key={index}>
+                      <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                        {item.namaObat}
+                      </Td>
+                      <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                        {item.totalPermintaan}
+                      </Td>
+                    </Tr>
+                  ))}
                 </Tbody>
               </Table>
             </Box>

@@ -32,31 +32,32 @@ import ExcelJS from "exceljs";
 import { BsCartXFill } from "react-icons/bs";
 import { BsPencilFill } from "react-icons/bs";
 import { FaRegUser } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
 import addFoto from "./../assets/add_photo.png";
 import Batik from "../assets/BATIK.png";
 function DetailAmprahan(props) {
   const [detailAmprahan, setDetailAmprahan] = useState([]);
+  const [StatusAmprahan, setStatusAmprahan] = useState([]);
   const [profile, setProfile] = useState([]);
   const [Penanggungjawab, setPenanggungjawab] = useState(0);
   const [inputValue, setInputValue] = useState(null);
   const history = useHistory();
   const [editIndex, setEditIndex] = useState(null);
   const [deleteIndex, setDeleteIndex] = useState(null);
+  const { UserRoles } = useSelector((state) => state.user);
 
   async function exportToExcel() {
     try {
       // Mengambil file Excel dari backend
       const response = await axios.get(
         `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/excel/amprahan`,
-        {
-          responseType: "arraybuffer", // Mengambil file sebagai array buffer
-        }
+        { responseType: "arraybuffer" }
       );
 
       // Membaca file Excel dengan ExcelJS
       const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(response.data); // Memuat file Excel dari array buffer
-      const worksheet = workbook.getWorksheet(1); // Ambil worksheet pertama
+      await workbook.xlsx.load(response.data);
+      const worksheet = workbook.getWorksheet(1);
 
       // Memodifikasi file Excel
       const date = new Date();
@@ -64,10 +65,10 @@ function DetailAmprahan(props) {
 
       // Mengatur ukuran kertas menjadi A4
       worksheet.pageSetup = {
-        paperSize: 9, // 9 adalah kode untuk ukuran A4
-        orientation: "portrait", // atau 'landscape' untuk orientasi lanskap
-        fitToPage: true, // Mengatur agar konten sesuai dengan halaman
-        view: "pageLayout", // Mengatur tampilan awal menjadi Page Layout
+        paperSize: 9,
+        orientation: "portrait",
+        fitToPage: true,
+        view: "pageLayout",
       };
 
       // Menambahkan header
@@ -76,38 +77,24 @@ function DetailAmprahan(props) {
       worksheet.getCell("A7").font = { bold: true, size: 12 };
       worksheet.getCell("A7").alignment = { horizontal: "center" };
 
-      // Atur lebar kolom A hingga G
-
-      worksheet.getColumn(2).width = 20; // Atur lebar kolom B
-      worksheet.getColumn(3).width = 20; // Atur lebar kolom C
-      worksheet.getColumn(4).width = 20; // Atur lebar kolom D
-      worksheet.getColumn(5).width = 20; // Atur lebar kolom E
-      worksheet.getColumn(6).width = 20; // Atur lebar kolom F
-      worksheet.getColumn(7).width = 20; // Atur lebar kolom G
-      worksheet.getColumn(8).width = 20; // Atur lebar kolom H
-
-      // worksheet.mergeCells("A7:I7");
-      worksheet.getCell("A7").value = `SURAT BUKTI BARANG KELUAR`;
-      worksheet.getCell("A7").alignment = { horizontal: "center", bold: true };
-
       worksheet.mergeCells("A8:I8");
       worksheet.getCell(
         "A8"
-      ).value = `Nomor : 442/    /${detailAmprahan.StatusAmprahan.nama}/    /${year}`;
+      ).value = `Nomor : 442/             /${detailAmprahan.StatusAmprahan.nama}/            /${year}`;
       worksheet.getCell("A8").alignment = { horizontal: "center" };
 
       worksheet.mergeCells("A9:I9");
       worksheet.getCell("A9").value = `Tanggal : ${newTanggal}`;
       worksheet.getCell("A9").alignment = { horizontal: "center" };
 
-      worksheet.mergeCells("A11:G11");
+      worksheet.mergeCells("B11:G11");
       worksheet.getCell(
-        "A11"
+        "B11"
       ).value = `Dialamatkan kepada : ${detailAmprahan?.uptd?.nama}`;
       worksheet.getCell("A11").alignment = { horizontal: "center" };
 
       // Menambahkan tabel
-      worksheet.addRow([]); // Baris kosong
+      worksheet.addRow([]);
       worksheet.addRow([
         "",
         "No",
@@ -118,12 +105,20 @@ function DetailAmprahan(props) {
         "Jumlah",
         "Sumber",
       ]);
+
+      // Mengatur lebar setiap kolom setelah menambahkan header
+      worksheet.getColumn(2).width = 5; // No
+      worksheet.getColumn(3).width = 25; // Nama Obat
+      worksheet.getColumn(4).width = 15; // Kemasan
+      worksheet.getColumn(5).width = 15; // No. Batch
+      worksheet.getColumn(6).width = 15; // Expire Date
+      worksheet.getColumn(7).width = 10; // Jumlah
+      worksheet.getColumn(8).width = 15; // Sumber
+
       worksheet.lastRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
         cell.alignment = { horizontal: "center" };
-        if (colNumber === 1) {
-          cell.border = null; // Menghapus border untuk kolom paling kiri
-        } else {
+        if (colNumber !== 1) {
           cell.border = {
             top: { style: "thin" },
             left: { style: "thin" },
@@ -132,17 +127,6 @@ function DetailAmprahan(props) {
           };
         }
       });
-
-      // Mengatur lebar kolom
-      worksheet.getColumn(1).width = 0.87 * 5; // No
-      worksheet.getColumn(2).width = 1 * 5; // No
-      worksheet.getColumn(3).width = 4.9 * 5; // Nama Obat
-      worksheet.getColumn(4).alignment = { wrapText: true };
-      worksheet.getColumn(5).width = 2.35 * 5; // Kemasan
-      worksheet.getColumn(6).width = 3.1 * 5; // No. Batch
-      worksheet.getColumn(7).width = 2.25 * 5; // Expire Date (default width)
-      worksheet.getColumn(8).width = 1.9 * 5; // Jumlah (default width)
-      worksheet.getColumn(9).width = 2 * 5; // Sumber (default width)
 
       // Menambahkan data
       detailAmprahan?.amprahanItems?.forEach((item, index) => {
@@ -157,9 +141,7 @@ function DetailAmprahan(props) {
           item.noBatch.obat.sumberDana.sumber,
         ]);
         row.eachCell((cell, colNumber) => {
-          if (colNumber === 1) {
-            cell.border = null; // Menghapus border untuk kolom paling kiri
-          } else {
+          if (colNumber !== 1) {
             cell.border = {
               top: { style: "thin" },
               left: { style: "thin" },
@@ -170,13 +152,65 @@ function DetailAmprahan(props) {
         });
       });
 
-      // Menyimpan dan mengunduh file yang telah dimodifikasi
+      // Menghitung baris terakhir dari data tabel
+      let lastRow = worksheet.rowCount;
+
+      // Tambahkan tiga baris kosong setelah tabel
+      lastRow += 3;
+
+      // Menambahkan bagian tanda tangan
+      worksheet.getCell(`C${lastRow}`).value = "Yang Menyerahkan,";
+      worksheet.getCell(`C${lastRow}`).font = { bold: true };
+      worksheet.getCell(`C${lastRow}`).alignment = { horizontal: "center" };
+
+      worksheet.getCell(`H${lastRow}`).value = "Yang Menerima,";
+      worksheet.getCell(`H${lastRow}`).font = { bold: true };
+      worksheet.getCell(`H${lastRow}`).alignment = { horizontal: "center" };
+
+      // Tambahkan tiga baris kosong sebelum nama
+      lastRow += 4;
+      worksheet.getCell(`B${lastRow}`).value =
+        "apt. Tiara Laksmitha Purwandini, S.Farm";
+      worksheet.getCell(`C${lastRow}`).font = { underline: true, bold: true };
+      worksheet.getCell(`C${lastRow}`).alignment = { horizontal: "center" };
+
+      worksheet.getCell(`C${lastRow + 1}`).value = "NIP. 19940612 202421 2 047";
+      worksheet.getCell(`C${lastRow + 1}`).alignment = { horizontal: "center" };
+      worksheet.mergeCells(`G${lastRow + 1}:I${lastRow + 1}`);
+      worksheet.getCell(`G${lastRow + 1}`).value = "NIP.";
+
+      lastRow += 4;
+
+      worksheet.mergeCells(`A${lastRow}:I${lastRow}`);
+      worksheet.getCell(`A${lastRow}`).value = "Mengetahui: ";
+      worksheet.getCell(`A${lastRow}`).alignment = { horizontal: "center" };
+
+      worksheet.mergeCells(`A${lastRow + 1}:I${lastRow + 1}`);
+      worksheet.getCell(`A${lastRow + 1}`).value =
+        "Ka. UPTD PERBEKALAN OBAT DAN ALKES";
+      worksheet.getCell(`A${lastRow + 1}`).alignment = { horizontal: "center" };
+
+      worksheet.mergeCells(`A${lastRow + 2}:I${lastRow + 2}`);
+      worksheet.getCell(`A${lastRow + 2}`).value = "KABUPATEN PASER";
+      worksheet.getCell(`A${lastRow + 2}`).alignment = { horizontal: "center" };
+
+      lastRow += 6;
+
+      worksheet.mergeCells(`A${lastRow}:I${lastRow}`);
+      worksheet.getCell(`B${lastRow}`).value = "Yayillatul Rochman.S.Si.Apt";
+      worksheet.getCell(`C${lastRow}`).font = { underline: true, bold: true };
+      worksheet.getCell(`C${lastRow}`).alignment = { horizontal: "center" };
+      worksheet.mergeCells(`A${lastRow + 1}:I${lastRow + 1}`);
+      worksheet.getCell(`C${lastRow + 1}`).value = "NIP. 19780703 200502 2 006";
+      worksheet.getCell(`C${lastRow + 1}`).alignment = { horizontal: "center" };
+
+      // Simpan dan unduh file Excel
       workbook.xlsx.writeBuffer().then((buffer) => {
         const blob = new Blob([buffer], { type: "application/octet-stream" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "Surat_Bukti_Barang_Keluar.xlsx"; // Nama file yang akan diunduh
+        a.download = `Surat_Bukti_Barang_Keluar_${detailAmprahan?.uptd?.nama}.xlsx`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -268,6 +302,22 @@ function DetailAmprahan(props) {
       });
   }
 
+  function bukaAmprahan() {
+    axios
+      .patch(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/amprahan/buka/${
+          detailAmprahan.id
+        }`
+      )
+      .then((res) => {
+        // console.log(res.data);
+        fetchDetailAmprahan();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function tutup() {
     axios
       .patch(
@@ -277,7 +327,7 @@ function DetailAmprahan(props) {
       )
       .then((res) => {
         // console.log(res.data);
-        history.push("/gfk/amprahan");
+        fetchDetailAmprahan();
       })
       .catch((err) => {
         console.log(err);
@@ -291,8 +341,9 @@ function DetailAmprahan(props) {
         }?penanggungjawab=${Penanggungjawab}`
       )
       .then((res) => {
-        console.log(res.data.result);
+        console.log(res.data);
         setDetailAmprahan(res.data.result);
+        setStatusAmprahan(res.data.resultStatus);
       })
       .catch((err) => {
         console.log(err);
@@ -689,29 +740,43 @@ function DetailAmprahan(props) {
               </Select>
             </FormControl>
           </Flex>
-          <Flex gap={3}>
-            <Button
-              // bgColor={"white"}
-              // color={"primary"}
+          {UserRoles.includes(7) || UserRoles.includes(8) ? (
+            <Flex gap={3}>
+              <Button
+                // bgColor={"white"}
+                // color={"primary"}
 
-              variant={"secondary"}
-              onClick={exportToExcelAmrahan}
-              colorScheme="teal"
-            >
-              <BsFileEarmarkXFill />
-            </Button>
-            <Button gap={2} onClick={exportToExcel} variant={"secondary"}>
-              <BsFileEarmarkXFill /> SBBK
-            </Button>
-            {detailAmprahan.isOpen === 0 ? null : (
-              <>
-                {" "}
-                <Button variant={"primary"} onClick={tutup}>
-                  Tutup
-                </Button>
-              </>
-            )}
-          </Flex>
+                variant={"secondary"}
+                onClick={exportToExcelAmrahan}
+                colorScheme="teal"
+              >
+                <BsFileEarmarkXFill />
+              </Button>
+              <Button gap={2} onClick={exportToExcel} variant={"secondary"}>
+                <BsFileEarmarkXFill /> SBBK
+              </Button>
+              {detailAmprahan.isOpen === 0 ? null : (
+                <>
+                  {" "}
+                  <Button variant={"primary"} onClick={tutup}>
+                    Tutup
+                  </Button>
+                </>
+              )}
+              <Spacer />
+              {/* {StatusAmprahan[0]?.isOpen === 1 ? null : (
+                <>
+                  <Button
+                    color={"white"}
+                    bgColor={"danger"}
+                    onClick={bukaAmprahan}
+                  >
+                    Buka
+                  </Button>
+                </>
+              )} */}
+            </Flex>
+          ) : null}
         </Container>
         <Container
           bgColor={"white"}

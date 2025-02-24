@@ -688,12 +688,15 @@ function DaftarObatAlkes() {
                         </Flex>
                       </Box>
                       <Spacer />
-
-                      <Flex>
-                        <Text align={"right"} fontSize={"13px"} ms={"10px"}>
-                          {val2.stok}
-                        </Text>
-                      </Flex>
+                      {UserRoles.includes(2) ||
+                      UserRoles.includes(8) ||
+                      UserRoles.includes(7) ? (
+                        <Flex>
+                          <Text align={"right"} fontSize={"13px"} ms={"10px"}>
+                            {val2.stok}
+                          </Text>
+                        </Flex>
+                      ) : null}
                     </Flex>
                   );
                 })}

@@ -14,10 +14,18 @@ import {
   ModalBody,
   ModalCloseButton,
   Center,
+  HStack,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
 } from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import TambahAprahan from "../Components/TambahAprahan";
+import TambahAmprahan from "../Components/TambahAprahan";
 import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretLeftFill } from "react-icons/bs";
 import axios from "axios";
@@ -31,12 +39,13 @@ function Amprahan() {
   const history = useHistory();
   const [allAmprahan, setAllAmprahan] = useState([]);
   const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(20);
   const [pages, setPages] = useState(0);
   const [rows, setRows] = useState(0);
   const [time, setTime] = useState("");
   const [status, setStatus] = useState([]);
   const [jenis, setJenis] = useState(1);
+  const { UserRoles } = useSelector((state) => state.user);
 
   async function fetchStatus() {
     await axios
@@ -89,43 +98,41 @@ function Amprahan() {
     return allAmprahan.map((val, idx) => {
       const newTanggal = formatTanggal(val.tanggal);
       return (
-        <Center key={val.id} flexDirection={"column"}>
-          <Flex
-            my={"10px"}
-            borderBottom={"1px"}
-            borderColor={"rgba(229, 231, 235, 1)"}
-          >
-            <Text fontSize={"15px"} width={"130px"} me={"10px"}>
-              {val.uptd.nama}
-            </Text>
-            <Text fontSize={"15px"} width={"110px"} me={"10px"}>
-              {newTanggal}
-            </Text>{" "}
-            <Text fontSize={"15px"} width={"80px"} me={"10px"}>
-              {val.isOpen == 1 ? "Aktif" : "Selesai"}
-            </Text>{" "}
-            <Box width={"80px"}>
-              <Center
-                onClick={() => {
-                  history.push(`amprahan/${val.id}`);
-                }}
-                borderRadius={"5px"}
-                as="button"
-                h="25px"
-                w="25px"
-                fontSize="12px"
-                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                color="white"
-                _hover={{
-                  bg: "black",
-                }}
-                bg="green"
-              >
-                <BsCart4 />
-              </Center>
-            </Box>
-          </Flex>
-        </Center>
+        <>
+          <Tbody>
+            <Tr>
+              <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                {val.uptd.nama}
+              </Td>
+              <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                {newTanggal}
+              </Td>
+              <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                {val.isOpen == 1 ? "Aktif" : "Selesai"}
+              </Td>
+              <Td borderWidth="1px" borderColor="primary" py={"15px"}>
+                <Center
+                  onClick={() => {
+                    history.push(`amprahan/${val.id}`);
+                  }}
+                  borderRadius={"5px"}
+                  as="button"
+                  h="25px"
+                  w="25px"
+                  fontSize="12px"
+                  transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                  color="white"
+                  _hover={{
+                    bg: "black",
+                  }}
+                  bg="green"
+                >
+                  <BsCart4 />
+                </Center>
+              </Td>
+            </Tr>
+          </Tbody>
+        </>
       );
     });
   }
@@ -133,26 +140,47 @@ function Amprahan() {
   function renderHalaman() {
     return (
       <>
-        <Center
-          borderTop={"1px"}
-          borderBottom={"1px"}
-          borderColor={"rgba(229, 231, 235, 1)"}
-          p={"10px"}
-        >
-          <Text fontSize={"15px"} fontWeight={600} width={"130px"} me={"10px"}>
-            Puskesmas
-          </Text>
-          <Text fontSize={"15px"} fontWeight={600} width={"110px"} me={"10px"}>
-            Tanggal
-          </Text>{" "}
-          <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
-            Status
-          </Text>{" "}
-          <Text fontSize={"15px"} fontWeight={600} width={"80px"} me={"10px"}>
-            Aksi
-          </Text>{" "}
-        </Center>
-        <Center flexDirection={"column"}>{renderAmrahan()}</Center>
+        <Box style={{ overflowX: "auto" }}>
+          <Table variant="simple" size="sm" mt={2}>
+            <Thead bgColor={"primary"}>
+              <Tr>
+                <Th
+                  fontSize={"14px"}
+                  borderColor={"white"}
+                  color={"white"}
+                  py={"15px"}
+                >
+                  Tujuan
+                </Th>
+                <Th
+                  fontSize={"14px"}
+                  borderColor={"white"}
+                  color={"white"}
+                  py={"15px"}
+                >
+                  Tanggal
+                </Th>
+                <Th
+                  fontSize={"14px"}
+                  borderColor={"white"}
+                  color={"white"}
+                  py={"15px"}
+                >
+                  Status
+                </Th>
+                <Th
+                  fontSize={"14px"}
+                  borderColor={"white"}
+                  color={"white"}
+                  py={"15px"}
+                >
+                  Aksi
+                </Th>
+              </Tr>
+            </Thead>
+            {renderAmrahan()}
+          </Table>
+        </Box>
       </>
     );
   }
@@ -174,6 +202,7 @@ function Amprahan() {
         pt={"80px"}
         bgColor={"rgba(249, 250, 251, 1)"}
         backgroundImage={`url(${Batik})`}
+        pb={"40px"}
       >
         <Container
           bgColor={"white"}
@@ -184,8 +213,11 @@ function Amprahan() {
           p={"30px"}
         >
           {/* <TambahAprahan /> */}
-          {status?.isOpen ? null : <TambahAprahan />}
-
+          {UserRoles.includes(7) || UserRoles.includes(8) ? (
+            status?.isOpen ? null : (
+              <TambahAmprahan />
+            )
+          ) : null}
           <Box style={{ overflowX: "auto" }}>
             <Tabs
               isFitted
