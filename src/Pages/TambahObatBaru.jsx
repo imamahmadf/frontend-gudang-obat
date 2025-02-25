@@ -105,7 +105,9 @@ function tambahObatBaru() {
         .post(
           `${
             import.meta.env.VITE_REACT_APP_API_BASE_URL
-          }/obat/post?nama=${nama}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&profileReduxId=${profileReduxId}&sumberDanaId=${sumberDanaId}`
+          }/obat/post?nama=${encodeURIComponent(
+            nama
+          )}&kelasTerapiId=${kelasTerapiId}&kategoriId=${kategoriId}&satuanId=${satuanId}&profileId=${profileId}&profileReduxId=${profileReduxId}&sumberDanaId=${sumberDanaId}`
         )
         .then(async (res) => {
           //console.log(res.data);
